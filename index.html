@@ -3,176 +3,336 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK - FULL SYSTEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <title>4M TASK - Professional Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #10b981;
             --primary-dark: #059669;
-            --bg: #f0fdf4;
-            --glass: rgba(255, 255, 255, 0.98);
-            --text: #064e3b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
         body {
             font-family: 'Kanit', sans-serif;
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            background-attachment: fixed;
-            color: var(--text); margin: 0; padding: 0; padding-bottom: 120px;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0; padding: 0;
+            line-height: 1.6;
+            padding-bottom: 100px;
         }
 
-        .app-header { text-align: center; padding: 25px 20px; }
+        /* Header Design */
+        .app-header {
+            background: #fff;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
         .app-header h1 {
-            background: linear-gradient(to right, #059669, #10b981);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 0; font-weight: 700; font-size: 2.2rem;
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            letter-spacing: -0.5px;
+        }
+        .dev-tag {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            margin-top: 4px;
+            font-weight: 300;
         }
 
-        .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; padding: 0 20px; }
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            padding: 0 20px;
+            gap: 12px;
+            margin-bottom: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
         .tab-btn {
-            background: white; border: none; padding: 12px 20px; border-radius: 15px;
-            font-family: 'Kanit'; font-weight: 500; color: #666; cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); flex: 1; max-width: 150px;
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: #fff;
+            color: var(--text-sub);
+            font-family: 'Kanit';
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            font-size: 0.95rem;
         }
-        .tab-btn.active { background: var(--primary); color: white; }
+        .tab-btn.active {
+            background: var(--primary);
+            color: #fff;
+        }
 
-        .page-section { display: none; padding: 0 20px; }
-        .page-section.active { display: block; }
+        /* Container */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Card */
         .glass-card {
-            background: var(--glass); border-radius: 24px; padding: 25px;
-            margin-bottom: 30px; box-shadow: 0 10px 25px rgba(5, 150, 105, 0.1);
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.02);
         }
 
-        .ors-group { display: flex; align-items: center; margin-bottom: 15px; }
+        .label-text {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .ors-group { display: flex; margin-bottom: 16px; }
         .ors-prefix {
-            background: #d1fae5; color: var(--primary-dark); padding: 14px;
-            border-radius: 12px 0 0 12px; font-weight: 700; border: 1px solid #e2e8f0; border-right: none;
+            background: #f1f5f9;
+            color: var(--text-sub);
+            padding: 12px 16px;
+            border-radius: 12px 0 0 12px;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+            border-right: none;
         }
-        .ors-input { border-radius: 0 12px 12px 0 !important; border-left: none !important; font-weight: 600; color: var(--primary-dark); }
+        .ors-input {
+            border-radius: 0 12px 12px 0 !important;
+            border: 1px solid #e2e8f0;
+            padding: 12px; width: 100%;
+            font-family: 'Kanit'; font-weight: 600;
+            outline: none; transition: 0.2s;
+        }
+        .ors-input:focus { border-color: var(--primary); }
 
-        input, textarea, select {
-            width: 100%; padding: 14px; margin-bottom: 15px;
-            border-radius: 12px; border: 1px solid #e2e8f0;
-            font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem;
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            font-family: 'Kanit';
+            box-sizing: border-box;
+            font-size: 1rem;
+            outline: none;
         }
+
+        .btn-photo-upload {
+            width: 100%;
+            padding: 12px;
+            background: #fdfdfd;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            color: var(--text-sub);
+            font-family: 'Kanit';
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: 0.2s;
+        }
+        .btn-photo-upload:hover { border-color: var(--primary); color: var(--primary); }
 
         .btn-main {
-            background: var(--primary); color: white; border: none; padding: 16px;
-            border-radius: 14px; width: 100%; font-weight: 600; font-size: 1.1rem; cursor: pointer;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            width: 100%;
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: 0.2s;
         }
+        .btn-main:active { transform: scale(0.98); }
 
+        /* Task Cards Layout */
         .month-header {
-            background: var(--primary-dark); color: white; padding: 8px 18px;
-            border-radius: 12px; margin: 25px 0 10px 0; display: inline-block;
-            font-weight: 500; font-size: 0.9rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            background: #dcfce7;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin: 25px 0 15px 0;
+            display: inline-block;
         }
 
         .task-card {
-            background: white; border-radius: 20px; padding: 20px;
-            margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-left: 5px solid var(--primary);
+            background: #fff;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            border: 1px solid #f1f5f9;
         }
-        .ors-badge {
-            background: #ecfdf5; color: var(--primary-dark); padding: 4px 12px;
-            border-radius: 8px; font-size: 0.85rem; font-weight: 700; display: inline-block;
+
+        .task-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 8px 0;
+            color: var(--text-main);
         }
 
-        .gallery { display: flex; gap: 8px; overflow-x: auto; margin: 15px 0; padding-bottom: 5px; }
-        .gallery img { width: 120px; height: 90px; object-fit: cover; border-radius: 10px; cursor: pointer; }
+        .task-detail {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+        }
 
-        .actions { display: flex; gap: 15px; margin-top: 15px; border-top: 1px solid #f1f5f9; padding-top: 10px; }
-        .btn-edit { color: var(--primary); cursor: pointer; font-weight: 500; border: none; background: none; font-family: inherit; }
-        .btn-delete { color: #ef4444; cursor: pointer; font-weight: 500; border: none; background: none; font-family: inherit; }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+        }
+        .gallery img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+        }
 
-        /* Slider ขยายรูป */
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f8fafc;
+        }
+        .btn-action {
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: 'Kanit';
+        }
+
+        /* Slider */
         .slider-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center;
         }
-        .slider-img { max-width: 95%; max-height: 80%; object-fit: contain; }
-        .nav-btn { position: absolute; top: 50%; color: white; background: none; border: none; font-size: 2.5rem; cursor: pointer; padding: 10px; }
-        .nav-prev { left: 10px; } .nav-next { right: 10px; }
-        .close-slider { position: absolute; top: 20px; right: 20px; color: white; font-size: 1.5rem; cursor: pointer; background: none; border: none; }
-        .img-counter { position: absolute; bottom: 30px; color: white; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; }
+        .slider-img { max-width: 90%; max-height: 80%; border-radius: 8px; }
+        .nav-btn { position: absolute; top: 50%; color: #fff; font-size: 2rem; background: none; border: none; cursor: pointer; padding: 20px; }
 
-        /* Modal แก้ไข */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 90%; max-height: 85vh; border-radius: 24px; padding: 25px; overflow-y: auto; }
+        /* Modal Edit */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;
+        }
+        .modal-content { background: #fff; width: 90%; max-width: 450px; border-radius: 20px; padding: 25px; box-sizing: border-box; }
 
-        .app-footer { text-align: center; padding: 30px 0; color: #666; font-size: 0.8rem; border-top: 1px solid rgba(0,0,0,0.05); margin-top: 20px; }
+        .app-footer {
+            text-align: center; margin-top: 40px; padding-bottom: 40px;
+            font-size: 0.75rem; color: var(--text-sub);
+        }
     </style>
 </head>
 <body>
 
     <div class="app-header">
         <h1>4M TASK</h1>
-        <div style="color: #059669; font-size: 0.8rem;">Build v1.5.0 | Thiti Phukwilai</div>
+        <div class="dev-tag">System Version 1.6.0 | Developed by Thiti Phukwilai</div>
     </div>
 
     <div class="nav-tabs">
-        <button id="tab-add" class="tab-btn active" onclick="showSection('add')">➕ เพิ่มงาน</button>
-        <button id="tab-view" class="tab-btn" onclick="showSection('view')">📁 คลังงาน</button>
+        <button id="tab-add" class="tab-btn active" onclick="showSection('add')">เพิ่มงานใหม่</button>
+        <button id="tab-view" class="tab-btn" onclick="showSection('view')">คลังข้อมูลงาน</button>
     </div>
 
-    <div id="section-add" class="page-section active">
-        <div class="glass-card">
-            <label style="font-size: 0.85rem; font-weight: 600;">กรอกเลขงาน (เดือน/ลำดับ)</label>
-            <div class="ors-group">
-                <div class="ors-prefix">ORS.</div>
-                <input type="text" id="taskOrs" class="ors-input" placeholder="01/01">
-            </div>
-            
-            <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
-            <button onclick="document.getElementById('cameraInput').click()" style="width:100%; background:#f0fdf4; border:2px dashed var(--primary); padding:10px; border-radius:12px; color:var(--primary); margin-bottom:15px; cursor:pointer;">📸 แนบรูปภาพ</button>
-            <div id="preview-area" style="display:flex; gap:5px; margin-bottom:10px; overflow-x:auto;"></div>
+    <div class="container">
+        <div id="section-add" class="page-section active">
+            <div class="glass-card">
+                <span class="label-text">รหัสงาน (เดือน/ลำดับ)</span>
+                <div class="ors-group">
+                    <div class="ors-prefix">ORS.</div>
+                    <input type="text" id="taskOrs" class="ors-input" placeholder="03/01">
+                </div>
+                
+                <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
+                <button class="btn-photo-upload" onclick="document.getElementById('cameraInput').click()">📸 แนบรูปภาพประกอบ</button>
+                <div id="preview-area" style="display:flex; gap:8px; margin-bottom:12px; overflow-x:auto; padding-bottom:5px;"></div>
 
-            <input type="text" id="taskTitle" placeholder="ชื่องาน...">
-            <textarea id="taskDetail" rows="3" placeholder="รายละเอียด..."></textarea>
-            
-            <select id="taskStatus">
-                <option value="รอดำเนินการ">รอดำเนินการ</option>
-                <option value="กำลังทำ">กำลังทำ</option>
-                <option value="เสร็จสิ้น">เสร็จสิ้น</option>
-            </select>
-            <button class="btn-main" onclick="addTask()">บันทึกลงคลังงาน</button>
+                <span class="label-text">ชื่อหัวข้อบันทึก</span>
+                <input type="text" id="taskTitle" placeholder="เช่น ซ่อมบำรุงประจำเดือน...">
+                
+                <span class="label-text">รายละเอียดเพิ่มเติม</span>
+                <textarea id="taskDetail" rows="3" placeholder="ระบุข้อมูลที่ต้องการบันทึก..."></textarea>
+                
+                <span class="label-text">สถานะปัจจุบัน</span>
+                <select id="taskStatus">
+                    <option value="รอดำเนินการ">รอดำเนินการ</option>
+                    <option value="กำลังทำ">กำลังทำ</option>
+                    <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+                </select>
+                
+                <button class="btn-main" onclick="addTask()">บันทึกข้อมูลงาน</button>
+            </div>
+        </div>
+
+        <div id="section-view" class="page-section">
+            <div id="task-container"></div>
         </div>
     </div>
 
-    <div id="section-view" class="page-section">
-        <div id="task-container"></div>
-    </div>
-
-    <div id="sliderOverlay" class="slider-overlay">
-        <button class="close-slider" onclick="closeSlider()">✕</button>
-        <button class="nav-btn nav-prev" onclick="changeSlide(-1)">❮</button>
+    <div id="sliderOverlay" class="slider-overlay" onclick="closeSlider()">
+        <button class="nav-btn" style="left: 10px;" onclick="event.stopPropagation(); changeSlide(-1)">❮</button>
         <img id="sliderImg" class="slider-img">
-        <button class="nav-btn nav-next" onclick="changeSlide(1)">❯</button>
-        <div id="imgCounter" class="img-counter">1 / 1</div>
+        <button class="nav-btn" style="right: 10px;" onclick="event.stopPropagation(); changeSlide(1)">❯</button>
+        <div id="imgCounter" style="position: absolute; bottom: 40px; color: #fff; font-size: 0.9rem;"></div>
     </div>
 
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <h2 style="margin-top: 0; color:var(--primary-dark);">แก้ไขข้อมูลงาน</h2>
+            <h3 style="margin-top:0; border-bottom: 1px solid #eee; padding-bottom: 10px;">แก้ไขข้อมูลงาน</h3>
             <input type="hidden" id="editId">
-            <label style="font-size:0.8rem;">เลข ORS (ไม่ต้องพิมพ์ ORS.)</label>
+            <span class="label-text">เลข ORS (เช่น 03/01)</span>
             <input type="text" id="editOrs">
-            <label style="font-size:0.8rem;">ชื่องาน</label>
+            <span class="label-text">ชื่องาน</span>
             <input type="text" id="editTitle">
-            <label style="font-size:0.8rem;">รายละเอียด</label>
+            <span class="label-text">รายละเอียด</span>
             <textarea id="editDetail" rows="3"></textarea>
+            <span class="label-text">สถานะ</span>
             <select id="editStatus">
                 <option value="รอดำเนินการ">รอดำเนินการ</option>
                 <option value="กำลังทำ">กำลังทำ</option>
                 <option value="เสร็จสิ้น">เสร็จสิ้น</option>
             </select>
-            <button class="btn-main" onclick="updateTask()">อัปเดตข้อมูล</button>
-            <button style="background:none; border:none; color: #94a3b8; width:100%; margin-top:15px; cursor:pointer;" onclick="closeModal()">ยกเลิก</button>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-main" onclick="updateTask()">อัปเดต</button>
+                <button class="btn-main" style="background:#f1f5f9; color:#64748b;" onclick="closeModal()">ปิด</button>
+            </div>
         </div>
     </div>
 
     <div class="app-footer">
-        &copy; 2026 4M TASK - Developed by Thiti Phukwilai
+        &copy; 2026 4M TASK MANAGEMENT SYSTEM<br>
+        DESIGNED FOR INDUSTRIAL EFFICIENCY
     </div>
 
     <script type="module">
@@ -194,7 +354,6 @@
         let selectedPhotos = [];
         let currentSliderPhotos = [];
         let currentIdx = 0;
-
         const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
         window.showSection = (name) => {
@@ -211,9 +370,10 @@
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        canvas.width = 500; canvas.height = (500 / img.width) * img.height;
+                        const scale = 500 / img.width;
+                        canvas.width = 500; canvas.height = img.height * scale;
                         canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.5));
+                        resolve(canvas.toDataURL('image/jpeg', 0.6));
                     };
                     img.src = e.target.result;
                 };
@@ -226,7 +386,7 @@
                 const b64 = await resizeImage(file);
                 selectedPhotos.push(b64);
                 const img = document.createElement('img');
-                img.src = b64; img.style = "width:50px; height:50px; border-radius:8px; object-fit:cover;";
+                img.src = b64; img.style = "width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border: 1px solid #e2e8f0;";
                 document.getElementById('preview-area').appendChild(img);
             }
         };
@@ -234,8 +394,7 @@
         window.addTask = async () => {
             const rawOrs = document.getElementById('taskOrs').value;
             const title = document.getElementById('taskTitle').value;
-            if (!rawOrs || !title) return alert("กรุณากรอกเลข ORS และชื่องาน");
-
+            if (!rawOrs || !title) return alert("กรุณาระบุ ORS และหัวข้อ");
             await addDoc(collection(db, "tasks"), {
                 ors: "ORS." + rawOrs,
                 title: title,
@@ -244,8 +403,7 @@
                 photos: selectedPhotos,
                 createdAt: new Date().getTime()
             });
-
-            alert("บันทึกสำเร็จ!");
+            alert("บันทึกข้อมูลสำเร็จ");
             document.getElementById('taskOrs').value = "";
             document.getElementById('taskTitle').value = "";
             document.getElementById('taskDetail').value = "";
@@ -263,53 +421,47 @@
                 const d = docSnap.data();
                 const orsNum = d.ors.replace("ORS.", "");
                 const monthIdx = parseInt(orsNum.substring(0, 2));
-                const monthName = monthNames[monthIdx] || "หมวดหมู่อื่นๆ";
+                const monthName = monthNames[monthIdx] || "อื่นๆ";
 
                 if (lastMonthGroup !== monthName) {
                     lastMonthGroup = monthName;
-                    const h = document.createElement('div');
-                    h.className = 'month-header';
-                    h.innerText = `📁 เดือน${monthName}`;
-                    container.appendChild(h);
+                    container.innerHTML += `<div class="month-header">เดือน${monthName}</div>`;
                 }
 
                 const photosJson = JSON.stringify(d.photos || []);
-                const card = document.createElement('div');
-                card.className = 'task-card';
-                card.innerHTML = `
-                    <div class="ors-badge">${d.ors}</div>
-                    <div style="font-weight:600; margin-top:5px; font-size:1.1rem;">${d.title}</div>
-                    <p style="font-size:0.9rem; color:#4b5563; margin:5px 0;">${d.detail || ''}</p>
-                    <div class="gallery">${(d.photos || []).map((p, i) => `<img src="${p}" onclick='openSlider(${photosJson}, ${i})'>`).join('')}</div>
-                    <div class="actions">
-                        <div class="btn-edit" onclick="openEdit('${docSnap.id}', '${orsNum}', '${d.title}', '${d.detail || ""}', '${d.status}')">✏️ แก้ไข</div>
-                        <div class="btn-delete" onclick="deleteTask('${docSnap.id}')">🗑️ ลบ</div>
-                    </div>
-                `;
-                container.appendChild(card);
+                const card = `
+                    <div class="task-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span class="ors-badge">${d.ors}</span>
+                            <span style="font-size:0.75rem; font-weight:600; color:${d.status === 'เสร็จสิ้น' ? '#10b981' : '#f59e0b'}">${d.status}</span>
+                        </div>
+                        <div class="task-title">${d.title}</div>
+                        <div class="task-detail">${d.detail || '-'}</div>
+                        <div class="gallery">
+                            ${(d.photos || []).map((p, i) => `<img src="${p}" onclick='openSlider(${photosJson}, ${i})'>`).join('')}
+                        </div>
+                        <div class="actions">
+                            <button class="btn-action" style="color:var(--primary);" onclick="openEdit('${docSnap.id}', '${orsNum}', '${d.title}', '${d.detail || ""}', '${d.status}')">แก้ไข</button>
+                            <button class="btn-action" style="color:#ef4444;" onclick="deleteTask('${docSnap.id}')">ลบ</button>
+                        </div>
+                    </div>`;
+                container.innerHTML += card;
             });
         });
 
-        // ✅ ระบบ Slider เลื่อนรูป ✅
         window.openSlider = (photos, index) => {
-            currentSliderPhotos = photos;
-            currentIdx = index;
-            updateSlider();
+            currentSliderPhotos = photos; currentIdx = index;
+            document.getElementById('sliderImg').src = currentSliderPhotos[currentIdx];
+            document.getElementById('imgCounter').innerText = `${currentIdx + 1} / ${currentSliderPhotos.length}`;
             document.getElementById('sliderOverlay').style.display = 'flex';
         };
         window.changeSlide = (n) => {
-            currentIdx += n;
-            if (currentIdx >= currentSliderPhotos.length) currentIdx = 0;
-            if (currentIdx < 0) currentIdx = currentSliderPhotos.length - 1;
-            updateSlider();
-        };
-        function updateSlider() {
+            currentIdx = (currentIdx + n + currentSliderPhotos.length) % currentSliderPhotos.length;
             document.getElementById('sliderImg').src = currentSliderPhotos[currentIdx];
             document.getElementById('imgCounter').innerText = `${currentIdx + 1} / ${currentSliderPhotos.length}`;
-        }
+        };
         window.closeSlider = () => document.getElementById('sliderOverlay').style.display = 'none';
 
-        // ✅ ระบบแก้ไข (Edit) ✅
         window.openEdit = (id, ors, title, detail, status) => {
             document.getElementById('editId').value = id;
             document.getElementById('editOrs').value = ors;
@@ -320,18 +472,15 @@
         };
         window.closeModal = () => document.getElementById('editModal').style.display = 'none';
         window.updateTask = async () => {
-            const id = document.getElementById('editId').value;
-            const newOrs = document.getElementById('editOrs').value;
-            await updateDoc(doc(db, "tasks", id), {
-                ors: "ORS." + newOrs,
+            await updateDoc(doc(db, "tasks", document.getElementById('editId').value), {
+                ors: "ORS." + document.getElementById('editOrs').value,
                 title: document.getElementById('editTitle').value,
                 detail: document.getElementById('editDetail').value,
                 status: document.getElementById('editStatus').value
             });
             closeModal();
         };
-
-        window.deleteTask = async (id) => { if(confirm("ลบงานนี้?")) await deleteDoc(doc(db, "tasks", id)); };
+        window.deleteTask = async (id) => { if(confirm("คุณต้องการลบงานนี้ใช่หรือไม่?")) await deleteDoc(doc(db, "tasks", id)); };
     </script>
 </body>
 </html>
