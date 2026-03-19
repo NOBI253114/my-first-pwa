@@ -3,189 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK - Management System</title>
+    <title>4M TASK - Green Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.96);
-            --primary: #6366f1;
-            --accent: #a855f7;
-            --bg: #0f172a;
-            --text: #1e293b;
+            --primary: #10b981; /* สีเขียวหลัก */
+            --primary-dark: #059669;
+            --bg: #f0fdf4;
+            --glass: rgba(255, 255, 255, 0.98);
+            --text: #064e3b;
         }
 
         body {
             font-family: 'Kanit', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
             background-attachment: fixed;
-            color: white; margin: 0; padding: 20px; padding-bottom: 120px;
+            color: var(--text); margin: 0; padding: 0;
+            padding-bottom: 120px;
         }
 
         /* App Header */
-        .app-header { text-align: center; margin-bottom: 30px; }
+        .app-header { text-align: center; padding: 30px 20px; }
         .app-header h1 {
-            background: linear-gradient(to right, #818cf8, #c084fc);
+            background: linear-gradient(to right, #059669, #10b981);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 0; font-weight: 700; font-size: 2.2rem; letter-spacing: 2px;
+            margin: 0; font-weight: 700; font-size: 2.2rem; letter-spacing: 1px;
         }
-        .version-tag {
-            display: inline-block; background: rgba(255,255,255,0.1);
-            padding: 2px 12px; border-radius: 20px; font-size: 0.75rem;
-            margin-top: 5px; color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; padding: 0 20px;
         }
+        .tab-btn {
+            background: white; border: none; padding: 12px 20px; border-radius: 15px;
+            font-family: 'Kanit'; font-weight: 500; color: #666; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); flex: 1; max-width: 150px;
+        }
+        .tab-btn.active {
+            background: var(--primary); color: white;
+        }
+
+        /* Sections Control */
+        .page-section { display: none; padding: 0 20px; }
+        .page-section.active { display: block; }
 
         /* Form Card */
         .glass-card {
-            background: var(--glass); backdrop-filter: blur(10px);
-            border-radius: 24px; padding: 25px; margin-bottom: 30px;
-            color: var(--text); box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            background: var(--glass); border-radius: 24px; padding: 25px;
+            margin-bottom: 30px; box-shadow: 0 10px 25px rgba(5, 150, 105, 0.1);
         }
 
-        .ors-input { border: 2px solid var(--primary) !important; background: #eef2ff !important; font-weight: 600; color: var(--primary); }
+        .ors-group { position: relative; display: flex; align-items: center; margin-bottom: 15px; }
+        .ors-prefix {
+            background: #d1fae5; color: var(--primary-dark); padding: 14px;
+            border-radius: 12px 0 0 12px; font-weight: 700; border: 1px solid #e2e8f0; border-right: none;
+        }
+        .ors-input {
+            border-radius: 0 12px 12px 0 !important; border-left: none !important;
+            font-weight: 600; color: var(--primary-dark);
+        }
 
         input, textarea, select {
             width: 100%; padding: 14px; margin-bottom: 15px;
             border-radius: 12px; border: 1px solid #e2e8f0;
-            font-family: 'Kanit', sans-serif; box-sizing: border-box; font-size: 1rem;
+            font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem; background: #fff;
         }
 
         .btn-main {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white; border: none; padding: 16px; border-radius: 14px;
-            width: 100%; font-weight: 500; font-size: 1.1rem; cursor: pointer; transition: 0.2s;
+            background: var(--primary); color: white; border: none; padding: 16px;
+            border-radius: 14px; width: 100%; font-weight: 600; font-size: 1.1rem;
+            cursor: pointer; transition: 0.3s;
         }
-        .btn-main:active { transform: scale(0.98); }
+        .btn-main:hover { background: var(--primary-dark); }
 
-        .btn-photo {
-            background: #f1f5f9; color: #475569; border: 2px dashed #cbd5e1;
-            padding: 12px; border-radius: 12px; text-align: center;
-            margin-bottom: 15px; cursor: pointer; font-weight: 500;
-        }
-
-        /* Task List Grouping */
-        .month-group { margin-top: 40px; }
-        .month-title {
-            font-size: 1.3rem; margin-bottom: 15px; padding-left: 10px;
-            border-left: 4px solid var(--accent); color: #cbd5e1;
-        }
-
+        /* Task Cards */
         .task-card {
             background: white; border-radius: 20px; padding: 20px;
-            margin-bottom: 20px; color: var(--text); box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+        }
+        .ors-badge {
+            background: #ecfdf5; color: var(--primary-dark); padding: 4px 12px;
+            border-radius: 8px; font-size: 0.85rem; font-weight: 700; display: inline-block;
         }
 
-        .ors-label {
-            font-size: 0.85rem; font-weight: 600; color: var(--primary);
-            background: #eef2ff; padding: 2px 10px; border-radius: 6px;
-            display: inline-block; margin-bottom: 8px;
-        }
+        .gallery { display: flex; gap: 8px; overflow-x: auto; margin: 15px 0; }
+        .gallery img { width: 120px; height: 90px; object-fit: cover; border-radius: 10px; cursor: pointer; }
 
-        .badge {
-            padding: 4px 12px; border-radius: 8px; font-size: 0.8rem;
-            font-weight: 500; color: white; float: right;
-        }
-        .st-รอดำเนินการ { background: #64748b; }
-        .st-กำลังทำ { background: #f59e0b; }
-        .st-เสร็จสิ้น { background: #10b981; }
+        .app-footer { text-align: center; padding: 30px 0; color: #666; font-size: 0.8rem; }
 
-        .gallery { display: flex; gap: 10px; overflow-x: auto; margin: 15px 0; padding-bottom: 5px; }
-        .gallery img { width: 140px; height: 100px; object-fit: cover; border-radius: 12px; cursor: pointer; }
-
-        .actions { display: flex; gap: 15px; margin-top: 15px; border-top: 1px solid #f1f5f9; padding-top: 15px; }
-        .btn-edit { color: var(--primary); cursor: pointer; font-weight: 500; border: none; background: none; font-family: inherit; }
-        .btn-delete { color: #ef4444; cursor: pointer; font-weight: 500; border: none; background: none; font-family: inherit; }
-
-        /* Slider & Overlay */
+        /* Slider & Modal (Same as before but green-themed) */
         .slider-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center;
         }
-        .slider-img { max-width: 95%; max-height: 80%; object-fit: contain; }
-        .nav-btn { position: absolute; top: 50%; color: white; background: none; border: none; font-size: 2.5rem; cursor: pointer; padding: 10px; }
-        .nav-prev { left: 10px; } .nav-next { right: 10px; }
-        .img-counter { position: absolute; bottom: 30px; color: white; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; }
-
-        /* Footer Credits */
-        .app-footer {
-            text-align: center; padding: 20px 0; margin-top: 50px;
-            border-top: 1px solid rgba(255,255,255,0.1); color: #64748b; font-size: 0.85rem;
-        }
-
-        /* Modal Edit */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 90%; max-height: 85vh; border-radius: 24px; padding: 25px; overflow-y: auto; color: var(--text); }
-        
-        #preview-area { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 10px; }
-        #preview-area img { width: 60px; height: 60px; object-fit: cover; border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <div class="app-header">
         <h1>4M TASK</h1>
-        <div class="version-tag">Build v1.2.0 (Stable)</div>
+        <div style="color: #059669; font-size: 0.8rem;">Version 1.3.0 | Thiti Phukwilai</div>
     </div>
 
-    <div class="glass-card">
-        <label style="font-size: 0.85rem; font-weight: 500; color: #64748b;">ลำดับงาน (ORS Reference)</label>
-        <input type="text" id="taskOrs" class="ors-input" placeholder="ORS.01/01">
-        
-        <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
-        <div class="btn-photo" onclick="document.getElementById('cameraInput').click()">📸 คลิกเพื่อแนบรูปภาพ</div>
-        <div id="preview-area"></div>
-        
-        <input type="text" id="taskTitle" placeholder="ชื่องาน...">
-        <textarea id="taskDetail" rows="2" placeholder="รายละเอียดงาน..."></textarea>
-        
-        <select id="taskStatus">
-            <option value="รอดำเนินการ">รอดำเนินการ</option>
-            <option value="กำลังทำ">กำลังทำ</option>
-            <option value="เสร็จสิ้น">เสร็จสิ้น</option>
-        </select>
-        <button class="btn-main" onclick="addTask()">บันทึกข้อมูลลงระบบ</button>
+    <div class="nav-tabs">
+        <button id="tab-add" class="tab-btn active" onclick="showSection('add')">➕ เพิ่มงาน</button>
+        <button id="tab-view" class="tab-btn" onclick="showSection('view')">📁 ดูงานทั้งหมด</button>
     </div>
 
-    <div id="task-container"></div>
+    <div id="section-add" class="page-section active">
+        <div class="glass-card">
+            <label style="font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; display: block;">เลขลำดับงาน (เดือน/ลำดับ)</label>
+            <div class="ors-group">
+                <div class="ors-prefix">ORS.</div>
+                <input type="text" id="taskOrs" class="ors-input" placeholder="ตัวอย่าง 03/01">
+            </div>
+            
+            <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
+            <button onclick="document.getElementById('cameraInput').click()" style="width:100%; background:#f0fdf4; border:2px dashed var(--primary); padding:10px; border-radius:12px; color:var(--primary); margin-bottom:15px; cursor:pointer;">📸 แนบรูปภาพประกอบ</button>
+            <div id="preview-area" style="display:flex; gap:5px; margin-bottom:10px; overflow-x:auto;"></div>
 
-    <div id="sliderOverlay" class="slider-overlay" onclick="closeSlider()">
-        <button class="nav-btn nav-prev" onclick="event.stopPropagation(); changeSlide(-1)">❮</button>
-        <img id="sliderImg" class="slider-img" onclick="event.stopPropagation()">
-        <button class="nav-btn nav-next" onclick="event.stopPropagation(); changeSlide(1)">❯</button>
-        <div id="imgCounter" class="img-counter">1 / 1</div>
-        <div style="position:absolute; top:20px; right:20px; color:white; cursor:pointer;">✕ ปิด</div>
-    </div>
-
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-top: 0;">แก้ไขรายละเอียดงาน</h2>
-            <input type="hidden" id="editId">
-            <label style="font-size:0.8rem; color:#64748b;">เลข ORS</label>
-            <input type="text" id="editOrs" class="ors-input">
-            <label style="font-size:0.8rem; color:#64748b;">ชื่องาน</label>
-            <input type="text" id="editTitle">
-            <label style="font-size:0.8rem; color:#64748b;">รายละเอียด</label>
-            <textarea id="editDetail" rows="3"></textarea>
-            <select id="editStatus">
+            <input type="text" id="taskTitle" placeholder="ชื่องาน...">
+            <textarea id="taskDetail" rows="3" placeholder="รายละเอียดงาน..."></textarea>
+            
+            <select id="taskStatus">
                 <option value="รอดำเนินการ">รอดำเนินการ</option>
                 <option value="กำลังทำ">กำลังทำ</option>
                 <option value="เสร็จสิ้น">เสร็จสิ้น</option>
             </select>
-            <button class="btn-main" onclick="updateTask()">อัปเดตข้อมูล</button>
-            <button style="background:none; border:none; color: #94a3b8; width:100%; margin-top:15px; cursor:pointer;" onclick="closeModal()">ยกเลิก</button>
+            <button class="btn-main" onclick="addTask()">บันทึกงานใหม่</button>
         </div>
     </div>
 
+    <div id="section-view" class="page-section">
+        <div id="task-container"></div>
+    </div>
+
+    <div id="sliderOverlay" class="slider-overlay" onclick="this.style.display='none'">
+        <img id="sliderImg" style="max-width:95%; max-height:80%; object-fit:contain;">
+    </div>
+
     <div class="app-footer">
-        <div>&copy; 2026 4M TASK ระบบจัดการงานอัจฉริยะ</div>
-        <div style="font-weight: 500; color: #cbd5e1; margin-top: 5px;">พัฒนาโดย นาย ธิติ พุกวิลัย</div>
-        <div style="font-size: 0.7rem; margin-top: 10px; opacity: 0.5;">Running on Google Firebase Cloud Platform</div>
+        &copy; 2026 4M TASK - Developed by Thiti Phukwilai
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Firebase Config ของคุณ
         const firebaseConfig = {
             apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
             authDomain: "mytaskapp-pro.firebaseapp.com",
@@ -199,9 +164,16 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         let selectedPhotos = [];
-        let sliderPhotos = [];
-        let currentIdx = 0;
 
+        // ฟังก์ชันสลับหน้า
+        window.showSection = (name) => {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('section-' + name).classList.add('active');
+            document.getElementById('tab-' + name).classList.add('active');
+        };
+
+        // ย่อรูป
         async function resizeImage(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -209,13 +181,9 @@
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const maxWidth = 500; 
-                        let width = img.width, height = img.height;
-                        if (width > maxWidth) { height = (maxWidth / width) * height; width = maxWidth; }
-                        canvas.width = width; canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.4)); 
+                        canvas.width = 500; canvas.height = (500 / img.width) * img.height;
+                        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.5));
                     };
                     img.src = e.target.result;
                 };
@@ -224,111 +192,62 @@
         }
 
         document.getElementById('cameraInput').onchange = async (e) => {
-            const files = Array.from(e.target.files);
-            for (let file of files) {
-                const base64 = await resizeImage(file);
-                selectedPhotos.push(base64);
+            for (let file of e.target.files) {
+                const b64 = await resizeImage(file);
+                selectedPhotos.push(b64);
                 const img = document.createElement('img');
-                img.src = base64;
+                img.src = b64; img.style = "width:50px; height:50px; border-radius:8px; object-fit:cover;";
                 document.getElementById('preview-area').appendChild(img);
             }
         };
 
         window.addTask = async () => {
-            const ors = document.getElementById('taskOrs').value;
+            const rawOrs = document.getElementById('taskOrs').value;
             const title = document.getElementById('taskTitle').value;
-            const detail = document.getElementById('taskDetail').value;
-            const status = document.getElementById('taskStatus').value;
-            if (!ors || !title) return alert("กรุณาระบุ ORS และ ชื่องาน");
+            if (!rawOrs || !title) return alert("กรุณากรอกเลขลำดับและชื่องาน");
 
-            try {
-                await addDoc(collection(db, "tasks"), {
-                    ors, title, detail, status,
-                    photos: selectedPhotos, 
-                    createdAt: new Date().getTime()
-                });
-                document.getElementById('taskOrs').value = "";
-                document.getElementById('taskTitle').value = "";
-                document.getElementById('taskDetail').value = "";
-                document.getElementById('preview-area').innerHTML = "";
-                selectedPhotos = [];
-            } catch (err) { alert(err.message); }
+            const finalOrs = "ORS." + rawOrs; // เติม ORS. ให้อัตโนมัติ
+
+            await addDoc(collection(db, "tasks"), {
+                ors: finalOrs,
+                title: title,
+                detail: document.getElementById('taskDetail').value,
+                status: document.getElementById('taskStatus').value,
+                photos: selectedPhotos,
+                createdAt: new Date().getTime()
+            });
+
+            alert("บันทึกสำเร็จ!");
+            document.getElementById('taskOrs').value = "";
+            document.getElementById('taskTitle').value = "";
+            document.getElementById('taskDetail').value = "";
+            document.getElementById('preview-area').innerHTML = "";
+            selectedPhotos = [];
+            showSection('view'); // บันทึกเสร็จแล้วเด้งไปหน้าดูงานทันที
         };
 
-        onSnapshot(query(collection(db, "tasks"), orderBy("createdAt", "desc")), (snap) => {
+        // แสดงผล เรียงตามเลข ORS
+        onSnapshot(query(collection(db, "tasks"), orderBy("ors", "asc")), (snap) => {
             const container = document.getElementById('task-container');
             container.innerHTML = "";
-            let currentMonth = "";
-
-            snap.forEach((docSnap) => {
+            snap.forEach(docSnap => {
                 const d = docSnap.data();
-                const date = new Date(d.createdAt);
-                const monthLabel = date.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' });
-
-                if (currentMonth !== monthLabel) {
-                    currentMonth = monthLabel;
-                    container.innerHTML += `<div class="month-group"><div class="month-title">${currentMonth}</div></div>`;
-                }
-
-                const photoString = JSON.stringify(d.photos || []);
-                const gallery = d.photos ? `<div class="gallery">${d.photos.map((u, i) => `<img src="${u}" onclick='openSlider(${photoString}, ${i})' loading="lazy">`).join('')}</div>` : "";
-                
-                const cardHtml = `
+                container.innerHTML += `
                     <div class="task-card">
-                        <span class="badge st-${d.status}">${d.status}</span>
-                        <div class="ors-label">${d.ors || 'N/A'}</div>
-                        <div style="font-weight:600; font-size:1.1rem; margin-top:5px;">${d.title}</div>
-                        <p style="color:#64748b; margin:8px 0; font-size:0.9rem;">${d.detail || ''}</p>
-                        ${gallery}
-                        <div class="actions">
-                            <div class="btn-edit" onclick="openEdit('${docSnap.id}', '${d.ors || ""}', '${d.title}', '${d.detail || ""}', '${d.status}')">✏️ แก้ไข</div>
-                            <div class="btn-delete" onclick="deleteTask('${docSnap.id}')">🗑️ ลบ</div>
+                        <div class="ors-badge">${d.ors}</div>
+                        <div style="font-weight:600; margin-top:5px; font-size:1.1rem;">${d.title}</div>
+                        <p style="font-size:0.9rem; color:#4b5563; margin:5px 0;">${d.detail || ''}</p>
+                        <div class="gallery">${(d.photos || []).map(p => `<img src="${p}" onclick="zoomImg('${p}')">`).join('')}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                            <span style="font-size:0.8rem; color:var(--primary-dark); font-weight:600;">สถานะ: ${d.status}</span>
+                            <button onclick="deleteTask('${docSnap.id}')" style="background:none; border:none; color:#ef4444; font-family:inherit; cursor:pointer;">ลบงาน</button>
                         </div>
                     </div>`;
-                container.lastChild.innerHTML += cardHtml;
             });
         });
 
-        // ระบบ Slider
-        window.openSlider = (photos, index) => {
-            sliderPhotos = photos;
-            currentIdx = index;
-            updateSlider();
-            document.getElementById('sliderOverlay').style.display = 'flex';
-        };
-        window.changeSlide = (n) => {
-            currentIdx += n;
-            if (currentIdx >= sliderPhotos.length) currentIdx = 0;
-            if (currentIdx < 0) currentIdx = sliderPhotos.length - 1;
-            updateSlider();
-        };
-        function updateSlider() {
-            document.getElementById('sliderImg').src = sliderPhotos[currentIdx];
-            document.getElementById('imgCounter').innerText = `${currentIdx + 1} / ${sliderPhotos.length}`;
-        }
-        window.closeSlider = () => document.getElementById('sliderOverlay').style.display = 'none';
-
-        // CRUD
-        window.openEdit = (id, ors, title, detail, status) => {
-            document.getElementById('editId').value = id;
-            document.getElementById('editOrs').value = ors;
-            document.getElementById('editTitle').value = title;
-            document.getElementById('editDetail').value = detail;
-            document.getElementById('editStatus').value = status;
-            document.getElementById('editModal').style.display = 'flex';
-        };
-        window.closeModal = () => document.getElementById('editModal').style.display = 'none';
-        window.updateTask = async () => {
-            const id = document.getElementById('editId').value;
-            await updateDoc(doc(db, "tasks", id), {
-                ors: document.getElementById('editOrs').value,
-                title: document.getElementById('editTitle').value,
-                detail: document.getElementById('editDetail').value,
-                status: document.getElementById('editStatus').value
-            });
-            closeModal();
-        };
-        window.deleteTask = async (id) => { if(confirm("ยืนยันการลบ?")) await deleteDoc(doc(db, "tasks", id)); };
+        window.deleteTask = async (id) => { if(confirm("ลบงานนี้?")) await deleteDoc(doc(db, "tasks", id)); };
+        window.zoomImg = (url) => { document.getElementById('sliderImg').src = url; document.getElementById('sliderOverlay').style.display = 'flex'; };
     </script>
 </body>
 </html>
