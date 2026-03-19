@@ -1,0 +1,15 @@
+{
+  "name": "My Simple App",
+  "short_name": "SimpleApp",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1177/1177568.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
