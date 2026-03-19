@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK - ULTIMATE EDITION</title>
+    <title>4M TASK - ULTIMATE</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -16,8 +16,7 @@
         .app-header { background: #fff; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .app-header h1 { margin: 0; font-size: 1.5rem; color: var(--primary-dark); }
 
-        /* Navigation */
-        .nav-tabs { display: flex; overflow-x: auto; padding: 15px; gap: 8px; sticky: top; background: var(--bg); z-index: 100; }
+        .nav-tabs { display: flex; overflow-x: auto; padding: 15px; gap: 8px; position: sticky; top: 0; background: var(--bg); z-index: 100; }
         .tab-btn { padding: 10px 18px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); white-space: nowrap; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow); font-family: 'Kanit'; }
         .tab-btn.active { background: var(--primary); color: #fff; }
 
@@ -31,26 +30,33 @@
         .stat-card { background: #fff; padding: 20px; border-radius: 15px; text-align: center; box-shadow: var(--shadow); }
         .chart-container { background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: var(--shadow); }
 
-        /* Form */
+        /* Form - ปรับใหม่ให้เท่ากัน */
         .glass-card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; }
-        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; }
+        .label-text { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 5px; display: block; font-weight: 500; }
+        
+        input, textarea, select { 
+            width: 100%; padding: 12px; margin-bottom: 15px; 
+            border-radius: 10px; border: 1px solid #e2e8f0; 
+            font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem;
+            outline: none; transition: 0.2s;
+        }
+        input:focus, textarea:focus { border-color: var(--primary); }
 
-        /* Search & Filter */
+        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-main:active { transform: scale(0.98); }
+
+        /* Search & Task Card */
         .search-box { display: flex; gap: 10px; margin-bottom: 15px; }
-        .search-box input { margin-bottom: 0; }
-
-        /* Task Card */
         .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: var(--shadow); }
         .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 10px 0; }
-        .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
+        .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; cursor: pointer; }
 
         /* Slider & Modal */
         .slider-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: #fff; width: 90%; max-width: 500px; border-radius: 20px; padding: 20px; max-height: 80vh; overflow-y: auto; }
+        .modal-content { background: #fff; width: 90%; max-width: 500px; border-radius: 20px; padding: 20px; max-height: 85vh; overflow-y: auto; }
         
-        /* Calendar Placeholder */
+        /* Calendar */
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: #fff; padding: 10px; border-radius: 15px; box-shadow: var(--shadow); }
         .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; border-radius: 8px; cursor: pointer; }
         .cal-has-task { background: #dcfce7; color: var(--primary-dark); font-weight: 600; }
@@ -60,7 +66,7 @@
 
     <div class="app-header">
         <h1>4M TASK ULTIMATE</h1>
-        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 1.7.0 | พัฒนาโดย นาย ธิติ พุกวิลัย</div>
+        <div style="font-size: 0.7rem; color: var(--text-sub);">System v1.7.1 | Developed by Thiti Phukwilai</div>
     </div>
 
     <div class="nav-tabs">
@@ -79,26 +85,31 @@
             <div class="chart-container">
                 <canvas id="statusChart"></canvas>
             </div>
-            <button class="btn-main" style="background:#334155;" onclick="exportToCSV()">📤 ส่งออกข้อมูลเป็น Excel (.csv)</button>
+            <button class="btn-main" style="background:#334155; margin-bottom: 20px;" onclick="exportToCSV()">📤 ส่งออกข้อมูลเป็น Excel (.csv)</button>
         </div>
 
         <div id="section-add" class="page-section">
             <div class="glass-card">
-                <div style="display:flex; align-items:center; margin-bottom:10px;">
-                    <div style="background:#f1f5f9; padding:12px; border-radius:10px 0 0 10px; font-weight:600; border:1px solid #e2e8f0; border-right:none;">ORS.</div>
-                    <input type="text" id="taskOrs" placeholder="03/01" style="margin-bottom:0; border-radius:0 10px 10px 0;">
-                </div>
-                <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; font-family:inherit; cursor:pointer;">📸 แนบรูปถ่าย</button>
+                <span class="label-text">เลขที่งาน (เช่น 03/01)</span>
+                <input type="text" id="taskOrs" placeholder="กรอกเฉพาะตัวเลข เดือน/ลำดับ">
+                
+                <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; font-family:inherit; cursor:pointer; color: var(--text-sub);">📸 แนบรูปถ่ายประกอบงาน</button>
                 <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
-                <div id="preview-area" style="display:flex; gap:5px; overflow-x:auto; margin-bottom:10px;"></div>
-                <input type="text" id="taskTitle" placeholder="ชื่อหัวข้องาน">
-                <textarea id="taskDetail" rows="3" placeholder="รายละเอียด"></textarea>
+                <div id="preview-area" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:10px; padding-bottom:5px;"></div>
+
+                <span class="label-text">หัวข้อบันทึกงาน</span>
+                <input type="text" id="taskTitle" placeholder="ระบุชื่อหัวข้อ">
+                
+                <span class="label-text">รายละเอียด</span>
+                <textarea id="taskDetail" rows="3" placeholder="ระบุข้อมูลเพิ่มเติม..."></textarea>
+                
+                <span class="label-text">สถานะการดำเนินงาน</span>
                 <select id="taskStatus">
                     <option value="รอดำเนินการ">รอดำเนินการ</option>
                     <option value="กำลังทำ">กำลังทำ</option>
                     <option value="เสร็จสิ้น">เสร็จสิ้น</option>
                 </select>
-                <button class="btn-main" onclick="addTask()">บันทึกงาน</button>
+                <button class="btn-main" onclick="addTask()">บันทึกข้อมูลเข้าสู่ระบบ</button>
             </div>
         </div>
 
@@ -116,23 +127,27 @@
         </div>
 
         <div id="section-cal" class="page-section">
-            <h3 id="cal-month-name" style="text-align:center;"></h3>
+            <h3 id="cal-month-name" style="text-align:center; color: var(--primary-dark);"></h3>
             <div class="calendar-grid" id="calendar-body"></div>
             <div id="cal-task-list" style="margin-top:20px;"></div>
         </div>
     </div>
 
     <div id="sliderOverlay" class="slider-overlay" onclick="this.style.display='none'">
-        <img id="sliderImg" style="max-width:90%; max-height:80%; object-fit:contain;">
+        <img id="sliderImg" style="max-width:90%; max-height:80%; object-fit:contain; border-radius:10px;">
     </div>
 
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <h3>แก้ไขงาน</h3>
+            <h3 style="margin-top:0;">แก้ไขข้อมูลงาน</h3>
             <input type="hidden" id="editId">
-            <input type="text" id="editOrs" placeholder="เลข ORS">
-            <input type="text" id="editTitle" placeholder="ชื่องาน">
+            <span class="label-text">เลข ORS (เดือน/ลำดับ)</span>
+            <input type="text" id="editOrs">
+            <span class="label-text">ชื่องาน</span>
+            <input type="text" id="editTitle">
+            <span class="label-text">รายละเอียด</span>
             <textarea id="editDetail" rows="3"></textarea>
+            <span class="label-text">สถานะ</span>
             <select id="editStatus">
                 <option value="รอดำเนินการ">รอดำเนินการ</option>
                 <option value="กำลังทำ">กำลังทำ</option>
@@ -140,7 +155,7 @@
             </select>
             <div style="display:flex; gap:10px;">
                 <button class="btn-main" onclick="updateTask()">อัปเดต</button>
-                <button class="btn-main" style="background:#ccc;" onclick="document.getElementById('editModal').style.display='none'">ปิด</button>
+                <button class="btn-main" style="background:#e2e8f0; color:#64748b;" onclick="document.getElementById('editModal').style.display='none'">ยกเลิก</button>
             </div>
         </div>
     </div>
@@ -164,7 +179,6 @@
         let allTasks = [];
         let selectedPhotos = [];
         let statusChart;
-
         const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
         window.showSection = (name) => {
@@ -176,114 +190,100 @@
             if(name === 'cal') renderCalendar();
         };
 
-        // Firebase Sync
         onSnapshot(query(collection(db, "tasks"), orderBy("ors", "asc")), (snap) => {
             allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             filterTasks();
             updateDashboard();
         });
 
-        // 1. Dashboard Logic
         function updateDashboard() {
             const total = allTasks.length;
             const done = allTasks.filter(t => t.status === 'เสร็จสิ้น').length;
             const doing = allTasks.filter(t => t.status === 'กำลังทำ').length;
             const pending = allTasks.filter(t => t.status === 'รอดำเนินการ').length;
-
             document.getElementById('stat-total').innerText = total;
             document.getElementById('stat-done').innerText = done;
-
             const ctx = document.getElementById('statusChart').getContext('2d');
             if(statusChart) statusChart.destroy();
             statusChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['เสร็จสิ้น', 'กำลังทำ', 'รอดำเนินการ'],
-                    datasets: [{
-                        data: [done, doing, pending],
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
-                    }]
+                    datasets: [{ data: [done, doing, pending], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderWeight: 0 }]
                 },
-                options: { plugins: { legend: { position: 'bottom' } } }
+                options: { plugins: { legend: { position: 'bottom', labels: { font: { family: 'Kanit' } } } }, cutout: '70%' }
             });
         }
 
-        // 2. Search & Filter
         window.filterTasks = () => {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const statusFilter = document.getElementById('filterStatus').value;
             const container = document.getElementById('task-container');
             container.innerHTML = "";
-            
             let lastGroup = "";
             const filtered = allTasks.filter(t => {
                 const matchesSearch = t.title.toLowerCase().includes(searchTerm) || t.ors.toLowerCase().includes(searchTerm);
                 const matchesStatus = statusFilter === 'ทั้งหมด' || t.status === statusFilter;
                 return matchesSearch && matchesStatus;
             });
-
             filtered.forEach(t => {
                 const mIdx = parseInt(t.ors.replace("ORS.", "").substring(0, 2));
                 const mName = monthNames[mIdx] || "อื่นๆ";
                 if(lastGroup !== mName) {
                     lastGroup = mName;
-                    container.innerHTML += `<div style="background:#dcfce7; padding:5px 15px; border-radius:20px; display:inline-block; margin:15px 0 5px 0; font-size:0.8rem; font-weight:600;">เดือน${mName}</div>`;
+                    container.innerHTML += `<div style="background:#dcfce7; padding:5px 15px; border-radius:20px; display:inline-block; margin:15px 0 8px 0; font-size:0.8rem; font-weight:600; color:var(--primary-dark);">📁 เดือน${mName}</div>`;
                 }
                 container.innerHTML += `
                     <div class="task-card">
-                        <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
-                            <b style="color:var(--primary-dark);">${t.ors}</b>
-                            <span style="color:${t.status==='เสร็จสิ้น'?'green':'orange'}">${t.status}</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="background:#f1f5f9; padding:2px 10px; border-radius:8px; font-size:0.8rem; font-weight:700; color:var(--primary-dark);">${t.ors}</span>
+                            <span style="font-size:0.75rem; font-weight:600; color:${t.status==='เสร็จสิ้น'?'#10b981':'#f59e0b'}">${t.status}</span>
                         </div>
-                        <div style="font-weight:600; margin:5px 0;">${t.title}</div>
+                        <div style="font-weight:600; margin:8px 0; font-size:1.05rem;">${t.title}</div>
                         <div class="gallery">${(t.photos||[]).map(p => `<img src="${p}" onclick="zoomImg('${p}')">`).join('')}</div>
-                        <div style="display:flex; gap:10px; margin-top:10px; font-size:0.8rem;">
-                            <span style="color:blue; cursor:pointer;" onclick="openEdit('${t.id}','${t.ors}','${t.title}','${t.detail}','${t.status}')">แก้ไข</span>
-                            <span style="color:red; cursor:pointer;" onclick="deleteTask('${t.id}')">ลบ</span>
+                        <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:10px; border-top:1px solid #f8fafc; padding-top:10px;">
+                            <span style="color:var(--primary); cursor:pointer; font-size:0.85rem;" onclick="openEdit('${t.id}','${t.ors}','${t.title}','${t.detail}','${t.status}')">✏️ แก้ไข</span>
+                            <span style="color:#ef4444; cursor:pointer; font-size:0.85rem;" onclick="deleteTask('${t.id}')">🗑️ ลบ</span>
                         </div>
                     </div>`;
             });
         };
 
-        // 3. Calendar Logic (Simple)
+        window.exportToCSV = () => {
+            let csv = "ORS,Title,Detail,Status\n";
+            allTasks.forEach(t => { csv += `${t.ors},${t.title},${t.detail.replace(/\n/g, " ")},${t.status}\n`; });
+            const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "4M_TASK_REPORT.csv";
+            link.click();
+        };
+
         function renderCalendar() {
             const now = new Date();
-            document.getElementById('cal-month-name').innerText = monthNames[now.getMonth()+1] + " " + now.getFullYear();
+            document.getElementById('cal-month-name').innerText = "ตารางงานเดือน " + monthNames[now.getMonth()+1];
             const body = document.getElementById('calendar-body');
             body.innerHTML = "";
             const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-            
             for(let i=1; i<=daysInMonth; i++) {
                 const dayStr = i.toString().padStart(2, '0');
                 const monthStr = (now.getMonth()+1).toString().padStart(2, '0');
                 const hasTask = allTasks.some(t => t.ors.includes(`${monthStr}/`) && t.ors.split('/')[1] == i);
-                body.innerHTML += `<div class="cal-day ${hasTask?'cal-has-task':''}" onclick="showDayTasks('${monthStr}/${dayStr}')">${i}</div>`;
+                body.innerHTML += `<div class="cal-day ${hasTask?'cal-has-task':''}" style="border: 1px solid #f1f5f9;">${i}</div>`;
             }
         }
 
-        // 4. Export to CSV
-        window.exportToCSV = () => {
-            let csv = "ORS,Title,Detail,Status\n";
-            allTasks.forEach(t => {
-                csv += `${t.ors},${t.title},${t.detail.replace(/\n/g, " ")},${t.status}\n`;
-            });
-            const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "4M_TASK_Export.csv";
-            link.click();
-        };
-
-        // Standard Functions
         window.addTask = async () => {
-            const ors = "ORS." + document.getElementById('taskOrs').value;
+            const val = document.getElementById('taskOrs').value;
+            if(!val || !document.getElementById('taskTitle').value) return alert("กรุณากรอกรหัส ORS และชื่องาน");
             await addDoc(collection(db, "tasks"), {
-                ors, title: document.getElementById('taskTitle').value,
+                ors: "ORS." + val,
+                title: document.getElementById('taskTitle').value,
                 detail: document.getElementById('taskDetail').value,
                 status: document.getElementById('taskStatus').value,
                 photos: selectedPhotos, createdAt: new Date().getTime()
             });
-            alert("บันทึกแล้ว!");
+            alert("บันทึกสำเร็จ!");
             location.reload();
         };
 
@@ -305,16 +305,15 @@
             });
             document.getElementById('editModal').style.display = 'none';
         };
-        window.deleteTask = async (id) => { if(confirm("ลบงานนี้?")) await deleteDoc(doc(db, "tasks", id)); };
+        window.deleteTask = async (id) => { if(confirm("ต้องการลบงานนี้ใช่หรือไม่?")) await deleteDoc(doc(db, "tasks", id)); };
 
-        // Handle Images
         document.getElementById('cameraInput').onchange = async (e) => {
             for (let file of e.target.files) {
                 const reader = new FileReader();
                 reader.onload = (ev) => {
                     selectedPhotos.push(ev.target.result);
                     const img = document.createElement('img');
-                    img.src = ev.target.result; img.style = "width:50px; height:50px; object-fit:cover; border-radius:5px;";
+                    img.src = ev.target.result; img.style = "width:60px; height:60px; object-fit:cover; border-radius:8px; border:1px solid #eee;";
                     document.getElementById('preview-area').appendChild(img);
                 };
                 reader.readAsDataURL(file);
