@@ -3,321 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK - Professional Edition</title>
+    <title>4M TASK - ULTIMATE EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #10b981;
-            --primary-dark: #059669;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-sub: #64748b;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --primary: #10b981; --primary-dark: #059669; --bg: #f8fafc;
+            --text-main: #1e293b; --text-sub: #64748b; --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
+        body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 50px; }
+        
+        .app-header { background: #fff; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .app-header h1 { margin: 0; font-size: 1.5rem; color: var(--primary-dark); }
 
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            margin: 0; padding: 0;
-            line-height: 1.6;
-            padding-bottom: 100px;
-        }
+        /* Navigation */
+        .nav-tabs { display: flex; overflow-x: auto; padding: 15px; gap: 8px; sticky: top; background: var(--bg); z-index: 100; }
+        .tab-btn { padding: 10px 18px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); white-space: nowrap; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow); font-family: 'Kanit'; }
+        .tab-btn.active { background: var(--primary); color: #fff; }
 
-        /* Header Design */
-        .app-header {
-            background: #fff;
-            padding: 25px 20px;
-            text-align: center;
-            border-bottom: 1px solid #e2e8f0;
-            margin-bottom: 20px;
-        }
-        .app-header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--primary-dark);
-            letter-spacing: -0.5px;
-        }
-        .dev-tag {
-            font-size: 0.75rem;
-            color: var(--text-sub);
-            margin-top: 4px;
-            font-weight: 300;
-        }
-
-        /* Navigation Tabs */
-        .nav-tabs {
-            display: flex;
-            padding: 0 20px;
-            gap: 12px;
-            margin-bottom: 20px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            background: #fff;
-            color: var(--text-sub);
-            font-family: 'Kanit';
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
-            font-size: 0.95rem;
-        }
-        .tab-btn.active {
-            background: var(--primary);
-            color: #fff;
-        }
-
-        /* Container */
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
+        .container { max-width: 700px; margin: 0 auto; padding: 0 15px; }
         .page-section { display: none; }
-        .page-section.active { display: block; animation: fadeIn 0.4s ease; }
+        .page-section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* Dashboard */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #fff; padding: 20px; border-radius: 15px; text-align: center; box-shadow: var(--shadow); }
+        .chart-container { background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: var(--shadow); }
 
-        /* Form Card */
-        .glass-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
+        /* Form */
+        .glass-card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; }
+        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; }
 
-        .label-text {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-sub);
-            margin-bottom: 8px;
-            display: block;
-        }
+        /* Search & Filter */
+        .search-box { display: flex; gap: 10px; margin-bottom: 15px; }
+        .search-box input { margin-bottom: 0; }
 
-        .ors-group { display: flex; margin-bottom: 16px; }
-        .ors-prefix {
-            background: #f1f5f9;
-            color: var(--text-sub);
-            padding: 12px 16px;
-            border-radius: 12px 0 0 12px;
-            font-weight: 600;
-            border: 1px solid #e2e8f0;
-            border-right: none;
-        }
-        .ors-input {
-            border-radius: 0 12px 12px 0 !important;
-            border: 1px solid #e2e8f0;
-            padding: 12px; width: 100%;
-            font-family: 'Kanit'; font-weight: 600;
-            outline: none; transition: 0.2s;
-        }
-        .ors-input:focus { border-color: var(--primary); }
+        /* Task Card */
+        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: var(--shadow); }
+        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 10px 0; }
+        .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
 
-        input[type="text"], textarea, select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 16px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            font-family: 'Kanit';
-            box-sizing: border-box;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .btn-photo-upload {
-            width: 100%;
-            padding: 12px;
-            background: #fdfdfd;
-            border: 2px dashed #cbd5e1;
-            border-radius: 12px;
-            color: var(--text-sub);
-            font-family: 'Kanit';
-            cursor: pointer;
-            margin-bottom: 16px;
-            transition: 0.2s;
-        }
-        .btn-photo-upload:hover { border-color: var(--primary); color: var(--primary); }
-
-        .btn-main {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            width: 100%;
-            font-weight: 600;
-            font-size: 1.05rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-main:active { transform: scale(0.98); }
-
-        /* Task Cards Layout */
-        .month-header {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--primary-dark);
-            background: #dcfce7;
-            padding: 6px 16px;
-            border-radius: 20px;
-            margin: 25px 0 15px 0;
-            display: inline-block;
-        }
-
-        .task-card {
-            background: #fff;
-            border-radius: 18px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            border: 1px solid #f1f5f9;
-        }
-
-        .task-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 8px 0;
-            color: var(--text-main);
-        }
-
-        .task-detail {
-            font-size: 0.9rem;
-            color: var(--text-sub);
-            margin-bottom: 12px;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 12px 0;
-        }
-        .gallery img {
-            width: 100%;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        .actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #f8fafc;
-        }
-        .btn-action {
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-family: 'Kanit';
-        }
-
-        /* Slider */
-        .slider-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center;
-        }
-        .slider-img { max-width: 90%; max-height: 80%; border-radius: 8px; }
-        .nav-btn { position: absolute; top: 50%; color: #fff; font-size: 2rem; background: none; border: none; cursor: pointer; padding: 20px; }
-
-        /* Modal Edit */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;
-        }
-        .modal-content { background: #fff; width: 90%; max-width: 450px; border-radius: 20px; padding: 25px; box-sizing: border-box; }
-
-        .app-footer {
-            text-align: center; margin-top: 40px; padding-bottom: 40px;
-            font-size: 0.75rem; color: var(--text-sub);
-        }
+        /* Slider & Modal */
+        .slider-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #fff; width: 90%; max-width: 500px; border-radius: 20px; padding: 20px; max-height: 80vh; overflow-y: auto; }
+        
+        /* Calendar Placeholder */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: #fff; padding: 10px; border-radius: 15px; box-shadow: var(--shadow); }
+        .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; border-radius: 8px; cursor: pointer; }
+        .cal-has-task { background: #dcfce7; color: var(--primary-dark); font-weight: 600; }
     </style>
 </head>
 <body>
 
     <div class="app-header">
-        <h1>4M TASK</h1>
-        <div class="dev-tag">System Version 1.6.0 | Developed by Thiti Phukwilai</div>
+        <h1>4M TASK ULTIMATE</h1>
+        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 1.7.0 | พัฒนาโดย นาย ธิติ พุกวิลัย</div>
     </div>
 
     <div class="nav-tabs">
-        <button id="tab-add" class="tab-btn active" onclick="showSection('add')">เพิ่มงานใหม่</button>
-        <button id="tab-view" class="tab-btn" onclick="showSection('view')">คลังข้อมูลงาน</button>
+        <button class="tab-btn active" onclick="showSection('dash')">📊 สรุปผล</button>
+        <button class="tab-btn" onclick="showSection('add')">➕ เพิ่มงาน</button>
+        <button class="tab-btn" onclick="showSection('view')">📁 คลังงาน</button>
+        <button class="tab-btn" onclick="showSection('cal')">📅 ปฏิทิน</button>
     </div>
 
     <div class="container">
-        <div id="section-add" class="page-section active">
-            <div class="glass-card">
-                <span class="label-text">รหัสงาน (เดือน/ลำดับ)</span>
-                <div class="ors-group">
-                    <div class="ors-prefix">ORS.</div>
-                    <input type="text" id="taskOrs" class="ors-input" placeholder="03/01">
-                </div>
-                
-                <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
-                <button class="btn-photo-upload" onclick="document.getElementById('cameraInput').click()">📸 แนบรูปภาพประกอบ</button>
-                <div id="preview-area" style="display:flex; gap:8px; margin-bottom:12px; overflow-x:auto; padding-bottom:5px;"></div>
+        <div id="section-dash" class="page-section active">
+            <div class="stat-grid">
+                <div class="stat-card"><div style="color:var(--text-sub); font-size:0.8rem;">งานทั้งหมด</div><div id="stat-total" style="font-size:1.5rem; font-weight:600;">0</div></div>
+                <div class="stat-card"><div style="color:var(--primary); font-size:0.8rem;">เสร็จสิ้น</div><div id="stat-done" style="font-size:1.5rem; font-weight:600; color:var(--primary);">0</div></div>
+            </div>
+            <div class="chart-container">
+                <canvas id="statusChart"></canvas>
+            </div>
+            <button class="btn-main" style="background:#334155;" onclick="exportToCSV()">📤 ส่งออกข้อมูลเป็น Excel (.csv)</button>
+        </div>
 
-                <span class="label-text">ชื่อหัวข้อบันทึก</span>
-                <input type="text" id="taskTitle" placeholder="เช่น ซ่อมบำรุงประจำเดือน...">
-                
-                <span class="label-text">รายละเอียดเพิ่มเติม</span>
-                <textarea id="taskDetail" rows="3" placeholder="ระบุข้อมูลที่ต้องการบันทึก..."></textarea>
-                
-                <span class="label-text">สถานะปัจจุบัน</span>
+        <div id="section-add" class="page-section">
+            <div class="glass-card">
+                <div style="display:flex; align-items:center; margin-bottom:10px;">
+                    <div style="background:#f1f5f9; padding:12px; border-radius:10px 0 0 10px; font-weight:600; border:1px solid #e2e8f0; border-right:none;">ORS.</div>
+                    <input type="text" id="taskOrs" placeholder="03/01" style="margin-bottom:0; border-radius:0 10px 10px 0;">
+                </div>
+                <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; font-family:inherit; cursor:pointer;">📸 แนบรูปถ่าย</button>
+                <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
+                <div id="preview-area" style="display:flex; gap:5px; overflow-x:auto; margin-bottom:10px;"></div>
+                <input type="text" id="taskTitle" placeholder="ชื่อหัวข้องาน">
+                <textarea id="taskDetail" rows="3" placeholder="รายละเอียด"></textarea>
                 <select id="taskStatus">
                     <option value="รอดำเนินการ">รอดำเนินการ</option>
                     <option value="กำลังทำ">กำลังทำ</option>
                     <option value="เสร็จสิ้น">เสร็จสิ้น</option>
                 </select>
-                
-                <button class="btn-main" onclick="addTask()">บันทึกข้อมูลงาน</button>
+                <button class="btn-main" onclick="addTask()">บันทึกงาน</button>
             </div>
         </div>
 
         <div id="section-view" class="page-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="ค้นหาชื่องาน หรือเลข ORS..." onkeyup="filterTasks()">
+            </div>
+            <select id="filterStatus" onchange="filterTasks()" style="margin-bottom:15px;">
+                <option value="ทั้งหมด">แสดงสถานะ: ทั้งหมด</option>
+                <option value="รอดำเนินการ">รอดำเนินการ</option>
+                <option value="กำลังทำ">กำลังทำ</option>
+                <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+            </select>
             <div id="task-container"></div>
+        </div>
+
+        <div id="section-cal" class="page-section">
+            <h3 id="cal-month-name" style="text-align:center;"></h3>
+            <div class="calendar-grid" id="calendar-body"></div>
+            <div id="cal-task-list" style="margin-top:20px;"></div>
         </div>
     </div>
 
-    <div id="sliderOverlay" class="slider-overlay" onclick="closeSlider()">
-        <button class="nav-btn" style="left: 10px;" onclick="event.stopPropagation(); changeSlide(-1)">❮</button>
-        <img id="sliderImg" class="slider-img">
-        <button class="nav-btn" style="right: 10px;" onclick="event.stopPropagation(); changeSlide(1)">❯</button>
-        <div id="imgCounter" style="position: absolute; bottom: 40px; color: #fff; font-size: 0.9rem;"></div>
+    <div id="sliderOverlay" class="slider-overlay" onclick="this.style.display='none'">
+        <img id="sliderImg" style="max-width:90%; max-height:80%; object-fit:contain;">
     </div>
 
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-top:0; border-bottom: 1px solid #eee; padding-bottom: 10px;">แก้ไขข้อมูลงาน</h3>
+            <h3>แก้ไขงาน</h3>
             <input type="hidden" id="editId">
-            <span class="label-text">เลข ORS (เช่น 03/01)</span>
-            <input type="text" id="editOrs">
-            <span class="label-text">ชื่องาน</span>
-            <input type="text" id="editTitle">
-            <span class="label-text">รายละเอียด</span>
+            <input type="text" id="editOrs" placeholder="เลข ORS">
+            <input type="text" id="editTitle" placeholder="ชื่องาน">
             <textarea id="editDetail" rows="3"></textarea>
-            <span class="label-text">สถานะ</span>
             <select id="editStatus">
                 <option value="รอดำเนินการ">รอดำเนินการ</option>
                 <option value="กำลังทำ">กำลังทำ</option>
@@ -325,14 +140,9 @@
             </select>
             <div style="display:flex; gap:10px;">
                 <button class="btn-main" onclick="updateTask()">อัปเดต</button>
-                <button class="btn-main" style="background:#f1f5f9; color:#64748b;" onclick="closeModal()">ปิด</button>
+                <button class="btn-main" style="background:#ccc;" onclick="document.getElementById('editModal').style.display='none'">ปิด</button>
             </div>
         </div>
-    </div>
-
-    <div class="app-footer">
-        &copy; 2026 4M TASK MANAGEMENT SYSTEM<br>
-        DESIGNED FOR INDUSTRIAL EFFICIENCY
     </div>
 
     <script type="module">
@@ -351,126 +161,141 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        let allTasks = [];
         let selectedPhotos = [];
-        let currentSliderPhotos = [];
-        let currentIdx = 0;
+        let statusChart;
+
         const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
         window.showSection = (name) => {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('section-' + name).classList.add('active');
-            document.getElementById('tab-' + name).classList.add('active');
+            event.target.classList.add('active');
+            if(name === 'dash') updateDashboard();
+            if(name === 'cal') renderCalendar();
         };
 
-        async function resizeImage(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const scale = 500 / img.width;
-                        canvas.width = 500; canvas.height = img.height * scale;
-                        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.6));
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+        // Firebase Sync
+        onSnapshot(query(collection(db, "tasks"), orderBy("ors", "asc")), (snap) => {
+            allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            filterTasks();
+            updateDashboard();
+        });
+
+        // 1. Dashboard Logic
+        function updateDashboard() {
+            const total = allTasks.length;
+            const done = allTasks.filter(t => t.status === 'เสร็จสิ้น').length;
+            const doing = allTasks.filter(t => t.status === 'กำลังทำ').length;
+            const pending = allTasks.filter(t => t.status === 'รอดำเนินการ').length;
+
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-done').innerText = done;
+
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            if(statusChart) statusChart.destroy();
+            statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['เสร็จสิ้น', 'กำลังทำ', 'รอดำเนินการ'],
+                    datasets: [{
+                        data: [done, doing, pending],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: { plugins: { legend: { position: 'bottom' } } }
             });
         }
 
-        document.getElementById('cameraInput').onchange = async (e) => {
-            for (let file of e.target.files) {
-                const b64 = await resizeImage(file);
-                selectedPhotos.push(b64);
-                const img = document.createElement('img');
-                img.src = b64; img.style = "width:60px; height:60px; border-radius:10px; object-fit:cover; flex-shrink:0; border: 1px solid #e2e8f0;";
-                document.getElementById('preview-area').appendChild(img);
-            }
-        };
-
-        window.addTask = async () => {
-            const rawOrs = document.getElementById('taskOrs').value;
-            const title = document.getElementById('taskTitle').value;
-            if (!rawOrs || !title) return alert("กรุณาระบุ ORS และหัวข้อ");
-            await addDoc(collection(db, "tasks"), {
-                ors: "ORS." + rawOrs,
-                title: title,
-                detail: document.getElementById('taskDetail').value,
-                status: document.getElementById('taskStatus').value,
-                photos: selectedPhotos,
-                createdAt: new Date().getTime()
-            });
-            alert("บันทึกข้อมูลสำเร็จ");
-            document.getElementById('taskOrs').value = "";
-            document.getElementById('taskTitle').value = "";
-            document.getElementById('taskDetail').value = "";
-            document.getElementById('preview-area').innerHTML = "";
-            selectedPhotos = [];
-            showSection('view');
-        };
-
-        onSnapshot(query(collection(db, "tasks"), orderBy("ors", "asc")), (snap) => {
+        // 2. Search & Filter
+        window.filterTasks = () => {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('filterStatus').value;
             const container = document.getElementById('task-container');
             container.innerHTML = "";
-            let lastMonthGroup = "";
+            
+            let lastGroup = "";
+            const filtered = allTasks.filter(t => {
+                const matchesSearch = t.title.toLowerCase().includes(searchTerm) || t.ors.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusFilter === 'ทั้งหมด' || t.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
 
-            snap.forEach(docSnap => {
-                const d = docSnap.data();
-                const orsNum = d.ors.replace("ORS.", "");
-                const monthIdx = parseInt(orsNum.substring(0, 2));
-                const monthName = monthNames[monthIdx] || "อื่นๆ";
-
-                if (lastMonthGroup !== monthName) {
-                    lastMonthGroup = monthName;
-                    container.innerHTML += `<div class="month-header">เดือน${monthName}</div>`;
+            filtered.forEach(t => {
+                const mIdx = parseInt(t.ors.replace("ORS.", "").substring(0, 2));
+                const mName = monthNames[mIdx] || "อื่นๆ";
+                if(lastGroup !== mName) {
+                    lastGroup = mName;
+                    container.innerHTML += `<div style="background:#dcfce7; padding:5px 15px; border-radius:20px; display:inline-block; margin:15px 0 5px 0; font-size:0.8rem; font-weight:600;">เดือน${mName}</div>`;
                 }
-
-                const photosJson = JSON.stringify(d.photos || []);
-                const card = `
+                container.innerHTML += `
                     <div class="task-card">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span class="ors-badge">${d.ors}</span>
-                            <span style="font-size:0.75rem; font-weight:600; color:${d.status === 'เสร็จสิ้น' ? '#10b981' : '#f59e0b'}">${d.status}</span>
+                        <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                            <b style="color:var(--primary-dark);">${t.ors}</b>
+                            <span style="color:${t.status==='เสร็จสิ้น'?'green':'orange'}">${t.status}</span>
                         </div>
-                        <div class="task-title">${d.title}</div>
-                        <div class="task-detail">${d.detail || '-'}</div>
-                        <div class="gallery">
-                            ${(d.photos || []).map((p, i) => `<img src="${p}" onclick='openSlider(${photosJson}, ${i})'>`).join('')}
-                        </div>
-                        <div class="actions">
-                            <button class="btn-action" style="color:var(--primary);" onclick="openEdit('${docSnap.id}', '${orsNum}', '${d.title}', '${d.detail || ""}', '${d.status}')">แก้ไข</button>
-                            <button class="btn-action" style="color:#ef4444;" onclick="deleteTask('${docSnap.id}')">ลบ</button>
+                        <div style="font-weight:600; margin:5px 0;">${t.title}</div>
+                        <div class="gallery">${(t.photos||[]).map(p => `<img src="${p}" onclick="zoomImg('${p}')">`).join('')}</div>
+                        <div style="display:flex; gap:10px; margin-top:10px; font-size:0.8rem;">
+                            <span style="color:blue; cursor:pointer;" onclick="openEdit('${t.id}','${t.ors}','${t.title}','${t.detail}','${t.status}')">แก้ไข</span>
+                            <span style="color:red; cursor:pointer;" onclick="deleteTask('${t.id}')">ลบ</span>
                         </div>
                     </div>`;
-                container.innerHTML += card;
             });
-        });
-
-        window.openSlider = (photos, index) => {
-            currentSliderPhotos = photos; currentIdx = index;
-            document.getElementById('sliderImg').src = currentSliderPhotos[currentIdx];
-            document.getElementById('imgCounter').innerText = `${currentIdx + 1} / ${currentSliderPhotos.length}`;
-            document.getElementById('sliderOverlay').style.display = 'flex';
         };
-        window.changeSlide = (n) => {
-            currentIdx = (currentIdx + n + currentSliderPhotos.length) % currentSliderPhotos.length;
-            document.getElementById('sliderImg').src = currentSliderPhotos[currentIdx];
-            document.getElementById('imgCounter').innerText = `${currentIdx + 1} / ${currentSliderPhotos.length}`;
-        };
-        window.closeSlider = () => document.getElementById('sliderOverlay').style.display = 'none';
 
+        // 3. Calendar Logic (Simple)
+        function renderCalendar() {
+            const now = new Date();
+            document.getElementById('cal-month-name').innerText = monthNames[now.getMonth()+1] + " " + now.getFullYear();
+            const body = document.getElementById('calendar-body');
+            body.innerHTML = "";
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            
+            for(let i=1; i<=daysInMonth; i++) {
+                const dayStr = i.toString().padStart(2, '0');
+                const monthStr = (now.getMonth()+1).toString().padStart(2, '0');
+                const hasTask = allTasks.some(t => t.ors.includes(`${monthStr}/`) && t.ors.split('/')[1] == i);
+                body.innerHTML += `<div class="cal-day ${hasTask?'cal-has-task':''}" onclick="showDayTasks('${monthStr}/${dayStr}')">${i}</div>`;
+            }
+        }
+
+        // 4. Export to CSV
+        window.exportToCSV = () => {
+            let csv = "ORS,Title,Detail,Status\n";
+            allTasks.forEach(t => {
+                csv += `${t.ors},${t.title},${t.detail.replace(/\n/g, " ")},${t.status}\n`;
+            });
+            const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "4M_TASK_Export.csv";
+            link.click();
+        };
+
+        // Standard Functions
+        window.addTask = async () => {
+            const ors = "ORS." + document.getElementById('taskOrs').value;
+            await addDoc(collection(db, "tasks"), {
+                ors, title: document.getElementById('taskTitle').value,
+                detail: document.getElementById('taskDetail').value,
+                status: document.getElementById('taskStatus').value,
+                photos: selectedPhotos, createdAt: new Date().getTime()
+            });
+            alert("บันทึกแล้ว!");
+            location.reload();
+        };
+
+        window.zoomImg = (url) => { document.getElementById('sliderImg').src = url; document.getElementById('sliderOverlay').style.display = 'flex'; };
         window.openEdit = (id, ors, title, detail, status) => {
             document.getElementById('editId').value = id;
-            document.getElementById('editOrs').value = ors;
+            document.getElementById('editOrs').value = ors.replace("ORS.", "");
             document.getElementById('editTitle').value = title;
             document.getElementById('editDetail').value = detail;
             document.getElementById('editStatus').value = status;
             document.getElementById('editModal').style.display = 'flex';
         };
-        window.closeModal = () => document.getElementById('editModal').style.display = 'none';
         window.updateTask = async () => {
             await updateDoc(doc(db, "tasks", document.getElementById('editId').value), {
                 ors: "ORS." + document.getElementById('editOrs').value,
@@ -478,9 +303,23 @@
                 detail: document.getElementById('editDetail').value,
                 status: document.getElementById('editStatus').value
             });
-            closeModal();
+            document.getElementById('editModal').style.display = 'none';
         };
-        window.deleteTask = async (id) => { if(confirm("คุณต้องการลบงานนี้ใช่หรือไม่?")) await deleteDoc(doc(db, "tasks", id)); };
+        window.deleteTask = async (id) => { if(confirm("ลบงานนี้?")) await deleteDoc(doc(db, "tasks", id)); };
+
+        // Handle Images
+        document.getElementById('cameraInput').onchange = async (e) => {
+            for (let file of e.target.files) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    selectedPhotos.push(ev.target.result);
+                    const img = document.createElement('img');
+                    img.src = ev.target.result; img.style = "width:50px; height:50px; object-fit:cover; border-radius:5px;";
+                    document.getElementById('preview-area').appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
     </script>
 </body>
 </html>
