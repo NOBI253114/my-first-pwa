@@ -3,91 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK - SOUND & UI v1.8.4</title>
+    <title>4M TASK - FULL SYSTEM v1.8.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     
     <style>
         :root {
             --primary: #10b981; --primary-dark: #059669; --bg: #f8fafc;
             --text-main: #1e293b; --text-sub: #64748b; --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
-        body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 50px; }
+        body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 50px; overflow-x: hidden; }
         
         /* Loading & Success Overlay */
         .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
-        .progress-container { width: 80%; max-width: 300px; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 15px; }
+        .progress-container { width: 80%; max-width: 300px; height: 10px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 15px; }
         .progress-bar { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s ease; }
-        .percent-text { font-size: 2rem; font-weight: 700; color: var(--primary-dark); }
-        
+        .percent-text { font-size: 2.5rem; font-weight: 700; color: var(--primary-dark); }
         .success-checkmark { display: none; text-align: center; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .check-icon { font-size: 80px; color: var(--primary); }
 
-        /* General UI */
+        /* UI Elements */
         .app-header { background: #fff; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .nav-tabs { display: flex; padding: 15px; gap: 8px; position: sticky; top: 0; background: var(--bg); z-index: 100; justify-content: center; }
-        .tab-btn { padding: 10px 20px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); cursor: pointer; transition: 0.2s; box-shadow: var(--shadow); font-family: 'Kanit'; font-weight: 500; outline: none; }
+        .tab-btn { padding: 12px 18px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); cursor: pointer; box-shadow: var(--shadow); font-family: 'Kanit'; font-weight: 500; transition: 0.2s; }
         .tab-btn.active { background: var(--primary); color: #fff; transform: scale(1.05); }
 
-        .container { max-width: 700px; margin: 0 auto; padding: 0 15px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 0 15px; }
         .page-section { display: none; }
-        .page-section.active { display: block; }
+        .page-section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .glass-card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem; }
-        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn-main:active { transform: scale(0.98); }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; font-size: 1rem; outline: none; box-sizing: border-box; }
+        .btn-main { background: var(--primary); color: #fff; border: none; padding: 16px; border-radius: 15px; width: 100%; font-weight: 600; cursor: pointer; font-size: 1rem; }
 
-        .month-header { background: #dcfce7; color: var(--primary-dark); padding: 8px 18px; border-radius: 20px; display: inline-block; margin: 20px 0 10px 0; font-size: 0.9rem; font-weight: 700; }
-        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: var(--shadow); position: relative; }
-        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 10px 0; }
+        /* Task List */
+        .month-header { background: #dcfce7; color: var(--primary-dark); padding: 8px 18px; border-radius: 20px; display: inline-block; margin: 15px 0; font-size: 0.85rem; font-weight: 700; }
+        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: var(--shadow); }
+        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 10px; }
         .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
 
-        .slider-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center; }
-        .slider-img { max-width: 90%; max-height: 75%; object-fit: contain; }
+        /* Dashboard Stats */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #fff; padding: 20px; border-radius: 20px; text-align: center; box-shadow: var(--shadow); border-bottom: 4px solid var(--primary); }
     </style>
 </head>
-<body>
-
-    <div id="loadingOverlay" class="loading-overlay">
+<body onclick="initAudio()"> <div id="loadingOverlay" class="loading-overlay">
         <div id="loadState">
             <div class="percent-text" id="percentText">0%</div>
-            <div style="color: var(--text-sub); text-align: center;">กำลังประมวลผล...</div>
-            <div class="progress-container">
-                <div id="progressBar" class="progress-bar"></div>
-            </div>
+            <div style="color: var(--text-sub); text-align: center;">กำลังบันทึกข้อมูล...</div>
+            <div class="progress-container"><div id="progressBar" class="progress-bar"></div></div>
         </div>
         <div id="successState" class="success-checkmark">
-            <div class="check-icon">✔</div>
-            <h2 style="color: var(--primary-dark); margin: 10px 0;">บันทึกสำเร็จ!</h2>
-            <p style="color: var(--text-sub);">ข้อมูลของคุณถูกเก็บเข้าคลังแล้ว</p>
+            <div style="font-size: 80px;">✅</div>
+            <h2 style="color: var(--primary-dark); margin: 10px 0;">บันทึกเรียบร้อย!</h2>
         </div>
     </div>
 
     <div class="app-header">
-        <h1>4M TASK</h1>
-        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 1.8.4 | Sound & UI FX | นาย ธิติ พุกวิลัย</div>
+        <h1 style="margin:0; font-size:1.4rem; color:var(--primary-dark);">4M TASK MANAGEMENT</h1>
+        <div style="font-size: 0.7rem; color: var(--text-sub);">v1.8.5 | Full Audio Feedback | นาย ธิติ พุกวิลัย</div>
     </div>
 
     <div class="nav-tabs">
-        <button id="btn-add" class="tab-btn active" onclick="playClick(); showSection('add')">➕ เพิ่มงาน</button>
-        <button id="btn-view" class="tab-btn" onclick="playClick(); showSection('view')">📁 คลังงาน</button>
-        <button id="btn-dash" class="tab-btn" onclick="playClick(); showSection('dash')">📊 สรุปผล</button>
+        <button id="btn-add" class="tab-btn active" onclick="showSection('add')">➕ เพิ่มงาน</button>
+        <button id="btn-view" class="tab-btn" onclick="showSection('view')">📁 คลังงาน</button>
+        <button id="btn-dash" class="tab-btn" onclick="showSection('dash')">📊 สรุปผล</button>
     </div>
 
     <div class="container">
         <div id="section-add" class="page-section active">
             <div class="glass-card">
-                <span style="font-size:0.85rem; color:var(--text-sub);">เลขที่งาน (ORS.)</span>
-                <input type="text" id="taskOrs" placeholder="เช่น 03/01">
-                <button onclick="playClick(); document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; cursor:pointer;">📸 แนบรูปถ่าย</button>
+                <input type="text" id="taskOrs" placeholder="เลขที่งาน (เช่น 03/01)">
+                <button class="tab-btn" style="width:100%; margin-bottom:15px; border:2px dashed #ccc;" onclick="document.getElementById('cameraInput').click()">📸 แนบรูปถ่าย</button>
                 <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
-                <div id="preview-area" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:10px;"></div>
+                <div id="preview-area" style="display:flex; gap:5px; overflow-x:auto; margin-bottom:10px;"></div>
                 <input type="text" id="taskTitle" placeholder="ชื่องาน">
-                <textarea id="taskDetail" rows="2" placeholder="รายละเอียด"></textarea>
+                <textarea id="taskDetail" rows="2" placeholder="รายละเอียด..."></textarea>
                 <select id="taskStatus">
                     <option value="รอดำเนินการ">รอดำเนินการ</option>
                     <option value="กำลังทำ">กำลังทำ</option>
@@ -98,21 +90,25 @@
         </div>
 
         <div id="section-view" class="page-section">
-            <input type="text" id="searchInput" placeholder="ค้นหา..." onkeyup="filterTasks()">
+            <input type="text" id="searchInput" placeholder="🔎 ค้นหา..." onkeyup="filterTasks()">
             <div id="task-container"></div>
         </div>
 
         <div id="section-dash" class="page-section">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;">
-                <div class="stat-card" style="background:#fff; padding:15px; border-radius:15px; text-align:center;"><b>งานทั้งหมด</b><div id="stat-total" style="font-size:1.5rem;">0</div></div>
-                <div class="stat-card" style="background:#fff; padding:15px; border-radius:15px; text-align:center;"><b>เสร็จแล้ว</b><div id="stat-done" style="font-size:1.5rem; color:var(--primary);">0</div></div>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div style="font-size: 0.9rem; color: var(--text-sub);">งานทั้งหมด</div>
+                    <div id="stat-total" style="font-size: 2rem; font-weight: 700; color: var(--text-main);">0</div>
+                </div>
+                <div class="stat-card" style="border-bottom-color: #f59e0b;">
+                    <div style="font-size: 0.9rem; color: var(--text-sub);">เสร็จสิ้นแล้ว</div>
+                    <div id="stat-done" style="font-size: 2rem; font-weight: 700; color: var(--primary);">0</div>
+                </div>
             </div>
-            <canvas id="statusChart"></canvas>
+            <div class="glass-card">
+                <canvas id="statusChart" style="max-height: 250px;"></canvas>
+            </div>
         </div>
-    </div>
-
-    <div id="sliderOverlay" class="slider-overlay" onclick="this.style.display='none'">
-        <img id="sliderImg" class="slider-img">
     </div>
 
     <script type="module">
@@ -133,35 +129,33 @@
         const db = getFirestore(app);
         let allTasks = [];
         let selectedPhotos = [];
-        const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+        let statusChartObj = null;
 
         // --- ระบบเสียง ---
         const sndClick = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
         const sndSuccess = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
-        const sndError = new Audio('https://www.soundjay.com/buttons/sounds/button-10.mp3');
-
-        window.playClick = () => sndClick.play();
+        
+        window.initAudio = () => { sndClick.play().then(()=>sndClick.pause()); }; // ปลดล็อคเสียง
+        const playClick = () => { sndClick.currentTime = 0; sndClick.play(); };
 
         window.showSection = (name) => {
+            playClick();
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('section-' + name).classList.add('active');
             document.getElementById('btn-' + name).classList.add('active');
+            if(name === 'dash') renderDashboard();
         };
 
-        async function compressImage(base64Str) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.src = base64Str;
+        async function compressImg(base64) {
+            return new Promise(res => {
+                const img = new Image(); img.src = base64;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const max_size = 800;
-                    let w = img.width, h = img.height;
-                    if (w > h) { if (w > max_size) { h *= max_size / w; w = max_size; } }
-                    else { if (h > max_size) { w *= max_size / h; h = max_size; } }
-                    canvas.width = w; canvas.height = h;
-                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    resolve(canvas.toDataURL('image/jpeg', 0.6));
+                    const scale = Math.min(800 / img.width, 1);
+                    canvas.width = img.width * scale; canvas.height = img.height * scale;
+                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                    res(canvas.toDataURL('image/jpeg', 0.6));
                 };
             });
         }
@@ -169,79 +163,87 @@
         window.addTask = async () => {
             const ors = document.getElementById('taskOrs').value;
             const title = document.getElementById('taskTitle').value;
-            if(!ors || !title) { sndError.play(); return alert("กรุณากรอกข้อมูลให้ครบ"); }
+            if(!ors || !title) return alert("กรุณากรอกข้อมูล!");
 
             playClick();
             const overlay = document.getElementById('loadingOverlay');
-            const loadState = document.getElementById('loadState');
-            const successState = document.getElementById('successState');
-            const bar = document.getElementById('progressBar');
-            const text = document.getElementById('percentText');
-
             overlay.style.display = 'flex';
-            loadState.style.display = 'block';
-            successState.style.display = 'none';
+            document.getElementById('loadState').style.display = 'block';
+            document.getElementById('successState').style.display = 'none';
 
             try {
-                const compressed = [];
-                for(let p of selectedPhotos) { compressed.push(await compressImage(p)); }
-                bar.style.width = '60%'; text.innerText = '60%';
+                const finalPhotos = [];
+                for(let p of selectedPhotos) { finalPhotos.push(await compressImg(p)); }
+                document.getElementById('progressBar').style.width = '60%';
+                document.getElementById('percentText').innerText = '60%';
 
                 await addDoc(collection(db, "tasks"), {
                     ors: "ORS." + ors, title, detail: document.getElementById('taskDetail').value,
-                    status: document.getElementById('taskStatus').value, photos: compressed, createdAt: new Date().getTime()
+                    status: document.getElementById('taskStatus').value, photos: finalPhotos, createdAt: new Date().getTime()
                 });
-                
-                bar.style.width = '100%'; text.innerText = '100%';
-                
-                // สลับไปหน้าจอ Success
-                setTimeout(() => {
-                    loadState.style.display = 'none';
-                    successState.style.display = 'block';
-                    sndSuccess.play();
-                    
-                    setTimeout(() => {
-                        overlay.style.display = 'none';
-                        location.reload();
-                    }, 2000);
-                }, 500);
 
-            } catch (e) {
-                overlay.style.display = 'none';
-                alert("Error: " + e.message);
-            }
+                document.getElementById('progressBar').style.width = '100%';
+                document.getElementById('percentText').innerText = '100%';
+
+                setTimeout(() => {
+                    document.getElementById('loadState').style.display = 'none';
+                    document.getElementById('successState').style.display = 'block';
+                    sndSuccess.play();
+                    setTimeout(() => location.reload(), 1500);
+                }, 500);
+            } catch (e) { alert(e.message); overlay.style.display = 'none'; }
         };
 
-        onSnapshot(query(collection(db, "tasks"), orderBy("ors", "asc")), (snap) => {
-            allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        onSnapshot(query(collection(db, "tasks"), orderBy("createdAt", "desc")), (snap) => {
+            allTasks = snap.docs.map(d => d.data());
             filterTasks();
+            if(document.getElementById('section-dash').classList.contains('active')) renderDashboard();
         });
 
         window.filterTasks = () => {
             const container = document.getElementById('task-container');
             container.innerHTML = "";
-            let lastMonth = "";
             allTasks.forEach(t => {
-                const m = monthNames[parseInt(t.ors.split('.')[1]?.split('/')[0])] || "ทั่วไป";
-                if(lastMonth !== m) { lastMonth = m; container.innerHTML += `<div class="month-header">📅 เดือน${m}</div>`; }
-                container.innerHTML += `<div class="task-card"><b>${t.ors}</b> - ${t.title}<div class="gallery">${(t.photos||[]).map(p => `<img src="${p}" onclick="window.openFull('${p}')">`).join('')}</div></div>`;
+                container.innerHTML += `<div class="task-card"><b>${t.ors}</b>: ${t.title}<div class="gallery">${(t.photos||[]).map(p => `<img src="${p}">`).join('')}</div></div>`;
             });
         };
 
-        window.openFull = (src) => { document.getElementById('sliderImg').src = src; document.getElementById('sliderOverlay').style.display='flex'; };
+        function renderDashboard() {
+            const total = allTasks.length;
+            const done = allTasks.filter(t => t.status === 'เสร็จสิ้น').length;
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-done').innerText = done;
+
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            if(statusChartObj) statusChartObj.destroy();
+            statusChartObj = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['เสร็จแล้ว', 'รอดำเนินการ'],
+                    datasets: [{ data: [done, total - done], backgroundColor: ['#10b981', '#e2e8f0'] }]
+                },
+                options: { plugins: { legend: { position: 'bottom' } } }
+            });
+        }
 
         document.getElementById('cameraInput').onchange = (e) => {
+            playClick();
             for (let f of e.target.files) {
                 const r = new FileReader();
                 r.onload = (ev) => {
                     selectedPhotos.push(ev.target.result);
                     const i = document.createElement('img'); i.src = ev.target.result;
-                    i.style = "width:50px; height:50px; object-fit:cover; border-radius:5px;";
+                    i.style = "width:50px; height:50px; border-radius:5px; object-fit:cover;";
                     document.getElementById('preview-area').appendChild(i);
                 };
                 r.readAsDataURL(f);
             }
         };
+
+        // ใส่เสียงให้ปุ่มอื่นๆ ทั้งหมดอัตโนมัติ
+        document.querySelectorAll('button, input, select').forEach(el => {
+            el.addEventListener('click', playClick);
+        });
     </script>
 </body>
 </html>
