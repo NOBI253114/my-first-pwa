@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK - Green Edition</title>
+    <title>4M TASK - ORS Smart Grouping</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #10b981; /* สีเขียวหลัก */
+            --primary: #10b981;
             --primary-dark: #059669;
             --bg: #f0fdf4;
             --glass: rgba(255, 255, 255, 0.98);
@@ -18,65 +18,57 @@
             font-family: 'Kanit', sans-serif;
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
             background-attachment: fixed;
-            color: var(--text); margin: 0; padding: 0;
-            padding-bottom: 120px;
+            color: var(--text); margin: 0; padding: 0; padding-bottom: 120px;
         }
 
-        /* App Header */
-        .app-header { text-align: center; padding: 30px 20px; }
+        .app-header { text-align: center; padding: 25px 20px; }
         .app-header h1 {
             background: linear-gradient(to right, #059669, #10b981);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 0; font-weight: 700; font-size: 2.2rem; letter-spacing: 1px;
+            margin: 0; font-weight: 700; font-size: 2.2rem;
         }
 
-        /* Navigation Tabs */
-        .nav-tabs {
-            display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; padding: 0 20px;
-        }
+        .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; padding: 0 20px; }
         .tab-btn {
             background: white; border: none; padding: 12px 20px; border-radius: 15px;
             font-family: 'Kanit'; font-weight: 500; color: #666; cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); flex: 1; max-width: 150px;
         }
-        .tab-btn.active {
-            background: var(--primary); color: white;
-        }
+        .tab-btn.active { background: var(--primary); color: white; }
 
-        /* Sections Control */
         .page-section { display: none; padding: 0 20px; }
         .page-section.active { display: block; }
 
-        /* Form Card */
         .glass-card {
             background: var(--glass); border-radius: 24px; padding: 25px;
             margin-bottom: 30px; box-shadow: 0 10px 25px rgba(5, 150, 105, 0.1);
         }
 
-        .ors-group { position: relative; display: flex; align-items: center; margin-bottom: 15px; }
+        .ors-group { display: flex; align-items: center; margin-bottom: 15px; }
         .ors-prefix {
             background: #d1fae5; color: var(--primary-dark); padding: 14px;
             border-radius: 12px 0 0 12px; font-weight: 700; border: 1px solid #e2e8f0; border-right: none;
         }
-        .ors-input {
-            border-radius: 0 12px 12px 0 !important; border-left: none !important;
-            font-weight: 600; color: var(--primary-dark);
-        }
+        .ors-input { border-radius: 0 12px 12px 0 !important; border-left: none !important; font-weight: 600; color: var(--primary-dark); }
 
         input, textarea, select {
             width: 100%; padding: 14px; margin-bottom: 15px;
             border-radius: 12px; border: 1px solid #e2e8f0;
-            font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem; background: #fff;
+            font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem;
         }
 
         .btn-main {
             background: var(--primary); color: white; border: none; padding: 16px;
-            border-radius: 14px; width: 100%; font-weight: 600; font-size: 1.1rem;
-            cursor: pointer; transition: 0.3s;
+            border-radius: 14px; width: 100%; font-weight: 600; font-size: 1.1rem; cursor: pointer;
         }
-        .btn-main:hover { background: var(--primary-dark); }
 
-        /* Task Cards */
+        /* หมวดหมู่เดือน */
+        .month-header {
+            background: var(--primary-dark); color: white; padding: 8px 18px;
+            border-radius: 12px; margin: 25px 0 15px 0; display: inline-block;
+            font-weight: 500; box-shadow: 0 4px 10px rgba(5,150,105,0.2);
+        }
+
         .task-card {
             background: white; border-radius: 20px; padding: 20px;
             margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -90,9 +82,6 @@
         .gallery { display: flex; gap: 8px; overflow-x: auto; margin: 15px 0; }
         .gallery img { width: 120px; height: 90px; object-fit: cover; border-radius: 10px; cursor: pointer; }
 
-        .app-footer { text-align: center; padding: 30px 0; color: #666; font-size: 0.8rem; }
-
-        /* Slider & Modal (Same as before but green-themed) */
         .slider-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center;
@@ -103,35 +92,35 @@
 
     <div class="app-header">
         <h1>4M TASK</h1>
-        <div style="color: #059669; font-size: 0.8rem;">Version 1.3.0 | Thiti Phukwilai</div>
+        <div style="color: #059669; font-size: 0.8rem;">Build v1.4.0 | Thiti Phukwilai</div>
     </div>
 
     <div class="nav-tabs">
         <button id="tab-add" class="tab-btn active" onclick="showSection('add')">➕ เพิ่มงาน</button>
-        <button id="tab-view" class="tab-btn" onclick="showSection('view')">📁 ดูงานทั้งหมด</button>
+        <button id="tab-view" class="tab-btn" onclick="showSection('view')">📁 คลังงาน</button>
     </div>
 
     <div id="section-add" class="page-section active">
         <div class="glass-card">
-            <label style="font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; display: block;">เลขลำดับงาน (เดือน/ลำดับ)</label>
+            <label style="font-size: 0.85rem; font-weight: 600; display: block;">กรอกเลขงาน (เช่น 03/01)</label>
             <div class="ors-group">
                 <div class="ors-prefix">ORS.</div>
-                <input type="text" id="taskOrs" class="ors-input" placeholder="ตัวอย่าง 03/01">
+                <input type="text" id="taskOrs" class="ors-input" placeholder="01/01">
             </div>
             
             <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
-            <button onclick="document.getElementById('cameraInput').click()" style="width:100%; background:#f0fdf4; border:2px dashed var(--primary); padding:10px; border-radius:12px; color:var(--primary); margin-bottom:15px; cursor:pointer;">📸 แนบรูปภาพประกอบ</button>
+            <button onclick="document.getElementById('cameraInput').click()" style="width:100%; background:#f0fdf4; border:2px dashed var(--primary); padding:10px; border-radius:12px; color:var(--primary); margin-bottom:15px; cursor:pointer;">📸 แนบรูปภาพ</button>
             <div id="preview-area" style="display:flex; gap:5px; margin-bottom:10px; overflow-x:auto;"></div>
 
             <input type="text" id="taskTitle" placeholder="ชื่องาน...">
-            <textarea id="taskDetail" rows="3" placeholder="รายละเอียดงาน..."></textarea>
+            <textarea id="taskDetail" rows="3" placeholder="รายละเอียด..."></textarea>
             
             <select id="taskStatus">
                 <option value="รอดำเนินการ">รอดำเนินการ</option>
                 <option value="กำลังทำ">กำลังทำ</option>
                 <option value="เสร็จสิ้น">เสร็จสิ้น</option>
             </select>
-            <button class="btn-main" onclick="addTask()">บันทึกงานใหม่</button>
+            <button class="btn-main" onclick="addTask()">บันทึกลงคลังงาน</button>
         </div>
     </div>
 
@@ -141,10 +130,6 @@
 
     <div id="sliderOverlay" class="slider-overlay" onclick="this.style.display='none'">
         <img id="sliderImg" style="max-width:95%; max-height:80%; object-fit:contain;">
-    </div>
-
-    <div class="app-footer">
-        &copy; 2026 4M TASK - Developed by Thiti Phukwilai
     </div>
 
     <script type="module">
@@ -165,7 +150,8 @@
         const db = getFirestore(app);
         let selectedPhotos = [];
 
-        // ฟังก์ชันสลับหน้า
+        const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+
         window.showSection = (name) => {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -204,12 +190,10 @@
         window.addTask = async () => {
             const rawOrs = document.getElementById('taskOrs').value;
             const title = document.getElementById('taskTitle').value;
-            if (!rawOrs || !title) return alert("กรุณากรอกเลขลำดับและชื่องาน");
-
-            const finalOrs = "ORS." + rawOrs; // เติม ORS. ให้อัตโนมัติ
+            if (!rawOrs || !title) return alert("กรุณากรอกเลข ORS และชื่องาน");
 
             await addDoc(collection(db, "tasks"), {
-                ors: finalOrs,
+                ors: "ORS." + rawOrs,
                 title: title,
                 detail: document.getElementById('taskDetail').value,
                 status: document.getElementById('taskStatus').value,
@@ -223,26 +207,44 @@
             document.getElementById('taskDetail').value = "";
             document.getElementById('preview-area').innerHTML = "";
             selectedPhotos = [];
-            showSection('view'); // บันทึกเสร็จแล้วเด้งไปหน้าดูงานทันที
+            showSection('view');
         };
 
-        // แสดงผล เรียงตามเลข ORS
         onSnapshot(query(collection(db, "tasks"), orderBy("ors", "asc")), (snap) => {
             const container = document.getElementById('task-container');
             container.innerHTML = "";
+            let lastMonthGroup = "";
+
             snap.forEach(docSnap => {
                 const d = docSnap.data();
-                container.innerHTML += `
-                    <div class="task-card">
-                        <div class="ors-badge">${d.ors}</div>
-                        <div style="font-weight:600; margin-top:5px; font-size:1.1rem;">${d.title}</div>
-                        <p style="font-size:0.9rem; color:#4b5563; margin:5px 0;">${d.detail || ''}</p>
-                        <div class="gallery">${(d.photos || []).map(p => `<img src="${p}" onclick="zoomImg('${p}')">`).join('')}</div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                            <span style="font-size:0.8rem; color:var(--primary-dark); font-weight:600;">สถานะ: ${d.status}</span>
-                            <button onclick="deleteTask('${docSnap.id}')" style="background:none; border:none; color:#ef4444; font-family:inherit; cursor:pointer;">ลบงาน</button>
-                        </div>
-                    </div>`;
+                
+                // Logic ดึงตัวเลขเดือนจาก ORS.XX/XX
+                const orsNum = d.ors.replace("ORS.", ""); // เหลือ XX/XX
+                const monthIdx = parseInt(orsNum.substring(0, 2)); // ดึง 2 ตัวแรกมาเป็นเลขเดือน
+                const monthName = monthNames[monthIdx] || "หมวดหมู่อื่นๆ";
+
+                // ถ้าเปลี่ยนเดือน ให้แสดง Header ใหม่
+                if (lastMonthGroup !== monthName) {
+                    lastMonthGroup = monthName;
+                    const h = document.createElement('div');
+                    h.className = 'month-header';
+                    h.innerText = `📁 เดือน${monthName}`;
+                    container.appendChild(h);
+                }
+
+                const card = document.createElement('div');
+                card.className = 'task-card';
+                card.innerHTML = `
+                    <div class="ors-badge">${d.ors}</div>
+                    <div style="font-weight:600; margin-top:5px; font-size:1.1rem;">${d.title}</div>
+                    <p style="font-size:0.9rem; color:#4b5563; margin:5px 0;">${d.detail || ''}</p>
+                    <div class="gallery">${(d.photos || []).map(p => `<img src="${p}" onclick="zoomImg('${p}')">`).join('')}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                        <span style="font-size:0.8rem; color:var(--primary-dark); font-weight:600;">สถานะ: ${d.status}</span>
+                        <button onclick="deleteTask('${docSnap.id}')" style="background:none; border:none; color:#ef4444; font-family:inherit; cursor:pointer;">ลบ</button>
+                    </div>
+                `;
+                container.appendChild(card);
             });
         });
 
