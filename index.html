@@ -3,60 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MyTaskApp Ultra</title>
+    <title>MyTaskApp Cloud PRO</title>
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #4361ee; --secondary: #3f37c9; --bg: #f0f2f5; --card-bg: #ffffff; --danger: #ff4757; }
-        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); margin: 0; padding: 20px 15px 100px 15px; color: #2d3436; }
+        :root { --primary: #4361ee; --secondary: #3f37c9; --bg: #f0f2f5; --card-bg: #ffffff; }
+        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); margin: 0; padding: 20px 15px 100px 15px; }
+        .header { text-align: center; color: var(--primary); margin-bottom: 20px; }
+        .form-container { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #e1e4e8; }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #edf2f7; box-sizing: border-box; font-family: inherit; font-size: 1rem; }
+        .btn-upload { background: #f8f9fa; border: 2px dashed var(--primary); padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; margin-bottom: 10px; color: var(--primary); font-weight: 600; }
+        .add-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 16px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2); }
+        .add-btn:disabled { background: #ccc; box-shadow: none; }
         
-        .header-app { text-align: center; margin-bottom: 25px; }
-        .header-app h1 { margin: 0; color: var(--primary); letter-spacing: 1px; font-size: 1.8rem; }
+        #preview-area { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 10px; padding: 5px 0; }
+        #preview-area img { width: 70px; height: 70px; object-fit: cover; border-radius: 10px; border: 2px solid var(--primary); }
+
+        .card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid #f1f2f6; position: relative; }
+        .gallery { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 12px; padding-bottom: 5px; }
+        .gallery img { width: 85%; height: 200px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
         
-        /* Form Styling */
-        .form-container { background: var(--card-bg); border-radius: 24px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #e1e4e8; }
-        input, textarea, select { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #edf2f7; border-radius: 14px; font-family: inherit; font-size: 1rem; box-sizing: border-box; transition: 0.3s; }
-        input:focus { border-color: var(--primary); outline: none; background: #f8faff; }
-
-        /* Multi-Photo Section */
-        .upload-section { margin-bottom: 15px; }
-        .preview-wrapper { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; min-height: 80px; }
-        .preview-img-item { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 2px solid var(--primary); flex-shrink: 0; }
-        .btn-upload { background: #f1f2f6; color: #57606f; border: 2px dashed #ced4da; padding: 15px; border-radius: 14px; width: 100%; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
-
-        .add-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 16px; border-radius: 14px; font-weight: 700; width: 100%; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3); }
-
-        /* Card Listing */
-        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); position: relative; border: 1px solid #f1f2f6; }
-        .gallery { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 12px; padding-bottom: 5px; scroll-snap-type: x mandatory; }
-        .gallery img { width: 85%; height: 200px; object-fit: cover; border-radius: 12px; scroll-snap-align: start; flex-shrink: 0; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
-        
-        .status-tag { display: inline-block; padding: 4px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; color: white; margin-bottom: 10px; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 10px; color: white; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px; }
         .st-รอดำเนินการ { background: #54a0ff; }
         .st-กำลังทำ { background: #ff9f43; }
         .st-เสร็จสิ้น { background: #10ac84; }
-
+        
         .job-title { font-size: 1.25rem; font-weight: 700; margin: 0 0 8px 0; color: #2d3436; }
-        .job-detail { font-size: 0.95rem; color: #636e72; line-height: 1.5; margin-bottom: 15px; }
-        .delete-btn { color: var(--danger); font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline; }
+        .job-detail { font-size: 0.95rem; color: #636e72; line-height: 1.5; margin-bottom: 15px; white-space: pre-line; }
+        .delete-btn { color: #ff4757; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline; border: none; background: none; padding: 0; }
     </style>
 </head>
 <body>
 
-    <div class="header-app">
-        <h1>MY TASK ULTRA</h1>
-    </div>
-    
+    <div class="header"><h1>☁️ MY TASK CLOUD</h1></div>
+
     <div class="form-container">
         <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
         <div class="btn-upload" onclick="document.getElementById('cameraInput').click()">
-            📸 เพิ่มรูปภาพ (ได้หลายรูป)
+            📸 ถ่ายรูป / เพิ่มรูปภาพ
         </div>
-        
-        <div id="preview-area" class="preview-wrapper"></div>
+        <div id="preview-area"></div>
 
-        <input type="text" id="taskTitle" placeholder="ชื่องานของคุณ...">
-        <textarea id="taskDetail" placeholder="ใส่รายละเอียดงานที่นี่..."></textarea>
+        <input type="text" id="taskTitle" placeholder="ชื่องาน (เช่น งานซ่อมบำรุง...)">
+        <textarea id="taskDetail" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
         
         <select id="taskStatus">
             <option value="รอดำเนินการ">🔵 รอดำเนินการ</option>
@@ -64,30 +53,34 @@
             <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
         </select>
         
-        <button class="add-btn" id="saveBtn" onclick="addTask()">บันทึกข้อมูลเข้าเครื่อง</button>
+        <button class="add-btn" id="saveBtn" onclick="addTask()">บันทึกข้อมูลเข้าระบบ Cloud</button>
     </div>
 
     <div id="task-container"></div>
 
-    <script>
-        let selectedPhotos = [];
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-        // จัดการการเลือกหลายรูป + ย่อขนาดรูป (สำคัญมาก!)
-        document.getElementById('cameraInput').onchange = async function(e) {
-            const files = Array.from(e.target.files);
-            for (let file of files) {
-                const base64 = await resizeImage(file, 800); // ย่อขนาดให้กว้างสูงสุด 800px
-                selectedPhotos.push(base64);
-                
-                const img = document.createElement('img');
-                img.src = base64;
-                img.className = 'preview-img-item';
-                document.getElementById('preview-area').appendChild(img);
-            }
+        // 🔥 ใช้ Config ของคุณที่ก๊อปปี้มา 🔥
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
+            authDomain: "mytaskapp-pro.firebaseapp.com",
+            projectId: "mytaskapp-pro",
+            storageBucket: "mytaskapp-pro.firebasestorage.app",
+            messagingSenderId: "189296604432",
+            appId: "1:189296604432:web:31dabc3c5e363b2c96a195",
+            measurementId: "G-MRE5GH4CYH"
         };
 
-        // ฟังก์ชันย่อขนาดรูปภาพเพื่อประหยัดพื้นที่ LocalStorage
-        function resizeImage(file, maxWidth) {
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        let selectedPhotos = [];
+
+        // ระบบย่อขนาดรูปก่อนอัปโหลด (เพื่อความประหยัดพื้นที่และอัปโหลดเร็ว)
+        function resizeImage(file, maxWidth = 800) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -104,7 +97,7 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.7)); // บันทึกเป็น JPEG คุณภาพ 70%
+                        resolve(canvas.toDataURL('image/jpeg', 0.8));
                     };
                     img.src = e.target.result;
                 };
@@ -112,84 +105,98 @@
             });
         }
 
-        function addTask() {
+        // จัดการเมื่อเลือกรูป
+        document.getElementById('cameraInput').onchange = async (e) => {
+            const files = Array.from(e.target.files);
+            for (let file of files) {
+                const base64 = await resizeImage(file);
+                selectedPhotos.push(base64);
+                const img = document.createElement('img');
+                img.src = base64;
+                document.getElementById('preview-area').appendChild(img);
+            }
+        };
+
+        // บันทึกขึ้น Cloud
+        window.addTask = async () => {
             const title = document.getElementById('taskTitle').value;
             const detail = document.getElementById('taskDetail').value;
             const status = document.getElementById('taskStatus').value;
-            const saveBtn = document.getElementById('saveBtn');
+            const btn = document.getElementById('saveBtn');
 
-            if (!title) return alert("❌ กรุณาระบุชื่อโปรเจกต์");
+            if (!title) return alert("กรุณาระบุชื่องานด้วยครับ");
 
-            saveBtn.innerText = "กำลังบันทึก...";
-            saveBtn.disabled = true;
-
-            const newTask = {
-                id: Date.now(),
-                title, detail, status,
-                photos: selectedPhotos,
-                time: new Date().toLocaleString('th-TH')
-            };
+            btn.disabled = true;
+            btn.innerText = "กำลังอัปโหลดรูปภาพ...";
 
             try {
-                const tasks = JSON.parse(localStorage.getItem('ultraTasks')) || [];
-                tasks.unshift(newTask);
-                localStorage.setItem('ultraTasks', JSON.stringify(tasks));
+                const photoUrls = [];
+                for (let i = 0; i < selectedPhotos.length; i++) {
+                    const photoRef = ref(storage, `tasks/${Date.now()}_${i}.jpg`);
+                    await uploadString(photoRef, selectedPhotos[i], 'data_url');
+                    const url = await getDownloadURL(photoRef);
+                    photoUrls.push(url);
+                }
 
-                // ล้างข้อมูลหลังบันทึก
+                btn.innerText = "กำลังบันทึกข้อมูล...";
+                await addDoc(collection(db, "tasks"), {
+                    title, detail, status,
+                    photos: photoUrls,
+                    createdAt: new Date().getTime()
+                });
+
+                // ล้างฟอร์ม
                 document.getElementById('taskTitle').value = "";
                 document.getElementById('taskDetail').value = "";
                 document.getElementById('preview-area').innerHTML = "";
                 selectedPhotos = [];
-                saveBtn.innerText = "บันทึกข้อมูลเข้าเครื่อง";
-                saveBtn.disabled = false;
-                
-                loadTasks();
-                alert("✅ บันทึกเรียบร้อย!");
-            } catch (e) {
-                alert("⚠️ พื้นที่เต็ม! กรุณาลบรายการเก่าออกบ้างนะครับ");
-                saveBtn.disabled = false;
-                saveBtn.innerText = "บันทึกข้อมูลเข้าเครื่อง";
+                alert("✅ บันทึกข้อมูลสำเร็จ! ข้อมูลถูก Sync ไปยัง Cloud แล้ว");
+
+            } catch (err) {
+                console.error(err);
+                alert("❌ เกิดข้อผิดพลาด: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "บันทึกข้อมูลเข้าระบบ Cloud";
             }
-        }
+        };
 
-        function loadTasks() {
+        // ดึงข้อมูล Real-time (Sync ทุกเครื่อง)
+        const q = query(collection(db, "tasks"), orderBy("createdAt", "desc"));
+        onSnapshot(q, (snapshot) => {
             const container = document.getElementById('task-container');
-            const tasks = JSON.parse(localStorage.getItem('ultraTasks')) || [];
             container.innerHTML = "";
-
-            tasks.forEach(t => {
-                let photosHTML = "";
-                if (t.photos && t.photos.length > 0) {
-                    photosHTML = `<div class="gallery">` + 
-                        t.photos.map(p => `<img src="${p}">`).join('') + 
-                        `</div>`;
-                }
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const id = docSnap.id;
+                const timeStr = new Date(data.createdAt).toLocaleString('th-TH');
+                
+                const galleryHTML = data.photos && data.photos.length > 0 
+                    ? `<div class="gallery">${data.photos.map(url => `<img src="${url}">`).join('')}</div>` 
+                    : "";
 
                 container.innerHTML += `
                     <div class="card">
-                        <div class="status-tag st-${t.status}">${t.status}</div>
-                        ${photosHTML}
-                        <div class="job-title">${t.title}</div>
-                        <div class="job-detail">${t.detail || 'ไม่มีรายละเอียด'}</div>
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:0.8rem; color:#b2bec3;">📅 ${t.time}</span>
-                            <span class="delete-btn" onclick="deleteTask(${t.id})">ลบทิ้ง</span>
+                        <div class="status-badge st-${data.status}">${data.status}</div>
+                        ${galleryHTML}
+                        <div class="job-title">${data.title}</div>
+                        <div class="job-detail">${data.detail || ''}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #eee; padding-top:10px;">
+                            <span style="font-size:0.75rem; color:#999;">📅 ${timeStr}</span>
+                            <button class="delete-btn" onclick="window.deleteTask('${id}')">ลบรายการ</button>
                         </div>
                     </div>
                 `;
             });
-        }
+        });
 
-        function deleteTask(id) {
-            if(confirm("ลบรายการนี้ใช่ไหม?")) {
-                let tasks = JSON.parse(localStorage.getItem('ultraTasks'));
-                tasks = tasks.filter(t => t.id !== id);
-                localStorage.setItem('ultraTasks', JSON.stringify(tasks));
-                loadTasks();
+        // ลบข้อมูล
+        window.deleteTask = async (id) => {
+            if(confirm("ยืนยันการลบรายการนี้?")) {
+                await deleteDoc(doc(db, "tasks", id));
             }
-        }
+        };
 
-        window.onload = loadTasks;
     </script>
 </body>
 </html>
