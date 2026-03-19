@@ -3,64 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MyTaskApp Cloud - Ultra Fast</title>
+    <title>⚡ TASK ULTRA FAST</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #4361ee; --secondary: #3f37c9; --bg: #f0f2f5; }
-        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); margin: 0; padding: 20px 15px 100px 15px; }
-        
-        /* หน้าจอโหลดพร้อมหลอด Progress */
-        .loading-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;
-        }
-        .progress-container { width: 80%; background-color: #e0e0e0; border-radius: 20px; margin: 20px 0; height: 15px; overflow: hidden; }
-        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: width 0.2s; }
-        #percent-text { font-size: 2rem; font-weight: 700; color: var(--primary); }
-
-        /* UI Form */
-        .form-container { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; }
-        .btn-upload { background: #f8f9fa; border: 2px dashed var(--primary); padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; margin-bottom: 10px; color: var(--primary); font-weight: 600; }
-        .add-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 16px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
-        
-        #preview-area { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 10px; }
-        #preview-area img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--primary); }
-
-        /* รายการงาน */
-        .card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .gallery { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 12px; scroll-snap-type: x mandatory; }
-        .gallery img { width: 90%; height: 200px; object-fit: cover; border-radius: 12px; flex-shrink: 0; scroll-snap-align: start; background: #eee; }
-        
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 10px; color: white; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px; }
-        .st-รอดำเนินการ { background: #54a0ff; }
-        .st-กำลังทำ { background: #ff9f43; }
-        .st-เสร็จสิ้น { background: #10ac84; }
+        :root { --primary: #4361ee; --bg: #f8f9fa; }
+        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); margin: 0; padding: 15px; padding-bottom: 80px; }
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; }
+        #percent-num { font-size: 3rem; font-weight: 800; color: var(--primary); }
+        .form-card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; }
+        .btn-cam { background: #f0f2f5; border: 2px dashed var(--primary); padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; margin-bottom: 10px; color: var(--primary); font-weight: 600; }
+        .btn-save { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: 700; font-size: 1.1rem; }
+        #preview-area { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; }
+        #preview-area img { width: 55px; height: 55px; object-fit: cover; border-radius: 6px; }
+        .card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .gallery { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 10px; }
+        .gallery img { width: 200px; height: 150px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #eee; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 8px; color: white; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; }
+        .st-รอดำเนินการ { background: #54a0ff; } .st-กำลังทำ { background: #ff9f43; } .st-เสร็จสิ้น { background: #10ac84; }
     </style>
 </head>
 <body>
 
     <div id="loader" class="loading-overlay">
-        <div id="percent-text">0%</div>
-        <div class="progress-container"><div id="p-bar" class="progress-bar"></div></div>
-        <p id="load-status" style="font-weight:600; color:#555;">กำลังประมวลผล...</p>
+        <div id="percent-num">0%</div>
+        <p style="font-weight:600;">กำลังบันทึกข้อมูลด่วน...</p>
     </div>
 
-    <div style="text-align:center; color:var(--primary);"><h1>☁️ TASK ULTRA FAST</h1></div>
+    <div style="text-align:center; color:var(--primary); margin-bottom:15px;"><h2>⚡ FAST TASK PRO</h2></div>
 
-    <div class="form-container">
+    <div class="form-card">
         <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
-        <div class="btn-upload" onclick="document.getElementById('cameraInput').click()">📸 ถ่ายรูป/เพิ่มรูป (หลายรูป)</div>
+        <div class="btn-cam" onclick="document.getElementById('cameraInput').click()">📸 ถ่ายรูป/เพิ่มรูป</div>
         <div id="preview-area"></div>
-
         <input type="text" id="taskTitle" placeholder="ชื่องาน...">
-        <textarea id="taskDetail" placeholder="รายละเอียด..."></textarea>
+        <textarea id="taskDetail" rows="2" placeholder="รายละเอียด..."></textarea>
         <select id="taskStatus">
-            <option value="รอดำเนินการ">🔵 รอดำเนินการ</option>
-            <option value="กำลังทำ">🟠 กำลังทำ</option>
-            <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
+            <option value="รอดำเนินการ">รอดำเนินการ</option>
+            <option value="กำลังทำ">กำลังทำ</option>
+            <option value="เสร็จสิ้น">เสร็จสิ้น</option>
         </select>
-        <button class="add-btn" onclick="addTask()">บันทึกด่วน</button>
+        <button class="btn-save" onclick="addTask()">บันทึกลง Cloud ทันที</button>
     </div>
 
     <div id="task-container"></div>
@@ -68,9 +51,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-        // 🔥 ก๊อปปี้ Config ของคุณมาวางตรงนี้ 🔥
         const firebaseConfig = {
             apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
             authDomain: "mytaskapp-pro.firebaseapp.com",
@@ -83,10 +64,9 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
         let selectedPhotos = [];
 
-        // ย่อรูปแบบ Extreme: เล็กมากแต่โหลดไวสุดๆ
+        // ย่อรูปขั้นสุด (กว้าง 400px) เพื่อให้ประหยัดเนื้อที่ฐานข้อมูล
         async function resizeImage(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -94,18 +74,13 @@
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const maxWidth = 500; // ลดขนาดเหลือ 500px
-                        let width = img.width;
-                        let height = img.height;
-                        if (width > maxWidth) {
-                            height = (maxWidth / width) * height;
-                            width = maxWidth;
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
+                        const maxWidth = 400; 
+                        let width = img.width, height = img.height;
+                        if (width > maxWidth) { height = (maxWidth / width) * height; width = maxWidth; }
+                        canvas.width = width; canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.4)); // ลดคุณภาพเหลือ 40% (ไฟล์จะเล็กมาก)
+                        resolve(canvas.toDataURL('image/jpeg', 0.3)); 
                     };
                     img.src = e.target.result;
                 };
@@ -129,83 +104,53 @@
             const detail = document.getElementById('taskDetail').value;
             const status = document.getElementById('taskStatus').value;
             const loader = document.getElementById('loader');
-            const pBar = document.getElementById('p-bar');
-            const pText = document.getElementById('percent-text');
-            const pStatus = document.getElementById('load-status');
+            const pText = document.getElementById('percent-num');
 
-            if (!title) return alert("กรุณาใส่ชื่องาน");
+            if (!title) return alert("ใส่ชื่องานด้วย!");
 
             loader.style.display = 'flex';
-            pBar.style.width = '0%';
-            pText.innerText = '0%';
+            pText.innerText = '50%';
             
             try {
-                const photoUrls = [];
-                const totalPhotos = selectedPhotos.length;
-
-                for (let i = 0; i < totalPhotos; i++) {
-                    pStatus.innerText = `กำลังส่งรูปที่ ${i+1}/${totalPhotos}...`;
-                    const photoRef = ref(storage, `tasks/${Date.now()}_${i}.jpg`);
-                    await uploadString(photoRef, selectedPhotos[i], 'data_url');
-                    const url = await getDownloadURL(photoRef);
-                    photoUrls.push(url);
-                    
-                    let progress = Math.round(((i + 1) / (totalPhotos + 1)) * 100);
-                    pBar.style.width = progress + '%';
-                    pText.innerText = progress + '%';
-                }
-
-                pStatus.innerText = "กำลังบันทึกข้อมูล...";
+                // บันทึกตรงเข้า Firestore (ไม่ต้องใช้ Storage)
                 await addDoc(collection(db, "tasks"), {
                     title, detail, status,
-                    photos: photoUrls,
+                    photos: selectedPhotos, 
                     createdAt: new Date().getTime()
                 });
 
-                pBar.style.width = '100%';
                 pText.innerText = '100%';
-                
                 setTimeout(() => {
                     document.getElementById('taskTitle').value = "";
                     document.getElementById('taskDetail').value = "";
                     document.getElementById('preview-area').innerHTML = "";
                     selectedPhotos = [];
                     loader.style.display = 'none';
-                }, 500);
-
+                }, 300);
             } catch (err) {
                 alert("ล้มเหลว: " + err.message);
                 loader.style.display = 'none';
             }
         };
 
-        const q = query(collection(db, "tasks"), orderBy("createdAt", "desc"));
-        onSnapshot(q, (snapshot) => {
+        onSnapshot(query(collection(db, "tasks"), orderBy("createdAt", "desc")), (snap) => {
             const container = document.getElementById('task-container');
             container.innerHTML = "";
-            snapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                // เพิ่ม loading="lazy" เพื่อให้โหลดเฉพาะรูปที่มองเห็น
-                const gallery = data.photos && data.photos.length > 0 
-                    ? `<div class="gallery">${data.photos.map(u => `<img src="${u}" loading="lazy" alt="task photo">`).join('')}</div>` 
-                    : "";
+            snap.forEach((docSnap) => {
+                const d = docSnap.data();
+                const gallery = d.photos ? `<div class="gallery">${d.photos.map(u => `<img src="${u}">`).join('')}</div>` : "";
                 container.innerHTML += `
                     <div class="card">
-                        <div class="status-badge st-${data.status}">${data.status}</div>
+                        <div class="badge st-${d.status}">${d.status}</div>
                         ${gallery}
-                        <div style="font-weight:bold; font-size:1.1rem;">${data.title}</div>
-                        <p style="color:#666; font-size:0.9rem; margin-top:5px;">${data.detail || ''}</p>
-                        <div style="text-align:right; border-top:1px solid #eee; padding-top:10px;">
-                            <button onclick="window.deleteTask('${docSnap.id}')" style="color:#ff4757; border:none; background:none; cursor:pointer; font-weight:600;">ลบงาน</button>
-                        </div>
-                    </div>
-                `;
+                        <div style="font-weight:700;">${d.title}</div>
+                        <p style="font-size:0.85rem; color:#666; margin:5px 0;">${d.detail || ''}</p>
+                        <button onclick="window.deleteTask('${docSnap.id}')" style="color:#ff4757; border:none; background:none; cursor:pointer;">ลบ</button>
+                    </div>`;
             });
         });
 
-        window.deleteTask = async (id) => {
-            if(confirm("ลบงานนี้ใช่ไหม?")) await deleteDoc(doc(db, "tasks", id));
-        };
+        window.deleteTask = async (id) => { if(confirm("ลบงาน?")) await deleteDoc(doc(db, "tasks", id)); };
     </script>
 </body>
 </html>
