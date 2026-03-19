@@ -3,25 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First PWA</title>
+    <title>MyTaskApp - ระบบบันทึกงาน</title>
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2c3e50">
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f9; }
-        .card { background: white; padding: 20px; border-radius: 15px; shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        body { font-family: 'Chakra Petch', sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; }
+        h1 { text-align: center; color: #1a73e8; font-size: 1.4rem; margin-bottom: 20px; }
+        #task-container { display: grid; gap: 15px; }
+        .card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-top: 5px solid #1a73e8; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .job-id { font-size: 0.8rem; color: #7f8c8d; font-weight: bold; }
+        .status-badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; color: white; background: #95a5a6; }
+        .status-doing { background: #f39c12; } /* กำลังทำ */
+        .status-done { background: #27ae60; }  /* เสร็จสิ้น */
+        .job-title { font-size: 1.1rem; font-weight: bold; color: #2c3e50; margin: 5px 0; line-height: 1.4; }
+        .job-detail { font-size: 0.9rem; color: #576574; margin-bottom: 12px; white-space: pre-line; }
+        .footer-info { display: flex; justify-content: space-between; border-top: 1px solid #eee; padding-top: 10px; font-size: 0.8rem; color: #95a5a6; }
+        #loading { text-align: center; padding: 50px; color: #7f8c8d; }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="card">
-        <h1>ยินดีด้วย!</h1>
-        <p>นี่คือแอป PWA ตัวแรกของคุณ</p>
-        <button onclick="alert('ใช้งานได้ปกติ!')">ทดสอบปุ่ม</button>
-    </div>
+
+    <h1>📋 รายการงาน MyTaskApp</h1>
+    
+    <div id="loading">⏳ กำลังโหลดข้อมูลจาก Sheets...</div>
+    <div id="task-container"></div>
 
     <script>
-        // ลงทะเบียน Service Worker
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxH5oVS_CdHD-wjNoOHoXkpoySI3NGL7i4cwKYGguNeujY76sztNwC0L7AFmpB7P1gNPA/exec";
+
+        async function loadData() {
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const data = await response.json();
+                const container = document.getElementById('task-container');
+                document.getElementById('loading').style.display = 'none';
+
+                data.forEach(item => {
+                    if(!item.ชื่องาน) return; // กรองแถวว่าง
+
+                    // กำหนดสีสถานะ
+                    let statusClass = "";
+                    if(item.สถานะ.includes("ทำ")) statusClass = "status-doing";
+                    if(item.สถานะ.includes("เสร็จ")) statusClass = "status-done";
+
+                    const card = `
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="job-id">${item.เลขงาน || '-'} / ${item.รหัสงาน || '-'}</span>
+                                <span class="status-badge ${statusClass}">${item.สถานะ || 'ไม่มีสถานะ'}</span>
+                            </div>
+                            <div class="job-title">${item.ชื่องาน}</div>
+                            <div class="job-detail">${item.รายละเอียด || ''}</div>
+                            <div class="footer-info">
+                                <span>👤 ${item.ผู้รับผิดชอบ || 'ไม่ระบุ'}</span>
+                                <span>📅 ${item.วันที่เสร็จงาน || '-'}</span>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            } catch (error) {
+                document.getElementById('loading').innerHTML = "❌ โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่";
+                console.error(error);
+            }
+        }
+
+        loadData();
+
+        // Register Service Worker
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js');
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js');
+            });
         }
     </script>
 </body>
