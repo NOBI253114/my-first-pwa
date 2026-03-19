@@ -3,91 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ TASK EDIT PRO</title>
+    <title>🐕 TASK MANAGER DOGMODE</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #4361ee; --bg: #f8f9fa; --success: #10ac84; --warning: #ff9f43; }
-        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); margin: 0; padding: 15px; padding-bottom: 80px; }
+        :root { --primary: #fb8c00; --bg: #fffbf0; --badge: #fff3e0; --dog: #e6b26d; }
+        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); margin: 0; padding: 15px 15px 100px 15px; }
         
+        /* สไตล์หน้าจอขยายรูป (Image Zoom Overlay) */
+        .zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; cursor: zoom-out; }
+        .zoom-overlay img { max-width: 95%; max-height: 95%; border-radius: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.2); transition: transform 0.2s; }
+
         /* หน้าจอโหลด */
         .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; }
-        
-        /* Modal สำหรับแก้ไขข้อมูล */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 90%; max-height: 80vh; border-radius: 20px; padding: 20px; overflow-y: auto; position: relative; }
+        #percent-num { font-size: 3rem; font-weight: 800; color: var(--primary); }
 
-        /* UI ทั่วไป */
-        .form-card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        /* Form */
+        .form-card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 5px solid var(--dog); }
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; }
-        .btn-cam { background: #f0f2f5; border: 2px dashed var(--primary); padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; margin-bottom: 10px; color: var(--primary); font-weight: 600; }
+        .btn-cam { background: var(--badge); border: 2px dashed var(--dog); padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; margin-bottom: 10px; color: var(--dog); font-weight: 600; }
         .btn-save { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: 700; font-size: 1.1rem; cursor: pointer; }
         
-        #preview-area, .edit-preview { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; }
-        #preview-area img, .edit-preview img { width: 55px; height: 55px; object-fit: cover; border-radius: 6px; }
+        #preview-area { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; }
+        #preview-area img { width: 55px; height: 55px; object-fit: cover; border-radius: 6px; }
 
-        /* Card รายการงาน */
-        .card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        /* Card งาน */
+        .card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
         .gallery { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 10px; }
-        .gallery img { width: 180px; height: 130px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #eee; }
+        .gallery img { width: 85%; height: 170px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #eee; cursor: zoom-in; /* เปลี่ยนเคอร์เซอร์เป็นรูปแว่นขยาย */ }
         .badge { display: inline-block; padding: 3px 10px; border-radius: 8px; color: white; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; }
-        .st-รอดำเนินการ { background: #54a0ff; } .st-กำลังทำ { background: #ff9f43; } .st-เสร็จสิ้น { background: #10ac84; }
-        
-        .card-actions { display: flex; justify-content: space-between; border-top: 1px solid #eee; padding-top: 10px; margin-top: 5px; }
-        .btn-edit { color: var(--warning); border: none; background: none; font-weight: 700; cursor: pointer; }
-        .btn-del { color: #ff4757; border: none; background: none; font-weight: 700; cursor: pointer; }
+        .st-รอดำเนินการ { background: #54a0ff; } .st-กำลังทำ { background: var(--dog); } .st-เสร็จสิ้น { background: #10ac84; }
     </style>
 </head>
 <body>
 
+    <div id="zoom-area" class="zoom-overlay" onclick="closeZoom()">
+        <img id="zoom-img" src="" alt="ขยายรูป" onclick="event.stopPropagation()"> </div>
+
     <div id="loader" class="loading-overlay">
-        <h2 id="percent-num" style="margin:0;">0%</h2>
-        <p style="font-weight:600;">กำลังจัดการข้อมูล...</p>
+        <div id="percent-num">0%</div>
+        <p style="font-weight:600; color:#555;">กำลังส่งงานครับหัวหน้า...</p>
     </div>
 
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-top:0; color:var(--primary);">📝 แก้ไขข้อมูลงาน</h3>
-            <input type="hidden" id="editId">
-            <label style="font-size: 0.8rem; color: #666;">ชื่องาน</label>
-            <input type="text" id="editTitle">
-            <label style="font-size: 0.8rem; color: #666;">รายละเอียด</label>
-            <textarea id="editDetail" rows="3"></textarea>
-            <label style="font-size: 0.8rem; color: #666;">สถานะ</label>
-            <select id="editStatus">
-                <option value="รอดำเนินการ">รอดำเนินการ</option>
-                <option value="กำลังทำ">กำลังทำ</option>
-                <option value="เสร็จสิ้น">เสร็จสิ้น</option>
-            </select>
-            <div id="editPhotoArea" class="edit-preview"></div>
-            <p style="font-size: 0.7rem; color: #999;">*รูปภาพเดิมจะถูกเก็บไว้ (ยังไม่รองรับการเปลี่ยนรูปในการแก้ไขนี้)</p>
-            <button class="btn-save" onclick="updateTask()">อัปเดตข้อมูล</button>
-            <button class="btn-del" style="width:100%; margin-top:10px;" onclick="closeModal()">ยกเลิก</button>
-        </div>
+    <div style="text-align:center; margin-bottom:20px;">
+        <img src="https://lh3.googleusercontent.com/pw/AP1GczNBgVbWfS2oK7_M_PjA-S4oT9GfL_Y-9_5z4Y-V9U54" alt="Dog Logo" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--dog); box-shadow: 0 4px 10px rgba(0,0,0,0.1); object-fit: cover; object-position: 50% 20%;">
+        <h2 style="margin:10px 0 0 0; color:var(--primary);">🐕 TASK MANAGER</h2>
+        <p style="margin:0; font-size:0.8rem; color:#888;">โหมดคนรักหมาสุดๆ</p>
     </div>
-
-    <div style="text-align:center; color:var(--primary); margin-bottom:15px;"><h2>⚡ TASK MANAGER PRO</h2></div>
 
     <div class="form-card">
         <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
-        <div class="btn-cam" onclick="document.getElementById('cameraInput').click()">📸 ถ่ายรูป/เพิ่มรูปภาพ</div>
+        <div class="btn-cam" onclick="document.getElementById('cameraInput').click()">📸 กดเพื่อถ่ายรูป/เลือกรูป (หลายรูป)</div>
         <div id="preview-area"></div>
-        <input type="text" id="taskTitle" placeholder="ใส่ชื่องาน...">
-        <textarea id="taskDetail" rows="2" placeholder="ใส่รายละเอียด..."></textarea>
+        <input type="text" id="taskTitle" placeholder="ชื่องาน...">
+        <textarea id="taskDetail" rows="2" placeholder="รายละเอียด..."></textarea>
         <select id="taskStatus">
             <option value="รอดำเนินการ">รอดำเนินการ</option>
             <option value="กำลังทำ">กำลังทำ</option>
             <option value="เสร็จสิ้น">เสร็จสิ้น</option>
         </select>
-        <button class="btn-save" onclick="addTask()">บันทึกข้อมูลด่วน</button>
+        <button class="btn-save" onclick="addTask()">บันทึกลง Cloud ด่วน</button>
     </div>
 
     <div id="task-container"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // 🔥 ใช้ Config เดิมของคุณ 🔥
+        // 🔥 ก๊อปปี้ Config ของคุณมาวางตรงนี้ 🔥
         const firebaseConfig = {
             apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
             authDomain: "mytaskapp-pro.firebaseapp.com",
@@ -109,13 +92,13 @@
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const maxWidth = 400; 
+                        const maxWidth = 500; 
                         let width = img.width, height = img.height;
                         if (width > maxWidth) { height = (maxWidth / width) * height; width = maxWidth; }
                         canvas.width = width; canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.3)); 
+                        resolve(canvas.toDataURL('image/jpeg', 0.4)); 
                     };
                     img.src = e.target.result;
                 };
@@ -138,77 +121,63 @@
             const title = document.getElementById('taskTitle').value;
             const detail = document.getElementById('taskDetail').value;
             const status = document.getElementById('taskStatus').value;
-            if (!title) return alert("กรุณาใส่ชื่องาน");
+            const loader = document.getElementById('loader');
+            const pText = document.getElementById('percent-num');
 
-            document.getElementById('loader').style.display = 'flex';
-            document.getElementById('percent-num').innerText = '50%';
+            if (!title) return alert("ใส่ชื่องานด้วย!");
+
+            loader.style.display = 'flex';
+            pText.innerText = '50%';
             
             try {
+                // บันทึกตรงเข้า Firestore (ไม่ต้องใช้ Storage)
                 await addDoc(collection(db, "tasks"), {
                     title, detail, status,
                     photos: selectedPhotos, 
                     createdAt: new Date().getTime()
                 });
-                document.getElementById('percent-num').innerText = '100%';
+
+                pText.innerText = '100%';
                 setTimeout(() => {
                     document.getElementById('taskTitle').value = "";
                     document.getElementById('taskDetail').value = "";
                     document.getElementById('preview-area').innerHTML = "";
                     selectedPhotos = [];
-                    document.getElementById('loader').style.display = 'none';
+                    loader.style.display = 'none';
                 }, 300);
-            } catch (err) { alert(err.message); document.getElementById('loader').style.display = 'none'; }
+
+            } catch (err) { alert(err.message); loader.style.display = 'none'; }
         };
 
-        // ฟังก์ชันดึงข้อมูลมาแสดงในรายการ
         onSnapshot(query(collection(db, "tasks"), orderBy("createdAt", "desc")), (snap) => {
             const container = document.getElementById('task-container');
             container.innerHTML = "";
             snap.forEach((docSnap) => {
                 const d = docSnap.data();
-                const gallery = d.photos ? `<div class="gallery">${d.photos.map(u => `<img src="${u}" loading="lazy">`).join('')}</div>` : "";
+                // ✅ เพิ่ม onclick="zoomPhoto('${u}')" ✅
+                const gallery = d.photos ? `<div class="gallery">${d.photos.map(u => `<img src="${u}" onclick="zoomPhoto('${u}')" loading="lazy">`).join('')}</div>` : "";
                 container.innerHTML += `
                     <div class="card">
                         <div class="badge st-${d.status}">${d.status}</div>
                         ${gallery}
-                        <div style="font-weight:700; font-size:1.1rem;">${d.title}</div>
-                        <p style="font-size:0.9rem; color:#666; margin:5px 0;">${d.detail || 'ไม่มีรายละเอียด'}</p>
-                        <div class="card-actions">
-                            <button class="btn-edit" onclick="openEdit('${docSnap.id}', '${d.title}', '${d.detail || ""}', '${d.status}')">✏️ แก้ไข</button>
-                            <button class="btn-del" onclick="deleteTask('${docSnap.id}')">🗑️ ลบ</button>
-                        </div>
+                        <div style="font-weight:700;">${d.title}</div>
+                        <p style="font-size:0.85rem; color:#666; margin:5px 0;">${d.detail || ''}</p>
+                        <button onclick="window.deleteTask('${docSnap.id}')" style="color:#ff4757; border:none; background:none; padding:0; font-size:0.8rem; cursor:pointer;">ลบ</button>
                     </div>`;
             });
         });
 
-        // เปิด Modal แก้ไข
-        window.openEdit = (id, title, detail, status) => {
-            document.getElementById('editId').value = id;
-            document.getElementById('editTitle').value = title;
-            document.getElementById('editDetail').value = detail;
-            document.getElementById('editStatus').value = status;
-            document.getElementById('editModal').style.display = 'flex';
+        // ✅ ฟังก์ชันขยายรูป ✅
+        window.zoomPhoto = (url) => {
+            document.getElementById('zoom-img').src = url;
+            document.getElementById('zoom-area').style.display = 'flex';
         };
 
-        window.closeModal = () => { document.getElementById('editModal').style.display = 'none'; };
-
-        // อัปเดตข้อมูลลง Cloud
-        window.updateTask = async () => {
-            const id = document.getElementById('editId').value;
-            const title = document.getElementById('editTitle').value;
-            const detail = document.getElementById('editDetail').value;
-            const status = document.getElementById('editStatus').value;
-
-            document.getElementById('loader').style.display = 'flex';
-            try {
-                const taskRef = doc(db, "tasks", id);
-                await updateDoc(taskRef, { title, detail, status });
-                closeModal();
-                document.getElementById('loader').style.display = 'none';
-            } catch (err) { alert(err.message); document.getElementById('loader').style.display = 'none'; }
+        window.closeZoom = () => {
+            document.getElementById('zoom-area').style.display = 'none';
         };
 
-        window.deleteTask = async (id) => { if(confirm("ยืนยันการลบข้อมูลนี้?")) await deleteDoc(doc(db, "tasks", id)); };
+        window.deleteTask = async (id) => { if(confirm("ลบไหม?")) await deleteDoc(doc(db, "tasks", id)); };
     </script>
 </body>
 </html>
