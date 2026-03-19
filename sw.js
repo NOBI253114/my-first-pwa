@@ -1,3 +1,20 @@
-self.addEventListener('fetch', (event) => {
-    // โค้ดส่วนนี้ปล่อยว่างไว้ก่อนเพื่อให้แอปดึงข้อมูลออนไลน์ปกติ
+const CACHE_NAME = 'mytask-v1';
+const assets = [
+  './',
+  './index.html',
+  './manifest.json'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      cache.addAll(assets);
+    })
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
+  );
 });
