@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK</title>
+    <title>4M TASK - PROGRESS PRO</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -16,9 +16,9 @@
         }
         body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 50px; }
         
+        /* Header & Nav */
         .app-header { background: #fff; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .app-header h1 { margin: 0; font-size: 1.5rem; color: var(--primary-dark); }
-
         .nav-tabs { display: flex; padding: 15px; gap: 8px; position: sticky; top: 0; background: var(--bg); z-index: 100; justify-content: center; }
         .tab-btn { padding: 10px 20px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); cursor: pointer; transition: 0.3s; box-shadow: var(--shadow); font-family: 'Kanit'; font-weight: 500; }
         .tab-btn.active { background: var(--primary); color: #fff; }
@@ -28,38 +28,51 @@
         .page-section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        /* Form Elements */
         .glass-card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
         .label-text { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 5px; display: block; font-weight: 500; }
-        
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem; outline: none; }
         .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
 
+        /* Loading Overlay & Progress Bar */
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
+        .progress-container { width: 80%; max-width: 300px; height: 12px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 15px; }
+        .progress-bar { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s ease; }
+        .percent-text { font-size: 1.5rem; font-weight: 600; color: var(--primary-dark); }
+
+        /* Task Cards & Monthly Header */
+        .month-header { background: #dcfce7; color: var(--primary-dark); padding: 8px 18px; border-radius: 20px; display: inline-block; margin: 20px 0 10px 0; font-size: 0.9rem; font-weight: 700; }
         .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: var(--shadow); }
         .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 10px 0; }
         .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; cursor: pointer; }
 
-        /* Slider Overlay */
+        /* Slider */
         .slider-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center; }
-        .slider-img { max-width: 90%; max-height: 75%; object-fit: contain; border-radius: 5px; }
-        .slider-nav { position: absolute; top: 50%; color: white; font-size: 2.5rem; background: none; border: none; cursor: pointer; padding: 20px; user-select: none; }
-        .nav-prev { left: 0; }
-        .nav-next { right: 0; }
-        .slider-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 1.5rem; background: none; border: none; cursor: pointer; }
+        .slider-img { max-width: 90%; max-height: 75%; object-fit: contain; }
+        .slider-nav { position: absolute; top: 50%; color: white; font-size: 2.5rem; background: none; border: none; cursor: pointer; padding: 20px; }
+        .nav-prev { left: 0; } .nav-next { right: 0; }
+        .slider-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 1.5rem; background: none; border: none; }
         .slider-counter { position: absolute; bottom: 30px; color: white; font-size: 0.9rem; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; }
 
-        /* Stat Cards */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .stat-card { background: #fff; padding: 15px; border-radius: 15px; text-align: center; box-shadow: var(--shadow); }
-        
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: #fff; width: 90%; max-width: 500px; border-radius: 20px; padding: 20px; }
     </style>
 </head>
 <body>
 
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="percent-text" id="percentText">0%</div>
+        <div style="color: var(--text-sub); font-size: 0.9rem; margin-top: 5px;">กำลังบันทึกข้อมูล...</div>
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+    </div>
+
     <div class="app-header">
         <h1>4M TASK</h1>
-        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 1.8.0 | พัฒนาโดย นาย ธิติ พุกวิลัย</div>
+        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 1.8.2 | ระบบโหลดข้อมูล % | นาย ธิติ พุกวิลัย</div>
     </div>
 
     <div class="nav-tabs">
@@ -72,7 +85,7 @@
         <div id="section-add" class="page-section active">
             <div class="glass-card">
                 <span class="label-text">เลขที่งาน (ORS.)</span>
-                <input type="text" id="taskOrs" placeholder="เช่น 01/01">
+                <input type="text" id="taskOrs" placeholder="เช่น 03/01">
                 <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; font-family:inherit; cursor:pointer; color: var(--text-sub);">📸 แนบรูปถ่าย</button>
                 <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
                 <div id="preview-area" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:10px;"></div>
@@ -88,9 +101,9 @@
         </div>
 
         <div id="section-view" class="page-section">
-            <input type="text" id="searchInput" placeholder="ค้นหาชื่องาน หรือเลข ORS..." onkeyup="filterTasks()" style="margin-bottom:10px;">
+            <input type="text" id="searchInput" placeholder="ค้นหา..." onkeyup="filterTasks()" style="margin-bottom:10px;">
             <select id="filterStatus" onchange="filterTasks()" style="margin-bottom:15px;">
-                <option value="ทั้งหมด">แสดงสถานะ: ทั้งหมด</option>
+                <option value="ทั้งหมด">ทั้งหมด</option>
                 <option value="รอดำเนินการ">รอดำเนินการ</option>
                 <option value="กำลังทำ">กำลังทำ</option>
                 <option value="เสร็จสิ้น">เสร็จสิ้น</option>
@@ -104,8 +117,8 @@
                 <div class="stat-card"><b>เสร็จแล้ว</b><div id="stat-done" style="font-size:1.5rem; color:var(--primary);">0</div></div>
             </div>
             <div class="glass-card"><canvas id="statusChart"></canvas></div>
-            <button class="btn-main" style="background:#475569;" onclick="exportToCSV()">📤 ส่งออก Excel (.csv)</button>
-            <button class="btn-main" style="background:#ef4444;" onclick="exportToPDF()">📄 ส่งออก PDF (.pdf)</button>
+            <button class="btn-main" style="background:#475569;" onclick="exportToCSV()">📤 Excel</button>
+            <button class="btn-main" style="background:#ef4444;" onclick="exportToPDF()">📄 PDF</button>
         </div>
     </div>
 
@@ -117,28 +130,9 @@
         <div id="sliderCounter" class="slider-counter">1 / 1</div>
     </div>
 
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <h3>แก้ไขงาน</h3>
-            <input type="hidden" id="editId">
-            <input type="text" id="editOrs" placeholder="เลข ORS">
-            <input type="text" id="editTitle" placeholder="ชื่องาน">
-            <textarea id="editDetail" rows="3"></textarea>
-            <select id="editStatus">
-                <option value="รอดำเนินการ">รอดำเนินการ</option>
-                <option value="กำลังทำ">กำลังทำ</option>
-                <option value="เสร็จสิ้น">เสร็จสิ้น</option>
-            </select>
-            <div style="display:flex; gap:10px;">
-                <button class="btn-main" onclick="updateTask()">อัปเดต</button>
-                <button class="btn-main" style="background:#e2e8f0; color:#64748b;" onclick="document.getElementById('editModal').style.display='none'">ปิด</button>
-            </div>
-        </div>
-    </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
@@ -157,6 +151,7 @@
         let currentPhotos = [];
         let currentPhotoIdx = 0;
         let statusChart;
+        const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
         window.showSection = (name) => {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
@@ -172,16 +167,54 @@
             updateDashboard();
         });
 
+        // ฟังก์ชันบันทึกพร้อมหลอดโหลด %
         window.addTask = async () => {
-            const val = document.getElementById('taskOrs').value;
-            if(!val || !document.getElementById('taskTitle').value) return alert("กรุณากรอกข้อมูลให้ครบ");
-            await addDoc(collection(db, "tasks"), {
-                ors: "ORS." + val, title: document.getElementById('taskTitle').value,
-                detail: document.getElementById('taskDetail').value,
-                status: document.getElementById('taskStatus').value,
-                photos: selectedPhotos, createdAt: new Date().getTime()
-            });
-            alert("บันทึกสำเร็จ!"); location.reload();
+            const ors = document.getElementById('taskOrs').value;
+            const title = document.getElementById('taskTitle').value;
+            if(!ors || !title) return alert("กรุณากรอกเลข ORS และชื่องาน");
+
+            const overlay = document.getElementById('loadingOverlay');
+            const bar = document.getElementById('progressBar');
+            const text = document.getElementById('percentText');
+
+            overlay.style.display = 'flex';
+            
+            // จำลองการโหลด (ถ้ามีรูปจะโหลดนานขึ้นตามจำนวนรูป)
+            let progress = 0;
+            const step = selectedPhotos.length > 0 ? 5 : 20; 
+            
+            const timer = setInterval(async () => {
+                progress += step;
+                if(progress > 90) progress = 95; // ค้างไว้ที่ 95 จนกว่า Firebase จะเสร็จ
+                bar.style.width = progress + '%';
+                text.innerText = progress + '%';
+            }, 150);
+
+            try {
+                await addDoc(collection(db, "tasks"), {
+                    ors: "ORS." + ors,
+                    title: title,
+                    detail: document.getElementById('taskDetail').value,
+                    status: document.getElementById('taskStatus').value,
+                    photos: selectedPhotos,
+                    createdAt: new Date().getTime()
+                });
+                
+                clearInterval(timer);
+                bar.style.width = '100%';
+                text.innerText = '100%';
+                
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    alert("บันทึกข้อมูลเรียบร้อย!");
+                    location.reload();
+                }, 500);
+
+            } catch (e) {
+                clearInterval(timer);
+                overlay.style.display = 'none';
+                alert("เกิดข้อผิดพลาด: " + e.message);
+            }
         };
 
         window.filterTasks = () => {
@@ -189,12 +222,19 @@
             const status = document.getElementById('filterStatus').value;
             const container = document.getElementById('task-container');
             container.innerHTML = "";
-            
+            let lastMonthGroup = "";
+
             allTasks.filter(t => {
                 const matchSearch = t.title.toLowerCase().includes(search) || t.ors.toLowerCase().includes(search);
                 const matchStatus = status === 'ทั้งหมด' || t.status === status;
                 return matchSearch && matchStatus;
             }).forEach(t => {
+                const monthNum = parseInt(t.ors.replace("ORS.", "").split('/')[0]);
+                const monthName = monthNames[monthNum] || "ไม่ระบุเดือน";
+                if (lastMonthGroup !== monthName) {
+                    lastMonthGroup = monthName;
+                    container.innerHTML += `<div class="month-header">📅 เดือน${monthName}</div>`;
+                }
                 container.innerHTML += `
                     <div class="task-card">
                         <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
@@ -203,90 +243,27 @@
                         </div>
                         <div style="font-weight:600; margin:8px 0;">${t.title}</div>
                         <div class="gallery">${(t.photos||[]).map((p, i) => `<img src="${p}" onclick="openSlider(${JSON.stringify(t.photos).replace(/"/g, '&quot;')}, ${i})">`).join('')}</div>
-                        <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:10px;">
-                            <span style="color:var(--primary); cursor:pointer; font-size:0.85rem;" onclick="openEdit('${t.id}','${t.ors}','${t.title}','${t.detail}','${t.status}')">แก้ไข</span>
-                            <span style="color:#ef4444; cursor:pointer; font-size:0.85rem;" onclick="deleteTask('${t.id}')">ลบ</span>
-                        </div>
                     </div>`;
             });
         };
 
         // Slider Logic
-        window.openSlider = (photos, index) => {
-            currentPhotos = photos;
-            currentPhotoIdx = index;
-            updateSliderView();
-            document.getElementById('sliderOverlay').style.display = 'flex';
-        };
-        window.changeSlide = (n) => {
-            currentPhotoIdx = (currentPhotoIdx + n + currentPhotos.length) % currentPhotos.length;
-            updateSliderView();
-        };
-        function updateSliderView() {
-            document.getElementById('sliderImg').src = currentPhotos[currentPhotoIdx];
-            document.getElementById('sliderCounter').innerText = `${currentPhotoIdx + 1} / ${currentPhotos.length}`;
-        }
+        window.openSlider = (photos, index) => { currentPhotos = photos; currentPhotoIdx = index; updateSliderView(); document.getElementById('sliderOverlay').style.display = 'flex'; };
+        window.changeSlide = (n) => { currentPhotoIdx = (currentPhotoIdx + n + currentPhotos.length) % currentPhotos.length; updateSliderView(); };
+        function updateSliderView() { document.getElementById('sliderImg').src = currentPhotos[currentPhotoIdx]; document.getElementById('sliderCounter').innerText = `${currentPhotoIdx + 1} / ${currentPhotos.length}`; }
         window.closeSlider = () => document.getElementById('sliderOverlay').style.display = 'none';
 
-        // Dashboard & Export
         function updateDashboard() {
             const total = allTasks.length;
             const done = allTasks.filter(t => t.status === 'เสร็จสิ้น').length;
-            const doing = allTasks.filter(t => t.status === 'กำลังทำ').length;
-            const pending = allTasks.filter(t => t.status === 'รอดำเนินการ').length;
-            document.getElementById('stat-total').innerText = total;
-            document.getElementById('stat-done').innerText = done;
-
             const ctx = document.getElementById('statusChart').getContext('2d');
             if(statusChart) statusChart.destroy();
-            statusChart = new Chart(ctx, {
-                type: 'pie',
-                data: { labels: ['เสร็จสิ้น', 'กำลังทำ', 'รอดำเนินการ'], datasets: [{ data: [done, doing, pending], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'] }] }
-            });
+            statusChart = new Chart(ctx, { type: 'pie', data: { labels: ['เสร็จสิ้น', 'รอดำเนินการ'], datasets: [{ data: [done, total-done], backgroundColor: ['#10b981', '#ef4444'] }] } });
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-done').innerText = done;
         }
 
-        window.exportToCSV = () => {
-            let csv = "ORS,Title,Detail,Status\n";
-            allTasks.forEach(t => csv += `${t.ors},${t.title},${t.detail.replace(/\n/g, " ")},${t.status}\n`);
-            const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "4M_TASK_Export.csv"; link.click();
-        };
-
-        window.exportToPDF = () => {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.addFont("https://fonts.gstatic.com/s/kanit/v15/npxDyY6_9Zku0609.ttf", "Kanit", "normal");
-            doc.setFont("Kanit");
-            doc.text("4M TASK MANAGEMENT REPORT", 14, 15);
-            
-            const rows = allTasks.map(t => [t.ors, t.title, t.status]);
-            doc.autoTable({ head: [['ORS', 'Job Title', 'Status']], body: rows, startY: 25 });
-            doc.save("4M_TASK_Report.pdf");
-        };
-
-        // Standard Functions
-        window.openEdit = (id, ors, title, detail, status) => {
-            document.getElementById('editId').value = id;
-            document.getElementById('editOrs').value = ors.replace("ORS.", "");
-            document.getElementById('editTitle').value = title;
-            document.getElementById('editDetail').value = detail;
-            document.getElementById('editStatus').value = status;
-            document.getElementById('editModal').style.display = 'flex';
-        };
-        window.updateTask = async () => {
-            await updateDoc(doc(db, "tasks", document.getElementById('editId').value), {
-                ors: "ORS." + document.getElementById('editOrs').value,
-                title: document.getElementById('editTitle').value,
-                detail: document.getElementById('editDetail').value,
-                status: document.getElementById('editStatus').value
-            });
-            document.getElementById('editModal').style.display = 'none';
-        };
-        window.deleteTask = async (id) => { if(confirm("ลบงานนี้?")) await deleteDoc(doc(db, "tasks", id)); };
-
-        document.getElementById('cameraInput').onchange = async (e) => {
+        document.getElementById('cameraInput').onchange = (e) => {
             for (let file of e.target.files) {
                 const reader = new FileReader();
                 reader.onload = (ev) => {
