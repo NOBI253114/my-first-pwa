@@ -3,203 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MyTaskApp Pro</title>
+    <title>MyTaskApp Ultra</title>
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --danger: #f72585;
-            --bg: #f8f9fa;
-            --card-bg: #ffffff;
-        }
+        :root { --primary: #4361ee; --secondary: #3f37c9; --bg: #f0f2f5; --card-bg: #ffffff; --danger: #ff4757; }
+        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); margin: 0; padding: 20px 15px 100px 15px; color: #2d3436; }
+        
+        .header-app { text-align: center; margin-bottom: 25px; }
+        .header-app h1 { margin: 0; color: var(--primary); letter-spacing: 1px; font-size: 1.8rem; }
+        
+        /* Form Styling */
+        .form-container { background: var(--card-bg); border-radius: 24px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #e1e4e8; }
+        input, textarea, select { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #edf2f7; border-radius: 14px; font-family: inherit; font-size: 1rem; box-sizing: border-box; transition: 0.3s; }
+        input:focus { border-color: var(--primary); outline: none; background: #f8faff; }
 
-        body { 
-            font-family: 'Chakra Petch', sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 20px 15px 100px 15px; 
-            color: #2b2d42;
-        }
+        /* Multi-Photo Section */
+        .upload-section { margin-bottom: 15px; }
+        .preview-wrapper { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; min-height: 80px; }
+        .preview-img-item { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 2px solid var(--primary); flex-shrink: 0; }
+        .btn-upload { background: #f1f2f6; color: #57606f; border: 2px dashed #ced4da; padding: 15px; border-radius: 14px; width: 100%; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
 
-        h1 { 
-            text-align: center; 
-            font-weight: 700; 
-            color: var(--primary); 
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
-        }
+        .add-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 16px; border-radius: 14px; font-weight: 700; width: 100%; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3); }
 
-        /* Glassmorphism Form */
-        .form-container { 
-            background: var(--card-bg); 
-            border-radius: 20px; 
-            padding: 20px; 
-            margin-bottom: 30px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255,255,255,0.3);
-        }
+        /* Card Listing */
+        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); position: relative; border: 1px solid #f1f2f6; }
+        .gallery { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 12px; padding-bottom: 5px; scroll-snap-type: x mandatory; }
+        .gallery img { width: 85%; height: 200px; object-fit: cover; border-radius: 12px; scroll-snap-align: start; flex-shrink: 0; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+        
+        .status-tag { display: inline-block; padding: 4px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; color: white; margin-bottom: 10px; }
+        .st-รอดำเนินการ { background: #54a0ff; }
+        .st-กำลังทำ { background: #ff9f43; }
+        .st-เสร็จสิ้น { background: #10ac84; }
 
-        .form-title { font-weight: 600; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-
-        input, textarea, select { 
-            width: 100%; padding: 12px; margin-bottom: 12px; 
-            border: 1.5px solid #e0e0e0; border-radius: 12px; 
-            font-family: inherit; font-size: 1rem; transition: 0.3s;
-        }
-
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1); }
-
-        /* Camera Section */
-        .camera-box {
-            width: 100%; background: #f0f0f0; border-radius: 12px;
-            margin-bottom: 15px; overflow: hidden; position: relative;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 150px; border: 2px dashed #ccc;
-        }
-
-        #photo-preview { width: 100%; display: none; border-radius: 10px; margin-top: 10px; }
-
-        .btn-camera {
-            background: #6c757d; color: white; border: none; padding: 10px 15px;
-            border-radius: 30px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px;
-        }
-
-        .add-btn { 
-            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            color: white; border: none; padding: 15px; border-radius: 12px; 
-            font-weight: 700; width: 100%; font-size: 1.1rem; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        /* Task Cards */
-        .card { 
-            background: var(--card-bg); border-radius: 18px; padding: 18px; 
-            margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            position: relative; overflow: hidden; animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .task-img { width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; }
-
-        .status-tag { 
-            position: absolute; top: 15px; right: 15px; padding: 4px 12px; 
-            border-radius: 20px; font-size: 0.75rem; color: white; font-weight: 600;
-        }
-
-        .status-รอดำเนินการ { background: var(--success); }
-        .status-กำลังทำ { background: #f7b731; }
-        .status-เสร็จสิ้น { background: #20bf6b; }
-
-        .task-title { font-size: 1.2rem; font-weight: 700; margin: 10px 0; color: #1e293b; }
-        .task-meta { font-size: 0.85rem; color: #64748b; display: flex; flex-direction: column; gap: 5px; }
-
-        .delete-btn { color: var(--danger); font-size: 0.9rem; cursor: pointer; margin-top: 15px; display: inline-block; font-weight: 600; }
-
+        .job-title { font-size: 1.25rem; font-weight: 700; margin: 0 0 8px 0; color: #2d3436; }
+        .job-detail { font-size: 0.95rem; color: #636e72; line-height: 1.5; margin-bottom: 15px; }
+        .delete-btn { color: var(--danger); font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
 
-    <h1>MyTaskApp PRO</h1>
+    <div class="header-app">
+        <h1>MY TASK ULTRA</h1>
+    </div>
     
     <div class="form-container">
-        <div class="form-title">🚀 สร้างโปรเจกต์ใหม่</div>
-        
-        <div class="camera-box">
-            <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
-            <button class="btn-camera" onclick="document.getElementById('cameraInput').click()">
-                📸 ถ่ายรูปประกอบ
-            </button>
-            <img id="photo-preview" src="">
+        <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
+        <div class="btn-upload" onclick="document.getElementById('cameraInput').click()">
+            📸 เพิ่มรูปภาพ (ได้หลายรูป)
         </div>
+        
+        <div id="preview-area" class="preview-wrapper"></div>
 
         <input type="text" id="taskTitle" placeholder="ชื่องานของคุณ...">
-        <textarea id="taskDetail" placeholder="รายละเอียดงาน..."></textarea>
+        <textarea id="taskDetail" placeholder="ใส่รายละเอียดงานที่นี่..."></textarea>
         
         <select id="taskStatus">
-            <option value="รอดำเนินการ">รอดำเนินการ</option>
-            <option value="กำลังทำ">กำลังทำ</option>
-            <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+            <option value="รอดำเนินการ">🔵 รอดำเนินการ</option>
+            <option value="กำลังทำ">🟠 กำลังทำ</option>
+            <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
         </select>
         
-        <button class="add-btn" onclick="addTask()">บันทึกข้อมูล</button>
+        <button class="add-btn" id="saveBtn" onclick="addTask()">บันทึกข้อมูลเข้าเครื่อง</button>
     </div>
 
     <div id="task-container"></div>
 
     <script>
-        let currentPhotoData = "";
+        let selectedPhotos = [];
 
-        // จัดการเรื่องรูปภาพ
-        document.getElementById('cameraInput').onchange = function(e) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                currentPhotoData = event.target.result;
-                const preview = document.getElementById('photo-preview');
-                preview.src = currentPhotoData;
-                preview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
+        // จัดการการเลือกหลายรูป + ย่อขนาดรูป (สำคัญมาก!)
+        document.getElementById('cameraInput').onchange = async function(e) {
+            const files = Array.from(e.target.files);
+            for (let file of files) {
+                const base64 = await resizeImage(file, 800); // ย่อขนาดให้กว้างสูงสุด 800px
+                selectedPhotos.push(base64);
+                
+                const img = document.createElement('img');
+                img.src = base64;
+                img.className = 'preview-img-item';
+                document.getElementById('preview-area').appendChild(img);
+            }
         };
+
+        // ฟังก์ชันย่อขนาดรูปภาพเพื่อประหยัดพื้นที่ LocalStorage
+        function resizeImage(file, maxWidth) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > maxWidth) {
+                            height = (maxWidth / width) * height;
+                            width = maxWidth;
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.7)); // บันทึกเป็น JPEG คุณภาพ 70%
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
 
         function addTask() {
             const title = document.getElementById('taskTitle').value;
             const detail = document.getElementById('taskDetail').value;
             const status = document.getElementById('taskStatus').value;
+            const saveBtn = document.getElementById('saveBtn');
 
-            if (!title) return alert("กรุณาระบุชื่องาน");
+            if (!title) return alert("❌ กรุณาระบุชื่อโปรเจกต์");
+
+            saveBtn.innerText = "กำลังบันทึก...";
+            saveBtn.disabled = true;
 
             const newTask = {
                 id: Date.now(),
                 title, detail, status,
-                photo: currentPhotoData,
+                photos: selectedPhotos,
                 time: new Date().toLocaleString('th-TH')
             };
 
-            const tasks = JSON.parse(localStorage.getItem('proTasks')) || [];
-            tasks.unshift(newTask);
-            localStorage.setItem('proTasks', JSON.stringify(tasks));
+            try {
+                const tasks = JSON.parse(localStorage.getItem('ultraTasks')) || [];
+                tasks.unshift(newTask);
+                localStorage.setItem('ultraTasks', JSON.stringify(tasks));
 
-            // Reset Form
-            document.getElementById('taskTitle').value = "";
-            document.getElementById('taskDetail').value = "";
-            document.getElementById('photo-preview').style.display = 'none';
-            currentPhotoData = "";
-            
-            loadTasks();
+                // ล้างข้อมูลหลังบันทึก
+                document.getElementById('taskTitle').value = "";
+                document.getElementById('taskDetail').value = "";
+                document.getElementById('preview-area').innerHTML = "";
+                selectedPhotos = [];
+                saveBtn.innerText = "บันทึกข้อมูลเข้าเครื่อง";
+                saveBtn.disabled = false;
+                
+                loadTasks();
+                alert("✅ บันทึกเรียบร้อย!");
+            } catch (e) {
+                alert("⚠️ พื้นที่เต็ม! กรุณาลบรายการเก่าออกบ้างนะครับ");
+                saveBtn.disabled = false;
+                saveBtn.innerText = "บันทึกข้อมูลเข้าเครื่อง";
+            }
         }
 
         function loadTasks() {
             const container = document.getElementById('task-container');
-            const tasks = JSON.parse(localStorage.getItem('proTasks')) || [];
+            const tasks = JSON.parse(localStorage.getItem('ultraTasks')) || [];
             container.innerHTML = "";
 
             tasks.forEach(t => {
+                let photosHTML = "";
+                if (t.photos && t.photos.length > 0) {
+                    photosHTML = `<div class="gallery">` + 
+                        t.photos.map(p => `<img src="${p}">`).join('') + 
+                        `</div>`;
+                }
+
                 container.innerHTML += `
                     <div class="card">
-                        <span class="status-tag status-${t.status}">${t.status}</span>
-                        ${t.photo ? `<img src="${t.photo}" class="task-img">` : ''}
-                        <div class="task-title">${t.title}</div>
-                        <div class="job-detail" style="font-size: 0.95rem; color: #444; margin-bottom: 10px;">${t.detail}</div>
-                        <div class="task-meta">
-                            <span>📅 ${t.time}</span>
+                        <div class="status-tag st-${t.status}">${t.status}</div>
+                        ${photosHTML}
+                        <div class="job-title">${t.title}</div>
+                        <div class="job-detail">${t.detail || 'ไม่มีรายละเอียด'}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:0.8rem; color:#b2bec3;">📅 ${t.time}</span>
+                            <span class="delete-btn" onclick="deleteTask(${t.id})">ลบทิ้ง</span>
                         </div>
-                        <span class="delete-btn" onclick="deleteTask(${t.id})">ลบรายการนี้</span>
                     </div>
                 `;
             });
         }
 
         function deleteTask(id) {
-            if(confirm("ยืนยันการลบ?")) {
-                let tasks = JSON.parse(localStorage.getItem('proTasks'));
+            if(confirm("ลบรายการนี้ใช่ไหม?")) {
+                let tasks = JSON.parse(localStorage.getItem('ultraTasks'));
                 tasks = tasks.filter(t => t.id !== id);
-                localStorage.setItem('proTasks', JSON.stringify(tasks));
+                localStorage.setItem('ultraTasks', JSON.stringify(tasks));
                 loadTasks();
             }
         }
