@@ -3,74 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🐕 TASK MANAGER DOGMODE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>PREMIUM TASK MANAGER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #fb8c00; --bg: #fffbf0; --badge: #fff3e0; --dog: #e6b26d; }
-        body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); margin: 0; padding: 15px 15px 100px 15px; }
+        :root {
+            --glass: rgba(255, 255, 255, 0.95);
+            --primary: #6366f1;
+            --accent: #a855f7;
+            --bg: #0f172a;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            background-attachment: fixed;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        /* Header ดีไซน์ใหม่ */
+        .app-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        .app-header h1 {
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin: 0;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ฟอร์มบันทึกข้อมูลแบบ Glassmorphism */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 30px;
+            color: var(--text);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1rem;
+            box-sizing: border-box;
+            background: #f8fafc;
+        }
+
+        .btn-main {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            width: 100%;
+            font-weight: 500;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-main:active { transform: scale(0.98); }
+
+        .btn-photo {
+            background: #eef2ff;
+            color: var(--primary);
+            border: 2px dashed var(--primary);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* ระบบแยกกลุ่มเดือน/ปี */
+        .month-group { margin-top: 40px; }
+        .month-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid var(--accent);
+            color: #e2e8f0;
+        }
+
+        /* Card รายการงาน */
+        .task-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: var(--text);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: white;
+        }
+        .st-รอดำเนินการ { background: #64748b; }
+        .st-กำลังทำ { background: #f59e0b; }
+        .st-เสร็จสิ้น { background: #10b981; }
+
+        .gallery { display: flex; gap: 10px; overflow-x: auto; margin: 15px 0; padding-bottom: 5px; }
+        .gallery img { width: 140px; height: 100px; object-fit: cover; border-radius: 12px; cursor: pointer; }
+
+        .actions { display: flex; gap: 15px; margin-top: 15px; border-top: 1px solid #f1f5f9; padding-top: 15px; }
+        .btn-edit { color: var(--primary); cursor: pointer; border: none; background: none; font-family: inherit; font-weight: 500; }
+        .btn-delete { color: #ef4444; cursor: pointer; border: none; background: none; font-family: inherit; font-weight: 500; }
+
+        /* Modal & Zoom */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 90%; max-height: 85vh; border-radius: 24px; padding: 25px; overflow-y: auto; color: var(--text); }
         
-        /* สไตล์หน้าจอขยายรูป (Image Zoom Overlay) */
-        .zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; cursor: zoom-out; }
-        .zoom-overlay img { max-width: 95%; max-height: 95%; border-radius: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.2); transition: transform 0.2s; }
+        .zoom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 2000; justify-content: center; align-items: center; }
+        .zoom-overlay img { max-width: 100%; max-height: 100%; }
 
-        /* หน้าจอโหลด */
-        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; }
-        #percent-num { font-size: 3rem; font-weight: 800; color: var(--primary); }
-
-        /* Form */
-        .form-card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; border-left: 5px solid var(--dog); }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; }
-        .btn-cam { background: var(--badge); border: 2px dashed var(--dog); padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; margin-bottom: 10px; color: var(--dog); font-weight: 600; }
-        .btn-save { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: 700; font-size: 1.1rem; cursor: pointer; }
-        
-        #preview-area { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; }
-        #preview-area img { width: 55px; height: 55px; object-fit: cover; border-radius: 6px; }
-
-        /* Card งาน */
-        .card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
-        .gallery { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 10px; }
-        .gallery img { width: 85%; height: 170px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #eee; cursor: zoom-in; /* เปลี่ยนเคอร์เซอร์เป็นรูปแว่นขยาย */ }
-        .badge { display: inline-block; padding: 3px 10px; border-radius: 8px; color: white; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; }
-        .st-รอดำเนินการ { background: #54a0ff; } .st-กำลังทำ { background: var(--dog); } .st-เสร็จสิ้น { background: #10ac84; }
+        #preview-area { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 10px; }
+        #preview-area img { width: 60px; height: 60px; object-fit: cover; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="zoom-area" class="zoom-overlay" onclick="closeZoom()">
-        <img id="zoom-img" src="" alt="ขยายรูป" onclick="event.stopPropagation()"> </div>
-
-    <div id="loader" class="loading-overlay">
-        <div id="percent-num">0%</div>
-        <p style="font-weight:600; color:#555;">กำลังส่งงานครับหัวหน้า...</p>
+    <div class="app-header">
+        <h1>PREMIUM TASK</h1>
+        <p style="opacity: 0.6; font-weight: 200;">Management System v2.0</p>
     </div>
 
-    <div style="text-align:center; margin-bottom:20px;">
-        <img src="https://lh3.googleusercontent.com/pw/AP1GczNBgVbWfS2oK7_M_PjA-S4oT9GfL_Y-9_5z4Y-V9U54" alt="Dog Logo" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--dog); box-shadow: 0 4px 10px rgba(0,0,0,0.1); object-fit: cover; object-position: 50% 20%;">
-        <h2 style="margin:10px 0 0 0; color:var(--primary);">🐕 TASK MANAGER</h2>
-        <p style="margin:0; font-size:0.8rem; color:#888;">โหมดคนรักหมาสุดๆ</p>
-    </div>
-
-    <div class="form-card">
+    <div class="glass-card">
         <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
-        <div class="btn-cam" onclick="document.getElementById('cameraInput').click()">📸 กดเพื่อถ่ายรูป/เลือกรูป (หลายรูป)</div>
+        <div class="btn-photo" onclick="document.getElementById('cameraInput').click()">📸 เพิ่มรูปภาพประกอบงาน</div>
         <div id="preview-area"></div>
-        <input type="text" id="taskTitle" placeholder="ชื่องาน...">
-        <textarea id="taskDetail" rows="2" placeholder="รายละเอียด..."></textarea>
+        <input type="text" id="taskTitle" placeholder="ระบุชื่องานที่ต้องทำ...">
+        <textarea id="taskDetail" rows="2" placeholder="รายละเอียดเพิ่มเติม (ถ้ามี)..."></textarea>
         <select id="taskStatus">
             <option value="รอดำเนินการ">รอดำเนินการ</option>
             <option value="กำลังทำ">กำลังทำ</option>
             <option value="เสร็จสิ้น">เสร็จสิ้น</option>
         </select>
-        <button class="btn-save" onclick="addTask()">บันทึกลง Cloud ด่วน</button>
+        <button class="btn-main" onclick="addTask()">บันทึกข้อมูล</button>
     </div>
 
     <div id="task-container"></div>
 
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-top: 0;">แก้ไขข้อมูลงาน</h2>
+            <input type="hidden" id="editId">
+            <input type="text" id="editTitle">
+            <textarea id="editDetail" rows="4"></textarea>
+            <select id="editStatus">
+                <option value="รอดำเนินการ">รอดำเนินการ</option>
+                <option value="กำลังทำ">กำลังทำ</option>
+                <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+            </select>
+            <button class="btn-main" onclick="updateTask()">ยืนยันการแก้ไข</button>
+            <button style="background:none; border:none; color: #64748b; width:100%; margin-top:15px; cursor:pointer;" onclick="closeModal()">ยกเลิก</button>
+        </div>
+    </div>
+
+    <div id="zoomOverlay" class="zoom-overlay" onclick="this.style.display='none'">
+        <img id="zoomImg">
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // 🔥 ก๊อปปี้ Config ของคุณมาวางตรงนี้ 🔥
+        // 🔥 ใช้ Config ของคุณ
         const firebaseConfig = {
             apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
             authDomain: "mytaskapp-pro.firebaseapp.com",
@@ -85,6 +200,7 @@
         const db = getFirestore(app);
         let selectedPhotos = [];
 
+        // ฟังก์ชันย่อรูปพรีเมียม
         async function resizeImage(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -92,13 +208,13 @@
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const maxWidth = 500; 
+                        const maxWidth = 600; 
                         let width = img.width, height = img.height;
                         if (width > maxWidth) { height = (maxWidth / width) * height; width = maxWidth; }
                         canvas.width = width; canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.4)); 
+                        resolve(canvas.toDataURL('image/jpeg', 0.5)); 
                     };
                     img.src = e.target.result;
                 };
@@ -121,63 +237,85 @@
             const title = document.getElementById('taskTitle').value;
             const detail = document.getElementById('taskDetail').value;
             const status = document.getElementById('taskStatus').value;
-            const loader = document.getElementById('loader');
-            const pText = document.getElementById('percent-num');
+            if (!title) return alert("กรุณาระบุชื่องาน");
 
-            if (!title) return alert("ใส่ชื่องานด้วย!");
-
-            loader.style.display = 'flex';
-            pText.innerText = '50%';
-            
             try {
-                // บันทึกตรงเข้า Firestore (ไม่ต้องใช้ Storage)
                 await addDoc(collection(db, "tasks"), {
                     title, detail, status,
                     photos: selectedPhotos, 
                     createdAt: new Date().getTime()
                 });
-
-                pText.innerText = '100%';
-                setTimeout(() => {
-                    document.getElementById('taskTitle').value = "";
-                    document.getElementById('taskDetail').value = "";
-                    document.getElementById('preview-area').innerHTML = "";
-                    selectedPhotos = [];
-                    loader.style.display = 'none';
-                }, 300);
-
-            } catch (err) { alert(err.message); loader.style.display = 'none'; }
+                // Reset form
+                document.getElementById('taskTitle').value = "";
+                document.getElementById('taskDetail').value = "";
+                document.getElementById('preview-area').innerHTML = "";
+                selectedPhotos = [];
+            } catch (err) { alert(err.message); }
         };
 
+        // แสดงผลและแยกหมวดหมู่ตามเดือน
         onSnapshot(query(collection(db, "tasks"), orderBy("createdAt", "desc")), (snap) => {
             const container = document.getElementById('task-container');
             container.innerHTML = "";
+            let currentMonth = "";
+
             snap.forEach((docSnap) => {
                 const d = docSnap.data();
-                // ✅ เพิ่ม onclick="zoomPhoto('${u}')" ✅
-                const gallery = d.photos ? `<div class="gallery">${d.photos.map(u => `<img src="${u}" onclick="zoomPhoto('${u}')" loading="lazy">`).join('')}</div>` : "";
-                container.innerHTML += `
-                    <div class="card">
-                        <div class="badge st-${d.status}">${d.status}</div>
+                const date = new Date(d.createdAt);
+                const monthLabel = date.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' });
+
+                // สร้างหัวข้อเดือนถ้าเป็นเดือนใหม่
+                if (currentMonth !== monthLabel) {
+                    currentMonth = monthLabel;
+                    container.innerHTML += `<div class="month-group"><div class="month-title">${currentMonth}</div></div>`;
+                }
+
+                const gallery = d.photos ? `<div class="gallery">${d.photos.map(u => `<img src="${u}" onclick="zoomImg('${u}')">`).join('')}</div>` : "";
+                
+                const cardHtml = `
+                    <div class="task-card">
+                        <span class="badge st-${d.status}">${d.status}</span>
+                        <div style="font-weight:600; font-size:1.2rem; margin-top:10px;">${d.title}</div>
+                        <p style="color:#64748b; margin:8px 0;">${d.detail || ''}</p>
                         ${gallery}
-                        <div style="font-weight:700;">${d.title}</div>
-                        <p style="font-size:0.85rem; color:#666; margin:5px 0;">${d.detail || ''}</p>
-                        <button onclick="window.deleteTask('${docSnap.id}')" style="color:#ff4757; border:none; background:none; padding:0; font-size:0.8rem; cursor:pointer;">ลบ</button>
+                        <div class="actions">
+                            <div class="btn-edit" onclick="openEdit('${docSnap.id}', '${d.title}', '${d.detail || ""}', '${d.status}')">แก้ไข</div>
+                            <div class="btn-delete" onclick="deleteTask('${docSnap.id}')">ลบรายการ</div>
+                        </div>
                     </div>`;
+                
+                container.lastChild.innerHTML += cardHtml;
             });
         });
 
-        // ✅ ฟังก์ชันขยายรูป ✅
-        window.zoomPhoto = (url) => {
-            document.getElementById('zoom-img').src = url;
-            document.getElementById('zoom-area').style.display = 'flex';
+        // ฟังก์ชันจัดการ Modal แก้ไข
+        window.openEdit = (id, title, detail, status) => {
+            document.getElementById('editId').value = id;
+            document.getElementById('editTitle').value = title;
+            document.getElementById('editDetail').value = detail;
+            document.getElementById('editStatus').value = status;
+            document.getElementById('editModal').style.display = 'flex';
         };
 
-        window.closeZoom = () => {
-            document.getElementById('zoom-area').style.display = 'none';
+        window.closeModal = () => document.getElementById('editModal').style.display = 'none';
+
+        window.updateTask = async () => {
+            const id = document.getElementById('editId').value;
+            const taskRef = doc(db, "tasks", id);
+            await updateDoc(taskRef, {
+                title: document.getElementById('editTitle').value,
+                detail: document.getElementById('editDetail').value,
+                status: document.getElementById('editStatus').value
+            });
+            closeModal();
         };
 
-        window.deleteTask = async (id) => { if(confirm("ลบไหม?")) await deleteDoc(doc(db, "tasks", id)); };
+        window.deleteTask = async (id) => { if(confirm("ต้องการลบงานนี้ใช่หรือไม่?")) await deleteDoc(doc(db, "tasks", id)); };
+
+        window.zoomImg = (url) => {
+            document.getElementById('zoomImg').src = url;
+            document.getElementById('zoomOverlay').style.display = 'flex';
+        };
     </script>
 </body>
 </html>
