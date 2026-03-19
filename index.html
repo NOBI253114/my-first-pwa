@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MyTaskApp Cloud Fast</title>
+    <title>MyTaskApp Cloud - Progress Bar</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #4361ee; --secondary: #3f37c9; --bg: #f0f2f5; }
+        :root { --primary: #4361ee; --secondary: #3f37c9; --bg: #f0f2f5; --success: #10ac84; }
         body { font-family: 'Chakra Petch', sans-serif; background: var(--bg); margin: 0; padding: 20px 15px 100px 15px; }
         
-        /* สไตล์หน้าจอโหลด */
+        /* สไตล์หน้าจอโหลดแบบมีหลอด Progress */
         .loading-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;
+            background: rgba(255,255,255,0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;
         }
-        .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
+        .progress-container { width: 80%; background-color: #e0e0e0; border-radius: 20px; margin: 20px 0; height: 20px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); }
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: width 0.3s ease; }
+        #percent-text { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+
+        /* UI ส่วนอื่นๆ */
         .form-container { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px; }
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; }
         .btn-upload { background: #f8f9fa; border: 2px dashed var(--primary); padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; margin-bottom: 10px; color: var(--primary); font-weight: 600; }
@@ -37,25 +39,28 @@
 <body>
 
     <div id="loader" class="loading-overlay">
-        <div class="spinner"></div>
-        <p id="load-text" style="margin-top:15px; font-weight:bold; color:var(--primary);">กำลังบันทึกข้อมูล...</p>
+        <div id="percent-text">0%</div>
+        <div class="progress-container">
+            <div id="p-bar" class="progress-bar"></div>
+        </div>
+        <p id="load-status" style="font-weight:600; color:#555;">กำลังเตรียมข้อมูล...</p>
     </div>
 
-    <div style="text-align:center; color:var(--primary);"><h1>☁️ MY TASK FAST</h1></div>
+    <div style="text-align:center; color:var(--primary);"><h1>☁️ MY TASK PRO</h1></div>
 
     <div class="form-container">
         <input type="file" id="cameraInput" accept="image/*" multiple style="display: none;">
-        <div class="btn-upload" onclick="document.getElementById('cameraInput').click()">📸 เลือกรูปภาพ (หลายรูปได้)</div>
+        <div class="btn-upload" onclick="document.getElementById('cameraInput').click()">📸 เพิ่มรูปภาพสำหรับงานนี้</div>
         <div id="preview-area"></div>
 
-        <input type="text" id="taskTitle" placeholder="ชื่องาน...">
-        <textarea id="taskDetail" placeholder="รายละเอียด..."></textarea>
+        <input type="text" id="taskTitle" placeholder="ชื่องานของคุณ...">
+        <textarea id="taskDetail" placeholder="รายละเอียดงาน..."></textarea>
         <select id="taskStatus">
             <option value="รอดำเนินการ">🔵 รอดำเนินการ</option>
             <option value="กำลังทำ">🟠 กำลังทำ</option>
             <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
         </select>
-        <button class="add-btn" id="saveBtn" onclick="addTask()">บันทึกด่วน</button>
+        <button class="add-btn" id="saveBtn" onclick="addTask()">บันทึกข้อมูลเข้า Cloud</button>
     </div>
 
     <div id="task-container"></div>
@@ -81,7 +86,6 @@
         const storage = getStorage(app);
         let selectedPhotos = [];
 
-        // ย่อรูปให้เล็กลงมาก (กว้าง 600px คุณภาพ 50%) เพื่อให้โหลดไว
         async function resizeImage(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -100,7 +104,7 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.5)); // ย่อเหลือ 50%
+                        resolve(canvas.toDataURL('image/jpeg', 0.6)); // ย่อเหลือ 60% ชัดกำลังดี
                     };
                     img.src = e.target.result;
                 };
@@ -124,63 +128,83 @@
             const detail = document.getElementById('taskDetail').value;
             const status = document.getElementById('taskStatus').value;
             const loader = document.getElementById('loader');
-            const loadText = document.getElementById('load-text');
+            const pBar = document.getElementById('p-bar');
+            const pText = document.getElementById('percent-text');
+            const pStatus = document.getElementById('load-status');
 
-            if (!title) return alert("ระบุชื่องานด้วยครับ");
+            if (!title) return alert("กรุณาใส่ชื่องาน");
 
-            loader.style.display = 'flex'; // แสดงหน้าจอโหลด
+            loader.style.display = 'flex';
+            pBar.style.width = '0%';
+            pText.innerText = '0%';
             
             try {
                 const photoUrls = [];
+                const totalSteps = selectedPhotos.length + 1; // จำนวนรูป + ขั้นตอนบันทึก DB
+
                 for (let i = 0; i < selectedPhotos.length; i++) {
-                    loadText.innerText = `กำลังส่งรูปที่ ${i+1}/${selectedPhotos.length}...`;
+                    pStatus.innerText = `กำลังอัปโหลดรูปที่ ${i+1}...`;
                     const photoRef = ref(storage, `tasks/${Date.now()}_${i}.jpg`);
                     await uploadString(photoRef, selectedPhotos[i], 'data_url');
                     const url = await getDownloadURL(photoRef);
                     photoUrls.push(url);
+                    
+                    // คำนวณ %
+                    let progress = Math.round(((i + 1) / totalSteps) * 100);
+                    pBar.style.width = progress + '%';
+                    pText.innerText = progress + '%';
                 }
 
-                loadText.innerText = "กำลังบันทึกข้อมูลลง Cloud...";
+                pStatus.innerText = "กำลังบันทึกข้อมูลลงฐานข้อมูล...";
                 await addDoc(collection(db, "tasks"), {
                     title, detail, status,
                     photos: photoUrls,
                     createdAt: new Date().getTime()
                 });
 
-                document.getElementById('taskTitle').value = "";
-                document.getElementById('taskDetail').value = "";
-                document.getElementById('preview-area').innerHTML = "";
-                selectedPhotos = [];
+                pBar.style.width = '100%';
+                pText.innerText = '100%';
+                pStatus.innerText = "บันทึกสำเร็จ!";
                 
+                setTimeout(() => {
+                    document.getElementById('taskTitle').value = "";
+                    document.getElementById('taskDetail').value = "";
+                    document.getElementById('preview-area').innerHTML = "";
+                    selectedPhotos = [];
+                    loader.style.display = 'none';
+                }, 800);
+
             } catch (err) {
-                alert("เกิดข้อผิดพลาด: " + err.message);
-            } finally {
-                loader.style.display = 'none'; // ซ่อนหน้าจอโหลด
+                alert("ล้มเหลว: " + err.message);
+                loader.style.display = 'none';
             }
         };
 
-        // แสดงผล Real-time
         const q = query(collection(db, "tasks"), orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
             const container = document.getElementById('task-container');
             container.innerHTML = "";
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                const gallery = data.photos ? `<div class="gallery">${data.photos.map(u => `<img src="${u}">`).join('')}</div>` : "";
+                const gallery = data.photos && data.photos.length > 0 
+                    ? `<div class="gallery">${data.photos.map(u => `<img src="${u}">`).join('')}</div>` 
+                    : "";
                 container.innerHTML += `
                     <div class="card">
                         <div class="status-badge st-${data.status}">${data.status}</div>
                         ${gallery}
                         <div style="font-weight:bold; font-size:1.2rem;">${data.title}</div>
                         <p style="color:#666; font-size:0.9rem;">${data.detail || ''}</p>
-                        <button onclick="window.deleteTask('${docSnap.id}')" style="color:red; border:none; background:none; cursor:pointer; font-size:0.8rem;">ลบงาน</button>
+                        <div style="text-align:right;">
+                            <button onclick="window.deleteTask('${docSnap.id}')" style="color:#ff4757; border:none; background:none; cursor:pointer; font-weight:600;">ลบงาน</button>
+                        </div>
                     </div>
                 `;
             });
         });
 
         window.deleteTask = async (id) => {
-            if(confirm("ลบใช่ไหม?")) await deleteDoc(doc(db, "tasks", id));
+            if(confirm("ต้องการลบงานนี้ใช่ไหม?")) await deleteDoc(doc(db, "tasks", id));
         };
     </script>
 </body>
