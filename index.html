@@ -2,75 +2,153 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyTaskApp - ระบบบันทึกงาน</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MyTaskApp - สมุดจดงาน</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2c3e50">
     <style>
-        body { font-family: 'Chakra Petch', sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; }
-        h1 { text-align: center; color: #1a73e8; font-size: 1.4rem; margin-bottom: 20px; }
+        body { font-family: 'Chakra Petch', sans-serif; background-color: #f7f9fc; margin: 0; padding: 20px 10px; padding-bottom: 80px; }
+        h1 { text-align: center; color: #1a73e8; font-size: 1.5rem; margin-bottom: 15px; }
+        
+        /* ส่วนฟอร์มเพิ่มงาน */
+        .form-container { background: white; border-radius: 15px; padding: 15px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .form-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; color: #333; }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 0.9rem; }
+        textarea { resize: vertical; height: 80px; }
+        .add-btn { background-color: #27ae60; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; width: 100%; transition: background 0.3s; }
+        .add-btn:hover { background-color: #219150; }
+
+        /* ส่วนรายการงาน */
         #task-container { display: grid; gap: 15px; }
-        .card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-top: 5px solid #1a73e8; }
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .job-id { font-size: 0.8rem; color: #7f8c8d; font-weight: bold; }
+        .card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-top: 5px solid #1a73e8; transition: transform 0.2s; position: relative;}
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .job-id { font-size: 0.8rem; color: #7f8c8d; }
         .status-badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; color: white; background: #95a5a6; }
-        .status-doing { background: #f39c12; } /* กำลังทำ */
-        .status-done { background: #27ae60; }  /* เสร็จสิ้น */
-        .job-title { font-size: 1.1rem; font-weight: bold; color: #2c3e50; margin: 5px 0; line-height: 1.4; }
-        .job-detail { font-size: 0.9rem; color: #576574; margin-bottom: 12px; white-space: pre-line; }
-        .footer-info { display: flex; justify-content: space-between; border-top: 1px solid #eee; padding-top: 10px; font-size: 0.8rem; color: #95a5a6; }
-        #loading { text-align: center; padding: 50px; color: #7f8c8d; }
+        .status-wait { background: #3498db; }  /* รอดำเนินการ - สีฟ้า */
+        .status-doing { background: #f39c12; } /* กำลังทำ - สีเหลืองส้ม */
+        .status-done { background: #27ae60; }  /* เสร็จสิ้น - สีเขียว */
+        
+        .job-title { font-size: 1.1rem; font-weight: bold; color: #2c3e50; margin: 0 0 10px 0; }
+        .job-detail { font-size: 0.95rem; color: #576574; margin-bottom: 12px; white-space: pre-line; }
+        
+        .footer-info { display: flex; flex-direction: column; border-top: 1px solid #eee; padding-top: 10px; font-size: 0.8rem; color: #7f8c8d; }
+        .delete-btn { position: absolute; top: 10px; right: 10px; color: #e74c3c; cursor: pointer; padding: 5px; font-weight: bold; }
+        
+        /* ฟอนต์ */
+        <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&display=swap" rel="stylesheet">
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <h1>📋 รายการงาน MyTaskApp</h1>
+    <h1>📝 สมุดจดงาน MyTaskApp</h1>
     
-    <div id="loading">⏳ กำลังโหลดข้อมูลจาก Sheets...</div>
+    <div class="form-container">
+        <div class="form-title">➕ เพิ่มงานใหม่</div>
+        <input type="text" id="taskTitle" placeholder="ชื่องาน (เช่น ซ่อมท่อประปา)">
+        <textarea id="taskDetail" placeholder="รายละเอียด (เช่น ท่อรั่วที่ห้องครัว)"></textarea>
+        <input type="text" id="taskResponsible" placeholder="ผู้รับผิดชอบ (เช่น ช่างสมชาย)">
+        <select id="taskStatus">
+            <option value="รอดำเนินการ" class="status-wait">รอดำเนินการ</option>
+            <option value="กำลังทำ" class="status-doing">กำลังทำ</option>
+            <option value="เสร็จสิ้น" class="status-done">เสร็จสิ้น</option>
+        </select>
+        <button class="add-btn" onclick="addTask()">บันทึกงาน</button>
+    </div>
+
     <div id="task-container"></div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxH5oVS_CdHD-wjNoOHoXkpoySI3NGL7i4cwKYGguNeujY76sztNwC0L7AFmpB7P1gNPA/exec";
+        // โหลดข้อมูลจาก LocalStorage เมื่อเปิดแอป
+        window.onload = loadTasks;
 
-        async function loadData() {
-            try {
-                const response = await fetch(SCRIPT_URL);
-                const data = await response.json();
-                const container = document.getElementById('task-container');
-                document.getElementById('loading').style.display = 'none';
-
-                data.forEach(item => {
-                    if(!item.ชื่องาน) return; // กรองแถวว่าง
-
-                    // กำหนดสีสถานะ
-                    let statusClass = "";
-                    if(item.สถานะ.includes("ทำ")) statusClass = "status-doing";
-                    if(item.สถานะ.includes("เสร็จ")) statusClass = "status-done";
-
-                    const card = `
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="job-id">${item.เลขงาน || '-'} / ${item.รหัสงาน || '-'}</span>
-                                <span class="status-badge ${statusClass}">${item.สถานะ || 'ไม่มีสถานะ'}</span>
-                            </div>
-                            <div class="job-title">${item.ชื่องาน}</div>
-                            <div class="job-detail">${item.รายละเอียด || ''}</div>
-                            <div class="footer-info">
-                                <span>👤 ${item.ผู้รับผิดชอบ || 'ไม่ระบุ'}</span>
-                                <span>📅 ${item.วันที่เสร็จงาน || '-'}</span>
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += card;
-                });
-            } catch (error) {
-                document.getElementById('loading').innerHTML = "❌ โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่";
-                console.error(error);
-            }
+        function getTasks() {
+            // ดึงข้อมูล tasks ใน LocalStorage, ถ้าไม่มีให้ส่งค่า Array ว่างไป
+            return JSON.parse(localStorage.getItem('myTasks')) || [];
         }
 
-        loadData();
+        function saveTasksToLocalStorage(tasks) {
+            // บันทึก tasks ทั้งหมดลงใน LocalStorage
+            localStorage.setItem('myTasks', JSON.stringify(tasks));
+        }
+
+        function addTask() {
+            const title = document.getElementById('taskTitle').value;
+            const detail = document.getElementById('taskDetail').value;
+            const responsible = document.getElementById('taskResponsible').value;
+            const status = document.getElementById('taskStatus').value;
+
+            if (!title) {
+                alert("❌ กรุณาใส่ชื่องาน");
+                return;
+            }
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('th-TH') + " " + now.toLocaleTimeString('th-TH');
+
+            const newTask = {
+                id: Date.now(), // ใช้ timestamp เป็น ID
+                title: title,
+                detail: detail,
+                responsible: responsible,
+                status: status,
+                createdAt: dateStr
+            };
+
+            const tasks = getTasks();
+            tasks.unshift(newTask); // เพิ่มงานใหม่ไว้บนสุด
+            saveTasksToLocalStorage(tasks);
+            
+            // ล้างฟอร์ม
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDetail').value = '';
+            document.getElementById('taskResponsible').value = '';
+            
+            loadTasks(); // โหลดรายการใหม่
+        }
+
+        function loadTasks() {
+            const container = document.getElementById('task-container');
+            const tasks = getTasks();
+            container.innerHTML = ''; // ล้างรายการเก่าก่อน
+
+            if (tasks.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #7f8c8d; padding: 20px;">คุณยังไม่มีงานที่จดไว้ ลองเพิ่มงานดูนะ!</div>';
+                return;
+            }
+
+            tasks.forEach(task => {
+                // กำหนดสีสถานะ
+                let statusClass = "status-wait";
+                if(task.status === "กำลังทำ") statusClass = "status-doing";
+                if(task.status === "เสร็จสิ้น") statusClass = "status-done";
+
+                const cardHTML = `
+                    <div class="card">
+                        <div class="delete-btn" onclick="deleteTask(${task.id})">🗑️</div>
+                        <div class="card-header">
+                            <span class="job-id">#${task.id}</span>
+                            <span class="status-badge ${statusClass}">${task.status}</span>
+                        </div>
+                        <div class="job-title">${task.title}</div>
+                        <div class="job-detail">${task.detail}</div>
+                        <div class="footer-info">
+                            <span>👤 ${task.responsible || 'ไม่ระบุ'}</span>
+                            <span>📅 จดเมื่อ: ${task.createdAt}</span>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
+
+        function deleteTask(id) {
+            if(confirm('🗑️ คุณแน่ใจไหมว่าต้องการลบงานนี้?')) {
+                const tasks = getTasks();
+                const updatedTasks = tasks.filter(task => task.id !== id);
+                saveTasksToLocalStorage(updatedTasks);
+                loadTasks();
+            }
+        }
 
         // Register Service Worker
         if ('serviceWorker' in navigator) {
