@@ -1,14 +1,13 @@
 {
-  "name": "MyTaskApp Tracking",
-  "short_name": "MyTask",
+  "name": "MyTaskApp PRO",
+  "short_name": "TaskPro",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1a73e8",
-  "description": "แอปติดตามสถานะงานจาก Google Sheets",
+  "background_color": "#f8f9fa",
+  "theme_color": "#4361ee",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2098/2098402.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/4359/4359042.png",
       "sizes": "512x512",
       "type": "image/png"
     }
