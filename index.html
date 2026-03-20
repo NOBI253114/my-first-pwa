@@ -469,7 +469,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v1.5 Beta</span>
+            <span class="brand-ver">v1.6 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -515,7 +515,7 @@
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v1.5 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v1.6 Beta</div>
             </div>
         </div>
 
@@ -1111,12 +1111,12 @@
             const C_WHITE       = "FFFFFF";
             const C_GRAY_LIGHT  = "F0FDF4"; // alternate row
 
-            const fontMain  = { name: "Calibri", sz: 11 };
-            const fontBold  = { name: "Calibri", sz: 11, bold: true };
-            const fontTitle = { name: "Calibri", sz: 18, bold: true, color: { rgb: C_WHITE } };
-            const fontSub   = { name: "Calibri", sz: 10, color: { rgb: "4B7A5A" } };
-            const fontHeader= { name: "Calibri", sz: 11, bold: true, color: { rgb: C_WHITE } };
-            const fontMono  = { name: "Courier New", sz: 10 };
+            const fontMain  = { name: "Calibri", sz: 9 };
+            const fontBold  = { name: "Calibri", sz: 9, bold: true };
+            const fontTitle = { name: "Calibri", sz: 14, bold: true, color: { rgb: C_WHITE } };
+            const fontSub   = { name: "Calibri", sz: 8, color: { rgb: "4B7A5A" } };
+            const fontHeader= { name: "Calibri", sz: 9, bold: true, color: { rgb: C_WHITE } };
+            const fontMono  = { name: "Courier New", sz: 8 };
 
             const border = {
                 top:    { style: "thin", color: { rgb: "BBF7D0" } },
@@ -1131,8 +1131,9 @@
                 right:  { style: "medium", color: { rgb: C_GREEN_DARK } },
             };
 
-            const align_c = { horizontal: "center", vertical: "center", wrapText: true };
-            const align_l = { horizontal: "left",   vertical: "center", wrapText: true };
+            const align_c = { horizontal: "center", vertical: "center", wrapText: false };
+            const align_l = { horizontal: "left",   vertical: "center", wrapText: false };
+            const align_wrap = { horizontal: "left", vertical: "top", wrapText: true };
 
             // สไตล์ Header row
             const sHeader = (col) => ({
@@ -1146,12 +1147,12 @@
                 if (status === "กำลังทำ")   return C_YELLOW_LIGHT;
                 return C_RED_LIGHT;
             };
-            const sCell = (val, status, mono = false, center = false) => ({
+            const sCell = (val, status, mono = false, center = false, wrap = false) => ({
                 v: val ?? "", t: "s",
                 s: {
                     font: mono ? { ...fontMono, color: { rgb: "166534" } } : fontMain,
                     fill: { fgColor: { rgb: rowBg(status) } },
-                    alignment: center ? align_c : align_l,
+                    alignment: wrap ? align_wrap : (center ? align_c : align_l),
                     border
                 }
             });
@@ -1188,9 +1189,9 @@
                 return [
                     { v: i + 1, t: "n", s: { font: { ...fontBold, color: { rgb: "166534" } }, fill: { fgColor: { rgb: rowBg(status) } }, alignment: align_c, border } },
                     sCell(t.ors, status, true, true),
-                    sCell(t.title, status),
+                    sCell(t.title, status, false, false),
                     sStatus(status),
-                    sCell(t.detail || "—", status),
+                    sCell(t.detail || "—", status, false, false, true),
                     sCell(dateCreated, status, false, true),
                 ];
             });
@@ -1203,7 +1204,7 @@
             const sSum = (label, val, color, bg) => ([
                 { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
                 { v: label, t: "s", s: { font: { ...fontBold, color: { rgb: color } }, fill: { fgColor: { rgb: bg } }, alignment: align_c, border } },
-                { v: `${val} รายการ`, t: "s", s: { font: { name: "Calibri", sz: 11, color: { rgb: color } }, fill: { fgColor: { rgb: bg } }, alignment: align_c, border } },
+                { v: `${val} รายการ`, t: "s", s: { font: { name: "Calibri", sz: 9, color: { rgb: color } }, fill: { fgColor: { rgb: bg } }, alignment: align_c, border } },
                 { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
                 { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
                 { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
@@ -1230,27 +1231,27 @@
                 { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } },
             ];
 
-            // ── Column widths (ปรับให้พอดี A4 portrait ~0.5" margin ทั้งสองข้าง) ──
+            // ── Column widths (A4 portrait ~43cm printable / 0.5" margins) ──
             ws["!cols"] = [
                 { wch: 5  },  // ลำดับ
-                { wch: 12 },  // ORS
-                { wch: 24 },  // ชื่องาน
-                { wch: 12 },  // สถานะ
-                { wch: 28 },  // รายละเอียด
-                { wch: 13 },  // วันที่
+                { wch: 11 },  // ORS
+                { wch: 22 },  // ชื่องาน
+                { wch: 11 },  // สถานะ
+                { wch: 26 },  // รายละเอียด
+                { wch: 12 },  // วันที่
             ];
 
-            // ── Row heights ──
+            // ── Row heights — เพิ่มความสูงให้ไม่เบียดกัน ──
             ws["!rows"] = [
-                { hpt: 38 }, // title
-                { hpt: 18 }, // sub
-                { hpt: 6  }, // spacer
-                { hpt: 22 }, // header
-                ...rows.map(() => ({ hpt: 20 })),
-                { hpt: 8  },
-                { hpt: 20 },
-                { hpt: 20 },
-                { hpt: 20 },
+                { hpt: 32 }, // title
+                { hpt: 16 }, // sub
+                { hpt: 4  }, // spacer
+                { hpt: 20 }, // header
+                ...rows.map(() => ({ hpt: 16 })),
+                { hpt: 6  },
+                { hpt: 16 },
+                { hpt: 16 },
+                { hpt: 16 },
             ];
 
             // ── A4 Print Settings ──
