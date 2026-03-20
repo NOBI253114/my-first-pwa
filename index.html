@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK - ULTIMATE v2.2.0</title>
+    <title>4M TASK - v2.2.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -29,7 +29,6 @@
         .btn-main:active { transform: scale(0.98); }
         .btn-excel { background: #1d6f42; color: #fff; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: 600; cursor: pointer; margin-top: 15px; font-family: 'Kanit'; }
         
-        /* สไตล์หมวดหมู่เดือน (อัปเกรดเป็น Accordion) */
         .month-header { 
             background: #dcfce7; color: var(--primary-dark); padding: 12px 20px; 
             border-radius: 12px; display: flex; justify-content: space-between; align-items: center; 
@@ -52,7 +51,6 @@
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-box { background: #fff; padding: 15px; border-radius: 15px; text-align: center; box-shadow: var(--shadow); }
 
-        /* UI ระบบ Modals */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-overlay.active { display: flex; animation: fadeIn 0.2s; }
         .modal-content { background: #fff; padding: 25px; border-radius: 20px; width: 90%; max-width: 450px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; }
@@ -60,7 +58,6 @@
         .btn-group { display: flex; gap: 10px; margin-top: 15px; }
         .btn-cancel { background: #e2e8f0; color: #475569; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: 600; cursor: pointer; font-family: 'Kanit'; }
         
-        /* UI หลอดโหลด */
         .progress-wrapper { width: 100%; background: #e2e8f0; border-radius: 15px; height: 28px; position: relative; overflow: hidden; margin-top: 15px; }
         .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #34d399); transition: width 0.3s ease; }
         .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.9rem; font-weight: 700; color: #1e293b; text-shadow: 0px 0px 3px rgba(255,255,255,0.8); }
@@ -73,7 +70,7 @@
 
     <div class="app-header">
         <h1>4M TASK</h1>
-        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 2.2.0 | Accordion & Details | นาย ธิติ พุกวิลัย</div>
+        <div style="font-size: 0.75rem; color: var(--text-sub); font-weight: 500;">Version 2.2.1 | ธิติ พุกวิลัย</div>
     </div>
 
     <div class="nav-tabs">
@@ -189,16 +186,13 @@
             const bar = document.getElementById('progressBar');
             const text = document.getElementById('progressText');
             document.getElementById('loadingTitle').innerText = title;
-            
             modal.classList.add('active');
             bar.style.width = '0%'; text.innerText = '0%';
-
             let p = 0;
             let interval = setInterval(() => {
                 if(p < 85) { p += Math.floor(Math.random() * 15) + 5; if(p > 85) p = 85; }
                 bar.style.width = p + '%'; text.innerText = p + '%';
             }, 300);
-
             try {
                 await taskPromiseFn();
                 clearInterval(interval);
@@ -229,26 +223,21 @@
         window.addTask = async () => {
             const raw = document.getElementById('taskFullInput').value;
             if(!raw) return alert("กรุณากรอกข้อมูลงาน");
-
             await runWithProgress("กำลังบันทึกงานใหม่...", async () => {
                 const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
                 const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
                 const title = match ? match[3].trim() : raw;
-                
                 const compressed = [];
                 for(let p of selectedPhotos) { 
                     if(p.startsWith('data:image')) compressed.push(await compressImg(p));
                     else compressed.push(p);
                 }
-
                 const data = {
                     ors, title, detail: document.getElementById('taskDetail').value,
                     status: document.getElementById('taskStatus').value, photos: compressed,
                     createdAt: new Date().getTime(), updatedAt: new Date().getTime()
                 };
-                
                 await addDoc(collection(db, "tasks"), data);
-                
                 document.getElementById('taskFullInput').value = "";
                 document.getElementById('taskDetail').value = "";
                 document.getElementById('taskStatus').value = "รอดำเนินการ";
@@ -274,24 +263,20 @@
             if(!editingId) return;
             const raw = document.getElementById('editFullInput').value;
             if(!raw) return alert("กรุณากรอกข้อมูลงาน");
-
             await runWithProgress("กำลังอัปเดตข้อมูล...", async () => {
                 const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
                 const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
                 const title = match ? match[3].trim() : raw;
-                
                 const compressed = [];
                 for(let p of editPhotos) { 
                     if(p.startsWith('data:image')) compressed.push(await compressImg(p));
                     else compressed.push(p);
                 }
-
                 const data = {
                     ors, title, detail: document.getElementById('editDetail').value,
                     status: document.getElementById('editStatus').value, photos: compressed,
                     updatedAt: new Date().getTime()
                 };
-                
                 await updateDoc(doc(db, "tasks", editingId), data);
                 closeEditModal();
             });
@@ -332,63 +317,40 @@
             if(document.getElementById('section-dash').classList.contains('active')) updateDashboard();
         });
 
-        // ฟังก์ชัน Toggle ซ่อน/แสดงเดือน
         window.toggleMonth = (monthId) => {
             const content = document.getElementById(`content-${monthId}`);
             const icon = document.getElementById(`icon-${monthId}`);
-            if (content.classList.contains('collapsed')) {
-                content.classList.remove('collapsed');
-                icon.classList.remove('rotated');
-            } else {
-                content.classList.add('collapsed');
-                icon.classList.add('rotated');
-            }
+            if (content.classList.contains('collapsed')) { content.classList.remove('collapsed'); icon.classList.remove('rotated'); }
+            else { content.classList.add('collapsed'); icon.classList.add('rotated'); }
         };
 
         window.filterTasks = () => {
-            const container = document.getElementById('task-container'); 
-            container.innerHTML = "";
+            const container = document.getElementById('task-container'); container.innerHTML = "";
             const search = document.getElementById('searchInput').value.toLowerCase();
-            
-            // จัดกลุ่มข้อมูลตามเดือน
             const groupedTasks = {};
-            
             allTasks.filter(t => (t.title||"").toLowerCase().includes(search) || (t.ors||"").includes(search) || (t.detail||"").toLowerCase().includes(search)).forEach(t => {
                 let mName = "ทั่วไป";
                 try {
                     const mIdx = parseInt(t.ors.split('/')[0].split('.')[1]);
                     if(mIdx > 0 && mIdx <= 12) mName = monthNames[mIdx];
                 } catch(e) {}
-
                 if(!groupedTasks[mName]) groupedTasks[mName] = [];
                 groupedTasks[mName].push(t);
             });
-
-            // สร้าง UI ทีละเดือน (เรียงตาม array monthNames)
             const orderedMonths = monthNames.filter(m => groupedTasks[m]);
-            
             orderedMonths.forEach(mName => {
                 const tasksInMonth = groupedTasks[mName];
                 const safeId = mName.replace(/\s+/g, '');
-                
-                // ถ้ากำลังค้นหา ให้กาง Accordion ออกเสมอ
-                const isCollapsed = search === "" ? "" : ""; // เปลี่ยนเป็น "collapsed" หากต้องการให้ซ่อนตอนเริ่มต้น (ตอนนี้ให้กางไว้ก่อน)
-                const isRotated = search === "" ? "" : "";
-
                 let html = `
                     <div class="month-header" onclick="toggleMonth('${safeId}')">
                         <span>📅 เดือน${mName} <span style="font-size:0.8rem; color:var(--text-sub); background:#fff; padding:2px 8px; border-radius:10px; margin-left:5px;">${tasksInMonth.length} งาน</span></span>
-                        <span id="icon-${safeId}" class="chevron ${isRotated}">▼</span>
+                        <span id="icon-${safeId}" class="chevron">▼</span>
                     </div>
-                    <div id="content-${safeId}" class="month-content ${isCollapsed}">
+                    <div id="content-${safeId}" class="month-content">
                 `;
-
                 tasksInMonth.forEach(t => {
                     let c = t.status === "เสร็จสิ้น" ? "var(--status-done)" : (t.status === "กำลังทำ" ? "var(--status-doing)" : "var(--status-wait)");
-                    
-                    // แสดงกล่องรายละเอียด (ถ้ามี)
                     let detailHtml = t.detail ? `<div class="task-detail-box">${t.detail}</div>` : '';
-
                     html += `
                         <div class="task-card" style="border-left: 6px solid ${c}">
                             <div style="display:flex; justify-content:space-between;"><b>${t.ors}</b> <span style="color:${c}; font-weight:600;">${t.status}</span></div>
@@ -401,14 +363,9 @@
                             </div>
                         </div>`;
                 });
-
-                html += `</div>`; // ปิด month-content
-                container.innerHTML += html;
+                html += `</div>`; container.innerHTML += html;
             });
-            
-            if(Object.keys(groupedTasks).length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding: 20px; color: var(--text-sub);">ไม่พบข้อมูลที่ค้นหา</div>`;
-            }
+            if(Object.keys(groupedTasks).length === 0) container.innerHTML = `<div style="text-align:center; padding: 20px; color: var(--text-sub);">ไม่พบข้อมูลที่ค้นหา</div>`;
         };
 
         window.updateDashboard = () => {
