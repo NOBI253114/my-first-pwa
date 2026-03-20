@@ -9,18 +9,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
-            --bg:       #0f1117;
-            --surface:  #1a1d27;
-            --surface2: #22263a;
-            --border:   rgba(255,255,255,0.07);
-            --primary:  #4f8ef7;
-            --primary-glow: rgba(79,142,247,0.18);
-            --green:    #34d399;
+            --bg:       #0a0f0d;
+            --surface:  #111a14;
+            --surface2: #192a1e;
+            --border:   rgba(74,222,128,0.1);
+            --primary:  #22c55e;
+            --primary-glow: rgba(34,197,94,0.15);
+            --green:    #4ade80;
             --yellow:   #fbbf24;
             --red:      #f87171;
-            --text:     #e8eaf0;
-            --text-sub: #6b7280;
-            --text-dim: #374151;
+            --text:     #e2f0e8;
+            --text-sub: #6b8f74;
+            --text-dim: #2d4a35;
             --radius:   16px;
             --radius-sm: 10px;
         }
@@ -49,9 +49,10 @@
             display: flex; align-items: center; gap: 10px;
         }
         .brand-icon {
-            width: 32px; height: 32px; background: var(--primary);
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
             border-radius: 8px; display: grid; place-items: center;
-            font-size: 16px;
+            font-size: 16px; box-shadow: 0 0 12px rgba(34,197,94,0.4);
         }
         .brand-name {
             font-size: 1.1rem; font-weight: 700; letter-spacing: 1.5px;
@@ -92,7 +93,7 @@
         }
         .nav-item .nav-icon { font-size: 20px; line-height: 1; }
         .nav-item:hover { color: var(--text); background: var(--surface); }
-        .nav-item.active { color: var(--primary); background: var(--primary-glow); }
+        .nav-item.active { color: var(--primary); background: var(--primary-glow); text-shadow: 0 0 8px rgba(34,197,94,0.5); }
         .nav-item[style*="none"] { display: none !important; }
 
         /* ═══════════════════════ LAYOUT ═══════════════════════ */
@@ -139,7 +140,7 @@
             font-family: 'IBM Plex Sans Thai'; font-size: 0.95rem; font-weight: 600;
             cursor: pointer; transition: 0.2s; letter-spacing: 0.3px;
         }
-        .btn-primary { background: var(--primary); color: #fff; width: 100%; }
+        .btn-primary { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; width: 100%; box-shadow: 0 4px 14px rgba(34,197,94,0.25); }
         .btn-primary:hover { filter: brightness(1.1); }
         .btn-primary:active { transform: scale(0.98); }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -196,7 +197,7 @@
         }
         .month-header:hover { border-color: var(--primary); background: var(--primary-glow); }
         .month-header-left { display: flex; align-items: center; gap: 10px; }
-        .month-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+        .month-dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 0 6px rgba(34,197,94,0.5); }
         .month-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
         .month-count {
             font-size: 0.7rem; background: var(--bg); color: var(--text-sub);
@@ -454,7 +455,7 @@
                 <div class="chart-label">สัดส่วนสถานะงาน</div>
                 <canvas id="statusChart"></canvas>
             </div>
-            <button class="btn btn-primary" style="background: #166534;" onclick="exportToExcel()">📗 ส่งออก Excel</button>
+            <button class="btn btn-primary" onclick="exportToExcel()">📗 ส่งออก Excel</button>
         </div>
 
         <!-- LOGS -->
@@ -685,7 +686,7 @@
                         </div>
                         <span class="month-chevron">▼</span>
                     </div>
-                    <div id="${sId}" class="month-body open">`;
+                    <div id="${sId}" class="month-body">`;
 
                 grouped[mName].forEach(t => {
                     const photosJSON = JSON.stringify(t.photos || []).replace(/"/g, '&quot;');
