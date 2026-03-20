@@ -6,7 +6,7 @@
     <title>4M TASK</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     <style>
         :root {
             --bg:       #f0faf4;
@@ -1098,17 +1098,163 @@
             });
         };
 
-        // ── Export ──
+        // ── Export Excel (Styled) ──
         window.exportToExcel = () => {
-            const d = allTasks.map(t => ({
-                "วันที่สร้าง": new Date(t.createdAt).toLocaleDateString('th-TH'),
-                "ORS": t.ors, "ชื่องาน": t.title,
-                "สถานะ": t.status, "รายละเอียด": t.detail
-            }));
-            const ws = XLSX.utils.json_to_sheet(d);
             const wb = XLSX.utils.book_new();
+
+            // ── สีหลัก ──
+            const C_GREEN_DARK  = "14532D"; // header bg
+            const C_GREEN_MID   = "16A34A"; // subheader / accent
+            const C_GREEN_LIGHT = "DCFCE7"; // done row
+            const C_YELLOW_LIGHT= "FEF9C3"; // doing row
+            const C_RED_LIGHT   = "FEE2E2"; // wait row
+            const C_WHITE       = "FFFFFF";
+            const C_GRAY_LIGHT  = "F0FDF4"; // alternate row
+
+            const fontMain  = { name: "Calibri", sz: 11 };
+            const fontBold  = { name: "Calibri", sz: 11, bold: true };
+            const fontTitle = { name: "Calibri", sz: 18, bold: true, color: { rgb: C_WHITE } };
+            const fontSub   = { name: "Calibri", sz: 10, color: { rgb: "4B7A5A" } };
+            const fontHeader= { name: "Calibri", sz: 11, bold: true, color: { rgb: C_WHITE } };
+            const fontMono  = { name: "Courier New", sz: 10 };
+
+            const border = {
+                top:    { style: "thin", color: { rgb: "BBF7D0" } },
+                bottom: { style: "thin", color: { rgb: "BBF7D0" } },
+                left:   { style: "thin", color: { rgb: "BBF7D0" } },
+                right:  { style: "thin", color: { rgb: "BBF7D0" } },
+            };
+            const borderHeader = {
+                top:    { style: "medium", color: { rgb: C_GREEN_DARK } },
+                bottom: { style: "medium", color: { rgb: C_GREEN_DARK } },
+                left:   { style: "medium", color: { rgb: C_GREEN_DARK } },
+                right:  { style: "medium", color: { rgb: C_GREEN_DARK } },
+            };
+
+            const align_c = { horizontal: "center", vertical: "center", wrapText: true };
+            const align_l = { horizontal: "left",   vertical: "center", wrapText: true };
+
+            // สไตล์ Header row
+            const sHeader = (col) => ({
+                v: col, t: "s",
+                s: { font: fontHeader, fill: { fgColor: { rgb: C_GREEN_DARK } }, alignment: align_c, border: borderHeader }
+            });
+
+            // สไตล์ตาม status
+            const rowBg = (status) => {
+                if (status === "เสร็จสิ้น") return C_GREEN_LIGHT;
+                if (status === "กำลังทำ")   return C_YELLOW_LIGHT;
+                return C_RED_LIGHT;
+            };
+            const sCell = (val, status, mono = false, center = false) => ({
+                v: val ?? "", t: "s",
+                s: {
+                    font: mono ? { ...fontMono, color: { rgb: "166534" } } : fontMain,
+                    fill: { fgColor: { rgb: rowBg(status) } },
+                    alignment: center ? align_c : align_l,
+                    border
+                }
+            });
+            const sStatus = (status) => {
+                const color = status === "เสร็จสิ้น" ? "166534" : status === "กำลังทำ" ? "92400E" : "991B1B";
+                const bg    = status === "เสร็จสิ้น" ? C_GREEN_LIGHT : status === "กำลังทำ" ? C_YELLOW_LIGHT : C_RED_LIGHT;
+                return {
+                    v: status, t: "s",
+                    s: { font: { ...fontBold, color: { rgb: color } }, fill: { fgColor: { rgb: bg } }, alignment: align_c, border }
+                };
+            };
+
+            // ── Title row ──
+            const now = new Date();
+            const dateStr = now.toLocaleDateString("th-TH", { year: "numeric", month: "long", day: "numeric" });
+            const titleCell = {
+                v: `4M TASK — รายงานสรุปงานทั้งหมด`, t: "s",
+                s: { font: fontTitle, fill: { fgColor: { rgb: C_GREEN_MID } }, alignment: align_c }
+            };
+            const subCell = {
+                v: `ส่งออกเมื่อ: ${dateStr} · รวม ${allTasks.length} รายการ`, t: "s",
+                s: { font: fontSub, fill: { fgColor: { rgb: "F0FDF4" } }, alignment: align_c }
+            };
+
+            // ── Header row ──
+            const headers = ["ลำดับ", "เลข ORS", "ชื่องาน", "สถานะ", "รายละเอียด", "วันที่สร้าง"];
+
+            // ── Data rows ──
+            const rows = allTasks.map((t, i) => {
+                const status = t.status || "รอดำเนินการ";
+                const dateCreated = t.createdAt
+                    ? new Date(t.createdAt).toLocaleDateString("th-TH", { year: "numeric", month: "short", day: "numeric" })
+                    : "—";
+                return [
+                    { v: i + 1, t: "n", s: { font: { ...fontBold, color: { rgb: "166534" } }, fill: { fgColor: { rgb: rowBg(status) } }, alignment: align_c, border } },
+                    sCell(t.ors, status, true, true),
+                    sCell(t.title, status),
+                    sStatus(status),
+                    sCell(t.detail || "—", status),
+                    sCell(dateCreated, status, false, true),
+                ];
+            });
+
+            // ── Summary rows ──
+            const done  = allTasks.filter(t => t.status === "เสร็จสิ้น").length;
+            const doing = allTasks.filter(t => t.status === "กำลังทำ").length;
+            const wait  = allTasks.filter(t => t.status === "รอดำเนินการ").length;
+
+            const sSum = (label, val, color, bg) => ([
+                { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
+                { v: label, t: "s", s: { font: { ...fontBold, color: { rgb: color } }, fill: { fgColor: { rgb: bg } }, alignment: align_c, border } },
+                { v: `${val} รายการ`, t: "s", s: { font: { name: "Calibri", sz: 11, color: { rgb: color } }, fill: { fgColor: { rgb: bg } }, alignment: align_c, border } },
+                { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
+                { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
+                { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
+            ]);
+
+            // ── Build worksheet array ──
+            const wsData = [
+                [titleCell, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }],
+                [subCell,   { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }],
+                [{ v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }],
+                headers.map(sHeader),
+                ...rows,
+                [{ v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }],
+                sSum("🟢 เสร็จสิ้น",   done,  "166534", C_GREEN_LIGHT),
+                sSum("🟡 กำลังทำ",    doing, "92400E", C_YELLOW_LIGHT),
+                sSum("🔴 รอดำเนินการ", wait,  "991B1B", C_RED_LIGHT),
+            ];
+
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+            // ── Merge title & sub cells ──
+            ws["!merges"] = [
+                { s: { r: 0, c: 0 }, e: { r: 0, c: 5 } },
+                { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } },
+            ];
+
+            // ── Column widths ──
+            ws["!cols"] = [
+                { wch: 6 },   // ลำดับ
+                { wch: 14 },  // ORS
+                { wch: 36 },  // ชื่องาน
+                { wch: 14 },  // สถานะ
+                { wch: 40 },  // รายละเอียด
+                { wch: 16 },  // วันที่
+            ];
+
+            // ── Row heights ──
+            ws["!rows"] = [
+                { hpt: 36 }, // title
+                { hpt: 20 }, // sub
+                { hpt: 6  }, // spacer
+                { hpt: 22 }, // header
+                ...rows.map(() => ({ hpt: 18 })),
+                { hpt: 10 },
+                { hpt: 18 },
+                { hpt: 18 },
+                { hpt: 18 },
+            ];
+
             XLSX.utils.book_append_sheet(wb, ws, "WorkLog");
-            XLSX.writeFile(wb, `Report_${new Date().toISOString().split('T')[0]}.xlsx`);
+            XLSX.writeFile(wb, `4MTASK_Report_${now.toISOString().split("T")[0]}.xlsx`);
         };
 
         // ── Theme Toggle ──
