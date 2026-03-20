@@ -13,6 +13,10 @@
         :root {
             --primary: #10b981; --primary-dark: #059669; --bg: #f8fafc;
             --text-main: #1e293b; --text-sub: #64748b; --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            /* Status Colors */
+            --status-wait: #ef4444;    /* แดง - รอดำเนินการ */
+            --status-doing: #f59e0b;   /* ส้ม - กำลังทำ */
+            --status-done: #10b981;    /* เขียว - เสร็จสิ้น */
         }
         body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 50px; }
         
@@ -45,7 +49,11 @@
 
         /* Monthly & Task Cards */
         .month-header { background: #dcfce7; color: var(--primary-dark); padding: 8px 18px; border-radius: 20px; display: inline-block; margin: 20px 0 10px 0; font-size: 0.9rem; font-weight: 700; border: 1px solid #bcf0d1; }
-        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--primary); box-shadow: var(--shadow); }
+        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); transition: 0.3s; }
+        
+        /* สีกรอบสถานะที่หัวข้อ */
+        .status-badge { padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; color: #fff; }
+
         .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 10px 0; }
         .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; cursor: pointer; }
 
@@ -81,7 +89,7 @@
 
     <div class="app-header">
         <h1>4M TASK</h1>
-        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 1.8.6 | Full System + FX | นาย ธิติ พุกวิลัย</div>
+        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 1.8.6 | Full System + Color Status | นาย ธิติ พุกวิลัย</div>
     </div>
 
     <div class="nav-tabs">
@@ -101,9 +109,9 @@
                 <input type="text" id="taskTitle" placeholder="ชื่องาน">
                 <textarea id="taskDetail" rows="3" placeholder="รายละเอียด"></textarea>
                 <select id="taskStatus">
-                    <option value="รอดำเนินการ">รอดำเนินการ</option>
-                    <option value="กำลังทำ">กำลังทำ</option>
-                    <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+                    <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
+                    <option value="กำลังทำ">🟡 กำลังทำ</option>
+                    <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
                 </select>
                 <button class="btn-main" onclick="addTask()">บันทึกข้อมูล</button>
             </div>
@@ -181,7 +189,6 @@
         let statusChart;
         const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
-        // --- ระบบเสียง ---
         const sndClick = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
         const sndSuccess = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
         window.initAudio = () => { sndClick.play().then(()=>sndClick.pause()); };
@@ -202,6 +209,7 @@
             updateDashboard();
         });
 
+        // บีบอัดรูปภาพให้เล็กลง (ป้องกัน Error 1MB)
         async function compressImage(base64Str) {
             return new Promise((resolve) => {
                 const img = new Image();
@@ -209,12 +217,12 @@
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     let width = img.width, height = img.height;
-                    const max_size = 800; 
+                    const max_size = 600; // ลดขนาดลงเพื่อความชัวร์
                     if (width > height) { if (width > max_size) { height *= max_size / width; width = max_size; } }
                     else { if (height > max_size) { width *= max_size / height; height = max_size; } }
                     canvas.width = width; canvas.height = height;
                     canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.6)); 
+                    resolve(canvas.toDataURL('image/jpeg', 0.5)); // ลด Quality ลงเล็กน้อย 
                 };
             });
         }
@@ -250,39 +258,47 @@
                     sndSuccess.play();
                     setTimeout(() => { overlay.style.display = 'none'; location.reload(); }, 2000);
                 }, 500);
-            } catch (e) { overlay.style.display = 'none'; alert(e.message); }
+            } catch (e) { overlay.style.display = 'none'; alert("เกิดข้อผิดพลาด: ข้อมูลอาจใหญ่เกินไป ลองลดจำนวนรูปภาพลงครับ"); }
         };
 
         window.filterTasks = () => {
             const search = document.getElementById('searchInput').value.toLowerCase();
-            const status = document.getElementById('filterStatus').value;
+            const statusFilter = document.getElementById('filterStatus').value;
             const container = document.getElementById('task-container');
             container.innerHTML = "";
             let lastMonthGroup = "";
 
             allTasks.filter(t => {
                 const matchSearch = (t.title||"").toLowerCase().includes(search) || (t.ors||"").toLowerCase().includes(search);
-                const matchStatus = status === 'ทั้งหมด' || t.status === status;
+                const matchStatus = statusFilter === 'ทั้งหมด' || t.status === statusFilter;
                 return matchSearch && matchStatus;
             }).forEach(t => {
                 const orsValue = t.ors.replace("ORS.", "").trim();
                 const monthNum = parseInt(orsValue.split('/')[0]);
                 const monthName = monthNames[monthNum] || "ไม่ระบุเดือน";
+                
+                // กำหนดสีตามสถานะ
+                let statusColor = "var(--status-wait)";
+                let leftBorder = "var(--status-wait)";
+                if(t.status === "กำลังทำ") { statusColor = "var(--status-doing)"; leftBorder = "var(--status-doing)"; }
+                else if(t.status === "เสร็จสิ้น") { statusColor = "var(--status-done)"; leftBorder = "var(--status-done)"; }
+
                 if (lastMonthGroup !== monthName) {
                     lastMonthGroup = monthName;
                     container.innerHTML += `<div class="month-header">📅 เดือน${monthName}</div>`;
                 }
                 container.innerHTML += `
-                    <div class="task-card">
-                        <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
-                            <span style="font-weight:700; color:var(--primary-dark);">${t.ors}</span>
-                            <span style="color:${t.status==='เสร็จสิ้น'?'#10b981':'#f59e0b'}">${t.status}</span>
+                    <div class="task-card" style="border-left: 6px solid ${leftBorder}">
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem;">
+                            <span style="font-weight:700; color:var(--text-main);">${t.ors}</span>
+                            <span class="status-badge" style="background:${statusColor}">${t.status}</span>
                         </div>
-                        <div style="font-weight:600; margin:8px 0;">${t.title}</div>
+                        <div style="font-weight:600; margin:10px 0; font-size:1.1rem; color:${leftBorder}">${t.title}</div>
+                        <div style="font-size:0.85rem; color:var(--text-sub); margin-bottom:10px;">${t.detail || ''}</div>
                         <div class="gallery">${(t.photos||[]).map((p, i) => `<img src="${p}" onclick="openSlider(${JSON.stringify(t.photos).replace(/"/g, '&quot;')}, ${i})">`).join('')}</div>
-                        <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:10px;">
-                            <span style="color:var(--primary); cursor:pointer; font-size:0.85rem;" onclick="openEdit('${t.id}','${t.ors}','${t.title}','${t.detail}','${t.status}')">แก้ไข</span>
-                            <span style="color:#ef4444; cursor:pointer; font-size:0.85rem;" onclick="deleteTask('${t.id}')">ลบ</span>
+                        <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:10px; border-top:1px solid #f1f5f9; padding-top:10px;">
+                            <span style="color:var(--text-sub); cursor:pointer; font-size:0.85rem;" onclick="openEdit('${t.id}','${t.ors}','${t.title}','${t.detail}','${t.status}')">✏️ แก้ไข</span>
+                            <span style="color:#ef4444; cursor:pointer; font-size:0.85rem;" onclick="deleteTask('${t.id}')">🗑️ ลบ</span>
                         </div>
                     </div>`;
             });
@@ -296,9 +312,22 @@
         function updateDashboard() {
             const total = allTasks.length;
             const done = allTasks.filter(t => t.status === 'เสร็จสิ้น').length;
+            const doing = allTasks.filter(t => t.status === 'กำลังทำ').length;
+            const wait = allTasks.filter(t => t.status === 'รอดำเนินการ').length;
+            
             const ctx = document.getElementById('statusChart').getContext('2d');
             if(statusChart) statusChart.destroy();
-            statusChart = new Chart(ctx, { type: 'pie', data: { labels: ['เสร็จสิ้น', 'กำลังทำ/รอ'], datasets: [{ data: [done, total-done], backgroundColor: ['#10b981', '#f59e0b'] }] } });
+            statusChart = new Chart(ctx, { 
+                type: 'doughnut', 
+                data: { 
+                    labels: ['เสร็จสิ้น', 'กำลังทำ', 'รอดำเนินการ'], 
+                    datasets: [{ 
+                        data: [done, doing, wait], 
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'] 
+                    }] 
+                },
+                options: { plugins: { legend: { position: 'bottom' } } }
+            });
             document.getElementById('stat-total').innerText = total;
             document.getElementById('stat-done').innerText = done;
         }
@@ -323,7 +352,6 @@
             }
         };
 
-        // ใส่เสียงให้ปุ่มทั้งหมด
         document.querySelectorAll('button, input, select').forEach(el => el.addEventListener('click', playClick));
     </script>
 </body>
