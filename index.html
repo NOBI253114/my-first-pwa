@@ -469,7 +469,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v1.9 Beta</span>
+            <span class="brand-ver">v2.0 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -515,7 +515,7 @@
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v1.9 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v2.0 Beta</div>
             </div>
         </div>
 
@@ -1231,19 +1231,19 @@
                 { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } },
             ];
 
-            // ── Column widths ──
+            // ── Column widths (A4 portrait พอดี: รวม ~82 wch) ──
             ws["!cols"] = [
-                { wch: 5  },  // ลำดับ
-                { wch: 11 },  // ORS
-                { wch: 26 },  // ชื่องาน (กว้างขึ้น)
-                { wch: 11 },  // สถานะ
-                { wch: 24 },  // รายละเอียด
-                { wch: 12 },  // วันที่
+                { wch: 4  },  // ลำดับ
+                { wch: 10 },  // ORS
+                { wch: 22 },  // ชื่องาน
+                { wch: 10 },  // สถานะ
+                { wch: 22 },  // รายละเอียด
+                { wch: 10 },  // วันที่
             ];
 
             // ── Row heights — คำนวณจากทั้งชื่องานและรายละเอียด ──
-            const titleColWidth  = 26;
-            const detailColWidth = 24;
+            const titleColWidth  = 22;
+            const detailColWidth = 22;
             const calcRowHpt = (title, detail) => {
                 const countLines = (text, colW) => {
                     if (!text || text === "—") return 1;
