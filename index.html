@@ -3,34 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK AI - v1.9.7 FIX</title>
+    <title>4M TASK - SMART v1.8.7</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --primary: #10b981; --primary-dark: #059669; --bg: #f8fafc; --text-main: #1e293b; --text-sub: #64748b; --shadow: 0 4px 20px rgba(0, 0, 0, 0.05); --status-wait: #ef4444; --status-doing: #f59e0b; --status-done: #10b981; }
+        :root { --primary: #10b981; --primary-dark: #059669; --bg: #f8fafc; --text-main: #1e293b; --text-sub: #64748b; --shadow: 0 4px 20px rgba(0,0,0,0.05); --status-wait: #ef4444; --status-doing: #f59e0b; --status-done: #10b981; }
         body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 50px; }
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
+        .progress-container { width: 80%; max-width: 300px; height: 12px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 15px; }
+        .progress-bar { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s ease; }
         .app-header { background: #fff; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .nav-tabs { display: flex; padding: 15px; gap: 8px; position: sticky; top: 0; background: var(--bg); z-index: 100; justify-content: center; }
-        .tab-btn { padding: 10px 20px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); cursor: pointer; box-shadow: var(--shadow); font-family: 'Kanit'; }
+        .tab-btn { padding: 10px 20px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); cursor: pointer; transition: 0.3s; box-shadow: var(--shadow); font-family: 'Kanit'; font-weight: 500; }
         .tab-btn.active { background: var(--primary); color: #fff; transform: scale(1.05); }
         .container { max-width: 700px; margin: 0 auto; padding: 0 15px; }
         .page-section { display: none; }
-        .page-section.active { display: block; }
+        .page-section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .glass-card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; }
-        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; }
-        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); border-left: 6px solid #ccc; }
+        .label-text { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 5px; display: block; font-weight: 500; }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem; outline: none; }
+        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
+        .month-header { background: #dcfce7; color: var(--primary-dark); padding: 8px 18px; border-radius: 20px; display: inline-block; margin: 20px 0 10px 0; font-size: 0.9rem; font-weight: 700; }
+        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); }
+        .status-badge { padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; color: #fff; }
         .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 10px 0; }
         .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; cursor: pointer; }
-        .ai-card { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
-        .ai-content { font-size: 0.95rem; line-height: 1.6; color: #064e3b; white-space: pre-wrap; }
     </style>
 </head>
-<body>
+<body onclick="initAudio()">
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div id="loadState">
+            <div id="percentText" style="font-size: 2.5rem; font-weight: 700; color: var(--primary-dark);">0%</div>
+            <div style="color: var(--text-sub); font-size: 0.9rem; margin-top: 5px;">ระบบกำลังแยกข้อมูลและบีบอัดรูปภาพ...</div>
+            <div class="progress-container"><div id="progressBar" class="progress-bar"></div></div>
+        </div>
+        <div id="successState" style="display:none; text-align: center;">
+            <div style="font-size: 80px;">✅</div>
+            <h2 style="color: var(--primary-dark);">บันทึกสำเร็จ!</h2>
+        </div>
+    </div>
 
     <div class="app-header">
-        <h1>4M TASK AI</h1>
-        <div style="font-size: 0.7rem; color: var(--text-sub);">v1.9.7 | 4mserver System | นาย ธิติ พุกวิลัย</div>
+        <h1>4M TASK</h1>
+        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 1.8.7 | Smart Split Input | นาย ธิติ พุกวิลัย</div>
     </div>
 
     <div class="nav-tabs">
@@ -42,164 +59,169 @@
     <div class="container">
         <div id="section-add" class="page-section active">
             <div class="glass-card">
-                <input type="hidden" id="editId">
-                <input type="text" id="taskFullInput" placeholder="เลข-เดือน ชื่องาน (เช่น 01-21 งานทางหลวง)">
-                <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; cursor:pointer;">📸 แนบรูป (บีบอัดอัตโนมัติ)</button>
+                <span class="label-text">ข้อมูลงาน (เช่น 01 - 21 งานทางหลวง...)</span>
+                <input type="text" id="taskFullInput" placeholder="พิมพ์เลข-เดือน ตามด้วยชื่องาน">
+                
+                <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; font-family:inherit; cursor:pointer; color: var(--text-sub);">📸 แนบรูปถ่าย</button>
                 <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
                 <div id="preview-area" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:10px;"></div>
-                <textarea id="taskDetail" rows="2" placeholder="รายละเอียด..."></textarea>
+
+                <span class="label-text">รายละเอียดเพิ่มเติม</span>
+                <textarea id="taskDetail" rows="3" placeholder="ระบุรายละเอียด (ถ้ามี)"></textarea>
+                
+                <span class="label-text">สถานะปัจจุบัน</span>
                 <select id="taskStatus">
                     <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
                     <option value="กำลังทำ">🟡 กำลังทำ</option>
                     <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
                 </select>
-                <button id="saveBtn" class="btn-main" onclick="saveTask()">บันทึกข้อมูล</button>
+                <button class="btn-main" onclick="addTask()">บันทึกข้อมูลด่วน</button>
             </div>
         </div>
 
         <div id="section-view" class="page-section">
-            <input type="text" id="searchInput" placeholder="ค้นหา..." onkeyup="filterTasks()">
+            <input type="text" id="searchInput" placeholder="ค้นหา..." onkeyup="filterTasks()" style="margin-bottom:10px;">
             <div id="task-container"></div>
         </div>
 
         <div id="section-dash" class="page-section">
-            <div class="ai-card">
-                <div id="aiOutput" class="ai-content">กดปุ่มเพื่อสรุปงานด้วย AI</div>
-                <button class="btn-main" style="margin-top:15px; background:#059669;" onclick="getAISummary()">🪄 วิเคราะห์งานด้วย AI</button>
-            </div>
-            <canvas id="statusChart"></canvas>
+            <div class="glass-card"><canvas id="statusChart"></canvas></div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ", authDomain: "mytaskapp-pro.firebaseapp.com", projectId: "mytaskapp-pro", storageBucket: "mytaskapp-pro.firebasestorage.app", messagingSenderId: "189296604432", appId: "1:189296604432:web:31dabc3c5e363b2c96a195" };
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
+            authDomain: "mytaskapp-pro.firebaseapp.com",
+            projectId: "mytaskapp-pro",
+            storageBucket: "mytaskapp-pro.firebasestorage.app",
+            messagingSenderId: "189296604432",
+            appId: "1:189296604432:web:31dabc3c5e363b2c96a195",
+            measurementId: "G-MRE5GH4CYH"
+        };
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const AI_KEY = "AIzaSyC8QAz-QHKz8GOWVWzzkReSuIesulku7L4";
-        let allTasks = [], selectedPhotos = [], statusChart;
+        let allTasks = [];
+        let selectedPhotos = [];
+        const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+
+        const sndClick = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
+        const sndSuccess = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+        window.initAudio = () => { sndClick.play().then(()=>sndClick.pause()); };
+        const playClick = () => { sndClick.currentTime = 0; sndClick.play(); };
 
         window.showSection = (name) => {
+            playClick();
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('section-' + name).classList.add('active');
             document.getElementById('btn-' + name).classList.add('active');
-            if(name === 'dash') renderChart();
         };
 
-        // ฟังก์ชันบีบอัดรูปภาพให้เล็กลงมาก (คุณภาพ 0.3)
-        async function compressImage(base64) {
-            return new Promise(res => {
-                const img = new Image(); img.src = base64;
+        async function compressImage(base64Str) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.src = base64Str;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const max = 500; let w = img.width, h = img.height;
-                    if (w > h) { if(w > max) { h *= max/w; w = max; } } else { if(h > max) { w *= max/h; h = max; } }
+                    const max_size = 600;
+                    let w = img.width, h = img.height;
+                    if (w > h) { if (w > max_size) { h *= max_size / w; w = max_size; } }
+                    else { if (h > max_size) { w *= max_size / h; h = max_size; } }
                     canvas.width = w; canvas.height = h;
                     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    res(canvas.toDataURL('image/jpeg', 0.3));
-                }
+                    resolve(canvas.toDataURL('image/jpeg', 0.5));
+                };
             });
         }
 
-        window.saveTask = async () => {
-            const raw = document.getElementById('taskFullInput').value;
-            const editId = document.getElementById('editId').value;
-            if(!raw) return alert("กรุณากรอกข้อมูล");
+        window.addTask = async () => {
+            const rawInput = document.getElementById('taskFullInput').value;
+            if(!rawInput) return alert("กรุณากรอกข้อมูลงาน");
 
-            const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
-            const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
-            const title = match ? match[3].trim() : raw;
-            
-            // บีบอัดรูปก่อนบันทึก
-            const compressed = [];
-            for(let p of selectedPhotos) { compressed.push(await compressImage(p)); }
+            playClick();
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = 'flex';
 
-            const data = { ors, title, detail: document.getElementById('taskDetail').value, status: document.getElementById('taskStatus').value, updatedAt: new Date().getTime(), photos: compressed };
-            
+            // ส่วนสำคัญ: แยก ORS และชื่องาน
+            const match = rawInput.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
+            let ors, title;
+            if (match) {
+                ors = `ORS.${match[1]}/${match[2]}`;
+                title = match[3].trim();
+            } else {
+                ors = "ORS.00/00";
+                title = rawInput;
+            }
+
             try {
-                if(editId) { await updateDoc(doc(db, "tasks", editId), data); } 
-                else { data.createdAt = new Date().getTime(); await addDoc(collection(db, "tasks"), data); }
-                alert("บันทึกสำเร็จ!");
-                location.reload();
-            } catch (e) {
-                alert("เกิดข้อผิดพลาด: ข้อมูลอาจใหญ่เกินไป (ลองลดจำนวนรูปภาพลง)");
+                const compressedPhotos = [];
+                for(let photo of selectedPhotos) { compressedPhotos.push(await compressImage(photo)); }
+                
+                await addDoc(collection(db, "tasks"), {
+                    ors, title, detail: document.getElementById('taskDetail').value,
+                    status: document.getElementById('taskStatus').value, 
+                    photos: compressedPhotos, 
+                    createdAt: new Date().getTime()
+                });
+                
+                document.getElementById('loadState').style.display = 'none';
+                document.getElementById('successState').style.display = 'block';
+                sndSuccess.play();
+                setTimeout(() => location.reload(), 1500);
+            } catch (e) { 
+                overlay.style.display = 'none'; 
+                alert("Error: ข้อมูลอาจใหญ่เกินไป หรือเกิดข้อผิดพลาดในการเชื่อมต่อ"); 
             }
         };
 
-        onSnapshot(query(collection(db, "tasks")), (snap) => {
+        onSnapshot(query(collection(db, "tasks"), orderBy("ors", "asc")), (snap) => {
             allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            allTasks.sort((a, b) => {
-                const p = (s) => { const x = s.replace("ORS.","").split("/"); return { f: parseInt(x[0])||0, b: parseInt(x[1])||0 }; };
-                const va = p(a.ors), vb = p(b.ors);
-                return va.b !== vb.b ? va.b - vb.b : va.f - vb.f;
-            });
             filterTasks();
         });
 
         window.filterTasks = () => {
             const container = document.getElementById('task-container');
             container.innerHTML = "";
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            allTasks.filter(t => t.title.toLowerCase().includes(search) || t.ors.includes(search)).forEach(t => {
-                let c = t.status === "เสร็จสิ้น" ? "var(--status-done)" : (t.status === "กำลังทำ" ? "var(--status-doing)" : "var(--status-wait)");
+            let lastMonth = "";
+
+            allTasks.forEach(t => {
+                const monthNum = parseInt(t.ors.split('.')[1]?.split('/')[0]) || 0;
+                const monthName = monthNames[monthNum] || "ทั่วไป";
+                
+                let color = "var(--status-wait)";
+                if(t.status === "กำลังทำ") color = "var(--status-doing)";
+                if(t.status === "เสร็จสิ้น") color = "var(--status-done)";
+
+                if (lastMonth !== monthName) {
+                    lastMonth = monthName;
+                    container.innerHTML += `<div class="month-header">📅 เดือน${monthName}</div>`;
+                }
                 container.innerHTML += `
-                    <div class="task-card" style="border-left-color:${c}">
-                        <div style="display:flex; justify-content:space-between;"><b>${t.ors}</b> <span style="color:${c}">${t.status}</span></div>
-                        <div style="margin:8px 0; font-weight:600;">${t.title}</div>
-                        <div class="gallery">${(t.photos||[]).map(p => `<img src="${p}" onclick="window.open('${p}')">`).join('')}</div>
-                        <div style="display:flex; justify-content:flex-end; gap:12px; font-size:0.8rem;">
-                            <span onclick="editTask('${t.id}')">✏️ แก้ไข</span>
-                            <span style="color:red;" onclick="deleteTask('${t.id}')">🗑️ ลบ</span>
+                    <div class="task-card" style="border-left: 6px solid ${color}">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span style="font-weight:700;">${t.ors}</span>
+                            <span class="status-badge" style="background:${color}">${t.status}</span>
                         </div>
+                        <div style="font-weight:600; margin:10px 0; font-size:1.1rem; color:${color}">${t.title}</div>
+                        <div class="gallery">${(t.photos||[]).map(p => `<img src="${p}">`).join('')}</div>
                     </div>`;
             });
         };
 
-        window.getAISummary = async () => {
-            const output = document.getElementById('aiOutput');
-            output.innerText = "🤖 AI กำลังคิด...";
-            const dataStr = allTasks.map(t => `${t.ors}: ${t.title} (${t.status})`).join('\n');
-            try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${AI_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "สรุปงานทางหลวงเหล่านี้เป็นภาษาไทย แยกสิ่งที่เสร็จแล้วกับที่ค้าง:\n" + dataStr }] }] })
-                });
-                const json = await res.json();
-                output.innerText = json.candidates[0].content.parts[0].text;
-            } catch (e) { output.innerText = "AI เชื่อมต่อไม่ได้ชั่วคราว"; }
-        };
-
-        window.editTask = (id) => {
-            const t = allTasks.find(x => x.id === id);
-            document.getElementById('editId').value = t.id;
-            document.getElementById('taskFullInput').value = `${t.ors.replace("ORS.","").replace("/","-")} ${t.title}`;
-            document.getElementById('taskStatus').value = t.status;
-            showSection('add');
-        };
-
-        window.deleteTask = async (id) => { if(confirm("ลบงานนี้?")) await deleteDoc(doc(db, "tasks", id)); };
-        
-        function renderChart() {
-            const ctx = document.getElementById('statusChart').getContext('2d');
-            const counts = { 'เสร็จสิ้น': 0, 'กำลังทำ': 0, 'รอดำเนินการ': 0 };
-            allTasks.forEach(t => counts[t.status]++);
-            if(statusChart) statusChart.destroy();
-            statusChart = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(counts), datasets: [{ data: Object.values(counts), backgroundColor: ['#10b981', '#f59e0b', '#ef4444'] }] } });
-        }
-
         document.getElementById('cameraInput').onchange = (e) => {
-            for (let f of e.target.files) {
-                const r = new FileReader();
-                r.onload = (ev) => {
+            for (let file of e.target.files) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
                     selectedPhotos.push(ev.target.result);
-                    const img = document.createElement('img'); img.src = ev.target.result; img.style = "width:40px; height:40px; object-fit:cover; border-radius:5px;";
+                    const img = document.createElement('img'); img.src = ev.target.result; img.style = "width:50px; height:50px; object-fit:cover; border-radius:5px;";
                     document.getElementById('preview-area').appendChild(img);
                 };
-                r.readAsDataURL(f);
+                reader.readAsDataURL(file);
             }
         };
     </script>
