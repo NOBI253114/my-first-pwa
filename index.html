@@ -469,7 +469,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v1.7 Beta</span>
+            <span class="brand-ver">v1.8 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -515,7 +515,7 @@
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v1.7 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v1.8 Beta</div>
             </div>
         </div>
 
@@ -1189,7 +1189,7 @@
                 return [
                     { v: i + 1, t: "n", s: { font: { ...fontBold, color: { rgb: "166534" } }, fill: { fgColor: { rgb: rowBg(status) } }, alignment: align_c, border } },
                     sCell(t.ors, status, true, true),
-                    sCell(t.title, status, false, false),
+                    sCell(t.title, status, false, false, true),
                     sStatus(status),
                     sCell(t.detail || "—", status, false, false, true),
                     sCell(dateCreated, status, false, true),
@@ -1231,38 +1231,39 @@
                 { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } },
             ];
 
-            // ── Column widths (A4 portrait ~43cm printable / 0.5" margins) ──
+            // ── Column widths ──
             ws["!cols"] = [
                 { wch: 5  },  // ลำดับ
                 { wch: 11 },  // ORS
-                { wch: 22 },  // ชื่องาน
+                { wch: 26 },  // ชื่องาน (กว้างขึ้น)
                 { wch: 11 },  // สถานะ
-                { wch: 26 },  // รายละเอียด
+                { wch: 24 },  // รายละเอียด
                 { wch: 12 },  // วันที่
             ];
 
-            // ── Row heights — ขยายตามเนื้อหาของคอลัมน์รายละเอียด ──
-            const detailColWidth = 26; // wch ของคอลัมน์รายละเอียด
-            const calcRowHpt = (detail) => {
-                if (!detail || detail === "—") return 16;
-                // ประมาณจำนวนบรรทัดจากความยาว text กับ line break
-                const lines = detail.split('\n');
-                let totalLines = 0;
-                lines.forEach(line => {
-                    // ภาษาไทย 1 ตัว ≈ 1 char แต่กว้างกว่าอังกฤษ ~1.6 เท่า
-                    const charWidth = line.length * 1.3;
-                    totalLines += Math.ceil(charWidth / detailColWidth) || 1;
-                });
-                const lineHpt = 13; // ความสูงต่อบรรทัด
-                return Math.max(16, Math.min(totalLines * lineHpt, 80)); // สูงสุด 80pt
+            // ── Row heights — คำนวณจากทั้งชื่องานและรายละเอียด ──
+            const titleColWidth  = 26;
+            const detailColWidth = 24;
+            const calcRowHpt = (title, detail) => {
+                const countLines = (text, colW) => {
+                    if (!text || text === "—") return 1;
+                    return text.split('\n').reduce((sum, line) => {
+                        return sum + (Math.ceil((line.length * 1.4) / colW) || 1);
+                    }, 0);
+                };
+                const lines = Math.max(
+                    countLines(title, titleColWidth),
+                    countLines(detail, detailColWidth)
+                );
+                return Math.max(16, Math.min(lines * 13, 90));
             };
 
             ws["!rows"] = [
-                { hpt: 32 }, // title
-                { hpt: 16 }, // sub
-                { hpt: 4  }, // spacer
-                { hpt: 20 }, // header
-                ...rows.map((_, i) => ({ hpt: calcRowHpt(allTasks[i]?.detail) })),
+                { hpt: 32 },
+                { hpt: 16 },
+                { hpt: 4  },
+                { hpt: 20 },
+                ...rows.map((_, i) => ({ hpt: calcRowHpt(allTasks[i]?.title, allTasks[i]?.detail) })),
                 { hpt: 6  },
                 { hpt: 16 },
                 { hpt: 16 },
