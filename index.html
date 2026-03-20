@@ -3,74 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK - ULTIMATE v1.8.8</title>
+    <title>4M TASK - ULTIMATE v1.9.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     
     <style>
         :root {
             --primary: #10b981; --primary-dark: #059669; --bg: #f8fafc;
             --text-main: #1e293b; --text-sub: #64748b; --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            --status-wait: #ef4444;    /* แดง - รอดำเนินการ */
-            --status-doing: #f59e0b;   /* ส้ม - กำลังทำ */
-            --status-done: #10b981;    /* เขียว - เสร็จสิ้น */
+            --status-wait: #ef4444; --status-doing: #f59e0b; --status-done: #10b981;
         }
         body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 50px; }
         
-        /* Loading Overlay */
         .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
-        .progress-container { width: 80%; max-width: 300px; height: 12px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 15px; }
-        .progress-bar { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s ease; }
+        .progress-bar { width: 0%; height: 12px; background: var(--primary); border-radius: 10px; transition: 0.3s; }
         
-        /* Header & Nav */
         .app-header { background: #fff; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
-        .app-header h1 { margin: 0; font-size: 1.5rem; color: var(--primary-dark); }
         .nav-tabs { display: flex; padding: 15px; gap: 8px; position: sticky; top: 0; background: var(--bg); z-index: 100; justify-content: center; }
-        .tab-btn { padding: 10px 20px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); cursor: pointer; transition: 0.3s; box-shadow: var(--shadow); font-family: 'Kanit'; font-weight: 500; }
+        .tab-btn { padding: 10px 20px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); cursor: pointer; box-shadow: var(--shadow); font-family: 'Kanit'; }
         .tab-btn.active { background: var(--primary); color: #fff; transform: scale(1.05); }
 
         .container { max-width: 700px; margin: 0 auto; padding: 0 15px; }
         .page-section { display: none; }
-        .page-section.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .page-section.active { display: block; }
 
-        /* Form & Cards */
         .glass-card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
-        .label-text { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 5px; display: block; font-weight: 500; }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem; outline: none; }
-        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; }
+        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; }
 
-        /* Task Items */
-        .month-header { background: #dcfce7; color: var(--primary-dark); padding: 8px 18px; border-radius: 20px; display: inline-block; margin: 20px 0 10px 0; font-size: 0.9rem; font-weight: 700; }
-        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); }
-        .status-badge { padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; color: #fff; }
+        .month-header { background: #dcfce7; color: var(--primary-dark); padding: 5px 15px; border-radius: 20px; margin: 20px 0 10px 0; display: inline-block; font-size: 0.8rem; font-weight: 700; }
+        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); position: relative; }
+        .status-badge { padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; color: #fff; }
+        
+        /* Photo Viewer */
         .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 10px 0; }
-        .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
-
-        /* Modal & Slider */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: #fff; width: 90%; max-width: 500px; border-radius: 20px; padding: 20px; }
+        .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; cursor: pointer; }
+        
+        /* Lightbox Slider */
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; user-select: none; }
+        .lightbox img { max-width: 95%; max-height: 80vh; border-radius: 10px; }
+        .lightbox-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 30px; cursor: pointer; }
+        .lightbox-nav { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; box-sizing: border-box; }
+        .nav-arrow { background: rgba(255,255,255,0.2); color: #fff; border: none; padding: 15px; border-radius: 50%; cursor: pointer; font-size: 20px; }
     </style>
 </head>
 <body onclick="initAudio()">
 
     <div id="loadingOverlay" class="loading-overlay">
-        <div id="loadState">
-            <div id="percentText" style="font-size: 2.5rem; font-weight: 700; color: var(--primary-dark); text-align:center;">0%</div>
-            <div style="color: var(--text-sub); font-size: 0.9rem; margin-top: 5px; text-align:center;">กำลังประมวลผลและบีบอัดข้อมูล...</div>
-            <div class="progress-container"><div id="progressBar" class="progress-bar"></div></div>
+        <div id="loadState" style="text-align:center;">
+            <div id="percentText" style="font-size: 2rem; font-weight: 700; color: var(--primary-dark);">0%</div>
+            <div class="progress-container" style="width:200px; height:8px; background:#eee; margin:10px auto;"><div id="progressBar" class="progress-bar"></div></div>
         </div>
-        <div id="successState" style="display:none; text-align: center;">
-            <div style="font-size: 80px;">✅</div>
-            <h2 style="color: var(--primary-dark);">บันทึกข้อมูลเรียบร้อย!</h2>
+    </div>
+
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img id="lightboxImg" src="">
+        <div class="lightbox-nav">
+            <button class="nav-arrow" onclick="changeImg(-1)">&#10094;</button>
+            <button class="nav-arrow" onclick="changeImg(1)">&#10095;</button>
         </div>
     </div>
 
     <div class="app-header">
         <h1>4M TASK</h1>
-        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 1.8.8 | Smart Auto-Split | นาย ธิติ พุกวิลัย</div>
+        <div id="version-tag" style="font-size: 0.7rem; color: var(--text-sub);">v1.9.0 | Edit Mode & Slider</div>
     </div>
 
     <div class="nav-tabs">
@@ -82,46 +79,40 @@
     <div class="container">
         <div id="section-add" class="page-section active">
             <div class="glass-card">
-                <span class="label-text">ข้อมูลงาน (เช่น 01-21 งานทางหลวง...)</span>
-                <input type="text" id="taskFullInput" placeholder="เลข-เดือน เว้นวรรค แล้วตามด้วยชื่องาน">
+                <h3 id="form-title" style="margin-top:0; color:var(--primary-dark);">📝 บันทึกงานใหม่</h3>
+                <input type="hidden" id="editId">
                 
-                <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; font-family:inherit; cursor:pointer; color: var(--text-sub);">📸 แนบรูปถ่าย</button>
+                <span class="label-text">ข้อมูลงาน (ตัวอย่าง: 01-21 งานทาสี)</span>
+                <input type="text" id="taskFullInput" placeholder="พิมพ์ ORS และชื่องานในช่องเดียว">
+                
+                <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; cursor:pointer;">📸 แนบรูปเพิ่ม</button>
                 <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
                 <div id="preview-area" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:10px;"></div>
 
-                <span class="label-text">รายละเอียดงาน</span>
-                <textarea id="taskDetail" rows="3" placeholder="ระบุรายละเอียดเพิ่มเติม..."></textarea>
-                
-                <span class="label-text">สถานะ</span>
+                <textarea id="taskDetail" rows="3" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
                 <select id="taskStatus">
                     <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
                     <option value="กำลังทำ">🟡 กำลังทำ</option>
                     <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
                 </select>
-                <button class="btn-main" onclick="addTask()">บันทึกข้อมูลด่วน</button>
+                <button id="saveBtn" class="btn-main" onclick="saveTask()">บันทึกข้อมูลงาน</button>
+                <button id="cancelEditBtn" class="btn-main" style="background:#94a3b8; display:none; margin-top:5px;" onclick="cancelEdit()">ยกเลิกการแก้ไข</button>
             </div>
         </div>
 
         <div id="section-view" class="page-section">
-            <input type="text" id="searchInput" placeholder="ค้นหาชื่องาน หรือ ORS..." onkeyup="filterTasks()" style="margin-bottom:10px;">
-            <select id="filterStatus" onchange="filterTasks()" style="margin-bottom:15px;">
-                <option value="ทั้งหมด">แสดงทุกสถานะ</option>
-                <option value="รอดำเนินการ">รอดำเนินการ</option>
-                <option value="กำลังทำ">กำลังทำ</option>
-                <option value="เสร็จสิ้น">เสร็จสิ้น</option>
-            </select>
+            <input type="text" id="searchInput" placeholder="ค้นหา..." onkeyup="filterTasks()">
             <div id="task-container"></div>
         </div>
 
         <div id="section-dash" class="page-section">
             <div class="glass-card"><canvas id="statusChart"></canvas></div>
-            <button class="btn-main" style="background:#475569;" onclick="exportToCSV()">📤 ส่งออก Excel</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
@@ -135,94 +126,87 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let allTasks = [];
-        let selectedPhotos = [];
-        let statusChart;
+        let allTasks = [], selectedPhotos = [], currentGallery = [], currentImgIdx = 0;
         const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
         const sndClick = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
-        const sndSuccess = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
         window.initAudio = () => { sndClick.play().then(()=>sndClick.pause()); };
-        const playClick = () => { sndClick.currentTime = 0; sndClick.play(); };
 
         window.showSection = (name) => {
-            playClick();
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('section-' + name).classList.add('active');
             document.getElementById('btn-' + name).classList.add('active');
-            if(name === 'dash') updateDashboard();
         };
 
-        async function compressImage(base64Str) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.src = base64Str;
+        // Compress Image Helper
+        async function compressImage(base64) {
+            return new Promise(res => {
+                const img = new Image(); img.src = base64;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const max_size = 600;
-                    let w = img.width, h = img.height;
-                    if (w > h) { if (w > max_size) { h *= max_size / w; w = max_size; } }
-                    else { if (h > max_size) { w *= max_size / h; h = max_size; } }
+                    const max = 600; let w = img.width, h = img.height;
+                    if (w > h) { if(w > max) { h *= max/w; w = max; } } else { if(h > max) { w *= max/h; h = max; } }
                     canvas.width = w; canvas.height = h;
                     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    resolve(canvas.toDataURL('image/jpeg', 0.5)); // บีบอัด 50% กัน Error 1MB
-                };
+                    res(canvas.toDataURL('image/jpeg', 0.5));
+                }
             });
         }
 
-        window.addTask = async () => {
-            const rawInput = document.getElementById('taskFullInput').value;
-            if(!rawInput) return alert("กรุณากรอกข้อมูลงาน");
+        // Add or Update Task
+        window.saveTask = async () => {
+            const raw = document.getElementById('taskFullInput').value;
+            const editId = document.getElementById('editId').value;
+            if(!raw) return alert("กรุณากรอกข้อมูล");
 
-            playClick();
-            const overlay = document.getElementById('loadingOverlay');
-            overlay.style.display = 'flex';
-            document.getElementById('loadState').style.display = 'block';
-            document.getElementById('successState').style.display = 'none';
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
+            const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
+            const title = match ? match[3].trim() : raw;
 
-            // ระบบแยก ORS อัตโนมัติ
-            const match = rawInput.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
-            let ors, title;
-            if (match) {
-                ors = `ORS.${match[1]}/${match[2]}`;
-                title = match[3].trim();
+            const compressed = [];
+            for(let p of selectedPhotos) { compressed.push(await compressImage(p)); }
+
+            const data = {
+                ors, title, detail: document.getElementById('taskDetail').value,
+                status: document.getElementById('taskStatus').value,
+                updatedAt: new Date().getTime()
+            };
+            if(compressed.length > 0) data.photos = compressed; // อัปเดตรูปเฉพาะเมื่อมีการเลือกใหม่
+
+            if(editId) {
+                await updateDoc(doc(db, "tasks", editId), data);
             } else {
-                ors = "ORS.00/00";
-                title = rawInput;
+                data.createdAt = new Date().getTime();
+                data.photos = compressed;
+                await addDoc(collection(db, "tasks"), data);
             }
-
-            try {
-                const compressedPhotos = [];
-                for(let photo of selectedPhotos) { 
-                    compressedPhotos.push(await compressImage(photo)); 
-                }
-                
-                document.getElementById('progressBar').style.width = '70%';
-                document.getElementById('percentText').innerText = '70%';
-
-                await addDoc(collection(db, "tasks"), {
-                    ors, title, detail: document.getElementById('taskDetail').value,
-                    status: document.getElementById('taskStatus').value, 
-                    photos: compressedPhotos, 
-                    createdAt: new Date().getTime()
-                });
-                
-                document.getElementById('progressBar').style.width = '100%';
-                document.getElementById('percentText').innerText = '100%';
-                sndSuccess.play();
-
-                setTimeout(() => {
-                    document.getElementById('loadState').style.display = 'none';
-                    document.getElementById('successState').style.display = 'block';
-                    setTimeout(() => location.reload(), 1500);
-                }, 500);
-            } catch (e) { 
-                overlay.style.display = 'none'; 
-                alert("ข้อมูลอาจใหญ่เกินไป ลองลดจำนวนรูปภาพลงครับ"); 
-            }
+            location.reload();
         };
 
+        // Edit Function
+        window.editTask = (id) => {
+            const t = allTasks.find(x => x.id === id);
+            document.getElementById('editId').value = t.id;
+            // แปลง ORS กลับเป็นรูปแบบพิมพ์ง่าย เช่น ORS.01/21 -> 01-21
+            const cleanOrs = t.ors.replace("ORS.", "").replace("/", "-");
+            document.getElementById('taskFullInput').value = `${cleanOrs} ${t.title}`;
+            document.getElementById('taskDetail').value = t.detail;
+            document.getElementById('taskStatus').value = t.status;
+            
+            document.getElementById('form-title').innerText = "✏️ แก้ไขข้อมูลงาน";
+            document.getElementById('saveBtn').innerText = "อัปเดตข้อมูล";
+            document.getElementById('cancelEditBtn').style.display = "block";
+            showSection('add');
+            window.scrollTo(0,0);
+        };
+
+        window.cancelEdit = () => { location.reload(); };
+
+        window.deleteTask = async (id) => { if(confirm("ลบงานนี้ถาวร?")) await deleteDoc(doc(db, "tasks", id)); };
+
+        // Real-time Data
         onSnapshot(query(collection(db, "tasks"), orderBy("ors", "asc")), (snap) => {
             allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             filterTasks();
@@ -230,56 +214,48 @@
 
         window.filterTasks = () => {
             const search = document.getElementById('searchInput').value.toLowerCase();
-            const filterS = document.getElementById('filterStatus').value;
             const container = document.getElementById('task-container');
             container.innerHTML = "";
             let lastMonth = "";
 
-            allTasks.filter(t => {
-                const matchSearch = (t.title||"").toLowerCase().includes(search) || (t.ors||"").toLowerCase().includes(search);
-                const matchStatus = filterS === 'ทั้งหมด' || t.status === filterS;
-                return matchSearch && matchStatus;
-            }).forEach(t => {
-                const monthNum = parseInt(t.ors.split('.')[1]?.split('/')[0]) || 0;
-                const monthName = monthNames[monthNum] || "ไม่ระบุเดือน";
-                
-                let color = "var(--status-wait)";
-                if(t.status === "กำลังทำ") color = "var(--status-doing)";
-                if(t.status === "เสร็จสิ้น") color = "var(--status-done)";
+            allTasks.filter(t => t.title.toLowerCase().includes(search) || t.ors.includes(search)).forEach(t => {
+                const mNum = parseInt(t.ors.split('.')[1]?.split('/')[0]) || 0;
+                const mName = monthNames[mNum] || "ทั่วไป";
+                let color = t.status === "เสร็จสิ้น" ? "var(--status-done)" : (t.status === "กำลังทำ" ? "var(--status-doing)" : "var(--status-wait)");
 
-                if (lastMonth !== monthName) {
-                    lastMonth = monthName;
-                    container.innerHTML += `<div class="month-header">📅 เดือน${monthName}</div>`;
-                }
+                if (lastMonth !== mName) { lastMonth = mName; container.innerHTML += `<div class="month-header">📅 เดือน${mName}</div>`; }
+                
                 container.innerHTML += `
                     <div class="task-card" style="border-left: 6px solid ${color}">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; justify-content:space-between;">
                             <span style="font-weight:700; font-size:0.8rem;">${t.ors}</span>
                             <span class="status-badge" style="background:${color}">${t.status}</span>
                         </div>
-                        <div style="font-weight:600; margin:10px 0; font-size:1.1rem; color:${color}">${t.title}</div>
-                        <div style="font-size:0.85rem; color:var(--text-sub); margin-bottom:10px;">${t.detail || ''}</div>
-                        <div class="gallery">${(t.photos||[]).map(p => `<img src="${p}">`).join('')}</div>
-                        <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9;">
-                            <span style="color:#ef4444; cursor:pointer; font-size:0.8rem;" onclick="deleteTask('${t.id}')">🗑️ ลบงาน</span>
+                        <div style="font-weight:600; margin:8px 0; font-size:1.1rem; color:${color}">${t.title}</div>
+                        <div class="gallery">${(t.photos||[]).map((p, idx) => `<img src="${p}" onclick="openLightbox('${t.id}', ${idx})">`).join('')}</div>
+                        <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:10px; border-top:1px solid #eee; padding-top:10px;">
+                            <span style="color:var(--text-sub); cursor:pointer;" onclick="editTask('${t.id}')">✏️ แก้ไข</span>
+                            <span style="color:#ef4444; cursor:pointer;" onclick="deleteTask('${t.id}')">🗑️ ลบ</span>
                         </div>
                     </div>`;
             });
         };
 
-        window.deleteTask = async (id) => { if(confirm("ลบงานนี้?")) await deleteDoc(doc(db, "tasks", id)); };
-
-        function updateDashboard() {
-            const done = allTasks.filter(t => t.status === 'เสร็จสิ้น').length;
-            const doing = allTasks.filter(t => t.status === 'กำลังทำ').length;
-            const wait = allTasks.filter(t => t.status === 'รอดำเนินการ').length;
-            const ctx = document.getElementById('statusChart').getContext('2d');
-            if(statusChart) statusChart.destroy();
-            statusChart = new Chart(ctx, { 
-                type: 'doughnut', 
-                data: { labels: ['เสร็จแล้ว', 'กำลังทำ', 'รอ'], datasets: [{ data: [done, doing, wait], backgroundColor: ['#10b981','#f59e0b','#ef4444'] }] }
-            });
-        }
+        // Lightbox Slider Logic
+        window.openLightbox = (taskId, idx) => {
+            const task = allTasks.find(t => t.id === taskId);
+            currentGallery = task.photos;
+            currentImgIdx = idx;
+            document.getElementById('lightboxImg').src = currentGallery[idx];
+            document.getElementById('lightbox').style.display = 'flex';
+        };
+        window.closeLightbox = () => { document.getElementById('lightbox').style.display = 'none'; };
+        window.changeImg = (dir) => {
+            currentImgIdx += dir;
+            if(currentImgIdx >= currentGallery.length) currentImgIdx = 0;
+            if(currentImgIdx < 0) currentImgIdx = currentGallery.length - 1;
+            document.getElementById('lightboxImg').src = currentGallery[currentImgIdx];
+        };
 
         document.getElementById('cameraInput').onchange = (e) => {
             for (let file of e.target.files) {
@@ -292,8 +268,6 @@
                 reader.readAsDataURL(file);
             }
         };
-
-        document.querySelectorAll('button, input, select').forEach(el => el.addEventListener('click', () => {}));
     </script>
 </body>
 </html>
