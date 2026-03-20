@@ -3,55 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK AI - ULTIMATE v1.9.6</title>
+    <title>4M TASK AI - v1.9.7 FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --primary: #10b981; --primary-dark: #059669; --bg: #f8fafc; --text-main: #1e293b; --text-sub: #64748b; --shadow: 0 4px 20px rgba(0, 0, 0, 0.05); --status-wait: #ef4444; --status-doing: #f59e0b; --status-done: #10b981; }
         body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding-bottom: 50px; }
-        
-        /* AI Insight Card */
-        .ai-card { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
-        .ai-badge { background: #10b981; color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; margin-bottom: 10px; display: inline-block; }
-        .ai-content { font-size: 0.95rem; line-height: 1.6; color: #064e3b; white-space: pre-wrap; }
-        .ai-loading { display: none; text-align: center; padding: 20px; color: var(--primary-dark); font-weight: 500; }
-        
-        /* App Structure */
         .app-header { background: #fff; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .nav-tabs { display: flex; padding: 15px; gap: 8px; position: sticky; top: 0; background: var(--bg); z-index: 100; justify-content: center; }
-        .tab-btn { padding: 10px 20px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); cursor: pointer; box-shadow: var(--shadow); font-family: 'Kanit'; font-weight: 500; transition: 0.3s; }
+        .tab-btn { padding: 10px 20px; border: none; border-radius: 12px; background: #fff; color: var(--text-sub); cursor: pointer; box-shadow: var(--shadow); font-family: 'Kanit'; }
         .tab-btn.active { background: var(--primary); color: #fff; transform: scale(1.05); }
-        
         .container { max-width: 700px; margin: 0 auto; padding: 0 15px; }
         .page-section { display: none; }
-        .page-section.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+        .page-section.active { display: block; }
         .glass-card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem; }
-        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn-main:active { transform: scale(0.98); }
-
-        /* Task Cards */
-        .month-header { background: #dcfce7; color: var(--primary-dark); padding: 5px 15px; border-radius: 20px; margin: 20px 0 10px 0; display: inline-block; font-size: 0.8rem; font-weight: 700; }
-        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); border-left: 6px solid #ccc; position: relative; }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; }
+        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; }
+        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); border-left: 6px solid #ccc; }
         .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 10px 0; }
         .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; cursor: pointer; }
-        
-        /* Lightbox */
-        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; }
-        .lightbox img { max-width: 95%; max-height: 80vh; border-radius: 10px; }
+        .ai-card { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+        .ai-content { font-size: 0.95rem; line-height: 1.6; color: #064e3b; white-space: pre-wrap; }
     </style>
 </head>
 <body>
 
-    <div id="lightbox" class="lightbox" onclick="this.style.display='none'">
-        <img id="lightboxImg" src="">
-    </div>
-
     <div class="app-header">
         <h1>4M TASK AI</h1>
-        <div style="font-size: 0.7rem; color: var(--text-sub);">Version 1.9.6 | Smart Sort & AI Insight | นาย ธิติ พุกวิลัย</div>
+        <div style="font-size: 0.7rem; color: var(--text-sub);">v1.9.7 | 4mserver System | นาย ธิติ พุกวิลัย</div>
     </div>
 
     <div class="nav-tabs">
@@ -64,37 +43,31 @@
         <div id="section-add" class="page-section active">
             <div class="glass-card">
                 <input type="hidden" id="editId">
-                <span style="font-size: 0.8rem; color: var(--text-sub);">พิมพ์ช่องเดียว (ตัวอย่าง: 01-21 งานทางหลวง ปท.5031)</span>
-                <input type="text" id="taskFullInput" placeholder="เลข-เดือน ชื่องาน">
-                <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; cursor:pointer; font-family:inherit;">📸 แนบรูปถ่าย</button>
+                <input type="text" id="taskFullInput" placeholder="เลข-เดือน ชื่องาน (เช่น 01-21 งานทางหลวง)">
+                <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; cursor:pointer;">📸 แนบรูป (บีบอัดอัตโนมัติ)</button>
                 <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
                 <div id="preview-area" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:10px;"></div>
-                <textarea id="taskDetail" rows="2" placeholder="รายละเอียดเพิ่มเติม (ถ้ามี)"></textarea>
+                <textarea id="taskDetail" rows="2" placeholder="รายละเอียด..."></textarea>
                 <select id="taskStatus">
                     <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
                     <option value="กำลังทำ">🟡 กำลังทำ</option>
                     <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
                 </select>
                 <button id="saveBtn" class="btn-main" onclick="saveTask()">บันทึกข้อมูล</button>
-                <button id="cancelBtn" class="btn-main" style="background:#94a3b8; display:none; margin-top:5px;" onclick="location.reload()">ยกเลิกแก้ไข</button>
             </div>
         </div>
 
         <div id="section-view" class="page-section">
-            <input type="text" id="searchInput" placeholder="ค้นหาชื่องาน หรือ ORS..." onkeyup="filterTasks()">
+            <input type="text" id="searchInput" placeholder="ค้นหา..." onkeyup="filterTasks()">
             <div id="task-container"></div>
         </div>
 
         <div id="section-dash" class="page-section">
             <div class="ai-card">
-                <div class="ai-badge">Gemini AI สรุปงาน ✨</div>
-                <div id="aiLoading" class="ai-loading">🤖 กำลังประมวลผลข้อมูลทางหลวง...</div>
-                <div id="aiOutput" class="ai-content">กดปุ่มด้านล่างเพื่อให้ AI ช่วยสรุปวิเคราะห์งานทั้งหมดของคุณ</div>
-                <button class="btn-main" style="margin-top:15px; background:#059669;" onclick="getAISummary()">🪄 เริ่มสรุปผลด้วย AI</button>
+                <div id="aiOutput" class="ai-content">กดปุ่มเพื่อสรุปงานด้วย AI</div>
+                <button class="btn-main" style="margin-top:15px; background:#059669;" onclick="getAISummary()">🪄 วิเคราะห์งานด้วย AI</button>
             </div>
-            <div class="glass-card">
-                <canvas id="statusChart"></canvas>
-            </div>
+            <canvas id="statusChart"></canvas>
         </div>
     </div>
 
@@ -105,8 +78,8 @@
         const firebaseConfig = { apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ", authDomain: "mytaskapp-pro.firebaseapp.com", projectId: "mytaskapp-pro", storageBucket: "mytaskapp-pro.firebasestorage.app", messagingSenderId: "189296604432", appId: "1:189296604432:web:31dabc3c5e363b2c96a195" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const AI_KEY = "AIzaSyC8QAz-QHKz8GOWVWzzkReSuIesulku7L4";
         let allTasks = [], selectedPhotos = [], statusChart;
-        const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
         window.showSection = (name) => {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
@@ -116,36 +89,46 @@
             if(name === 'dash') renderChart();
         };
 
-        // --- AI LOGIC ---
-        window.getAISummary = async () => {
-            const output = document.getElementById('aiOutput');
-            const loader = document.getElementById('aiLoading');
-            const apiKey = "AIzaSyC8QAz-QHKz8GOWVWzzkReSuIesulku7L4"; // ใส่ Key ให้แล้วครับ
+        // ฟังก์ชันบีบอัดรูปภาพให้เล็กลงมาก (คุณภาพ 0.3)
+        async function compressImage(base64) {
+            return new Promise(res => {
+                const img = new Image(); img.src = base64;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const max = 500; let w = img.width, h = img.height;
+                    if (w > h) { if(w > max) { h *= max/w; w = max; } } else { if(h > max) { w *= max/h; h = max; } }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    res(canvas.toDataURL('image/jpeg', 0.3));
+                }
+            });
+        }
 
-            output.style.display = 'none';
-            loader.style.display = 'block';
+        window.saveTask = async () => {
+            const raw = document.getElementById('taskFullInput').value;
+            const editId = document.getElementById('editId').value;
+            if(!raw) return alert("กรุณากรอกข้อมูล");
 
-            const dataStr = allTasks.map(t => `ORS: ${t.ors}, งาน: ${t.title}, สถานะ: ${t.status}`).join('\n');
-            const prompt = `คุณคือผู้เชี่ยวชาญจัดการงานทางหลวง สรุปข้อมูลงานเหล่านี้เป็นภาษาไทยให้อ่านง่าย:
-            1. สรุปภาพรวมว่ามีกี่งาน และกี่เปอร์เซ็นต์ที่เสร็จแล้ว
-            2. ระบุเลข ORS ที่ต้องเร่งดำเนินการ (รอดำเนินการ)
-            3. ให้คำแนะนำสั้นๆ ในการทำงานให้มีประสิทธิภาพขึ้น
-            ข้อมูล:\n${dataStr}`;
+            const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
+            const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
+            const title = match ? match[3].trim() : raw;
+            
+            // บีบอัดรูปก่อนบันทึก
+            const compressed = [];
+            for(let p of selectedPhotos) { compressed.push(await compressImage(p)); }
 
+            const data = { ors, title, detail: document.getElementById('taskDetail').value, status: document.getElementById('taskStatus').value, updatedAt: new Date().getTime(), photos: compressed };
+            
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
-                const json = await res.json();
-                output.innerText = json.candidates[0].content.parts[0].text;
-            } catch (e) { output.innerText = "ไม่สามารถเชื่อมต่อ AI ได้ในขณะนี้"; }
-            loader.style.display = 'none';
-            output.style.display = 'block';
+                if(editId) { await updateDoc(doc(db, "tasks", editId), data); } 
+                else { data.createdAt = new Date().getTime(); await addDoc(collection(db, "tasks"), data); }
+                alert("บันทึกสำเร็จ!");
+                location.reload();
+            } catch (e) {
+                alert("เกิดข้อผิดพลาด: ข้อมูลอาจใหญ่เกินไป (ลองลดจำนวนรูปภาพลง)");
+            }
         };
 
-        // --- CORE LOGIC ---
         onSnapshot(query(collection(db, "tasks")), (snap) => {
             allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             allTasks.sort((a, b) => {
@@ -156,50 +139,50 @@
             filterTasks();
         });
 
-        window.saveTask = async () => {
-            const raw = document.getElementById('taskFullInput').value;
-            const editId = document.getElementById('editId').value;
-            if(!raw) return alert("กรุณากรอกข้อมูล");
-            const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
-            const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
-            const title = match ? match[3].trim() : raw;
-            const data = { ors, title, detail: document.getElementById('taskDetail').value, status: document.getElementById('taskStatus').value, updatedAt: new Date().getTime(), photos: selectedPhotos };
-            if(editId) { await updateDoc(doc(db, "tasks", editId), data); } 
-            else { data.createdAt = new Date().getTime(); await addDoc(collection(db, "tasks"), data); }
-            location.reload();
-        };
-
         window.filterTasks = () => {
             const container = document.getElementById('task-container');
-            container.innerHTML = ""; let lastM = "";
+            container.innerHTML = "";
             const search = document.getElementById('searchInput').value.toLowerCase();
             allTasks.filter(t => t.title.toLowerCase().includes(search) || t.ors.includes(search)).forEach(t => {
-                const m = monthNames[parseInt(t.ors.split('.')[1]?.split('/')[0])] || "ทั่วไป";
                 let c = t.status === "เสร็จสิ้น" ? "var(--status-done)" : (t.status === "กำลังทำ" ? "var(--status-doing)" : "var(--status-wait)");
-                if(lastM !== m) { lastM = m; container.innerHTML += `<div class="month-header">📅 เดือน${m}</div>`; }
                 container.innerHTML += `
                     <div class="task-card" style="border-left-color:${c}">
-                        <div style="display:flex; justify-content:space-between;"><b>${t.ors}</b> <span style="color:${c}; font-size:0.8rem;">${t.status}</span></div>
+                        <div style="display:flex; justify-content:space-between;"><b>${t.ors}</b> <span style="color:${c}">${t.status}</span></div>
                         <div style="margin:8px 0; font-weight:600;">${t.title}</div>
-                        <div class="gallery">${(t.photos||[]).map(p => `<img src="${p}" onclick="viewImg('${p}')">`).join('')}</div>
-                        <div style="display:flex; justify-content:flex-end; gap:12px; font-size:0.8rem; border-top:1px solid #eee; padding-top:8px;">
-                            <span onclick="editTask('${t.id}')">✏️ แก้ไข</span> <span style="color:red;" onclick="deleteTask('${t.id}')">🗑️ ลบ</span>
+                        <div class="gallery">${(t.photos||[]).map(p => `<img src="${p}" onclick="window.open('${p}')">`).join('')}</div>
+                        <div style="display:flex; justify-content:flex-end; gap:12px; font-size:0.8rem;">
+                            <span onclick="editTask('${t.id}')">✏️ แก้ไข</span>
+                            <span style="color:red;" onclick="deleteTask('${t.id}')">🗑️ ลบ</span>
                         </div>
                     </div>`;
             });
         };
 
-        window.viewImg = (src) => { document.getElementById('lightboxImg').src = src; document.getElementById('lightbox').style.display = 'flex'; };
+        window.getAISummary = async () => {
+            const output = document.getElementById('aiOutput');
+            output.innerText = "🤖 AI กำลังคิด...";
+            const dataStr = allTasks.map(t => `${t.ors}: ${t.title} (${t.status})`).join('\n');
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${AI_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "สรุปงานทางหลวงเหล่านี้เป็นภาษาไทย แยกสิ่งที่เสร็จแล้วกับที่ค้าง:\n" + dataStr }] }] })
+                });
+                const json = await res.json();
+                output.innerText = json.candidates[0].content.parts[0].text;
+            } catch (e) { output.innerText = "AI เชื่อมต่อไม่ได้ชั่วคราว"; }
+        };
+
         window.editTask = (id) => {
             const t = allTasks.find(x => x.id === id);
             document.getElementById('editId').value = t.id;
             document.getElementById('taskFullInput').value = `${t.ors.replace("ORS.","").replace("/","-")} ${t.title}`;
             document.getElementById('taskStatus').value = t.status;
-            document.getElementById('saveBtn').innerText = "อัปเดตข้อมูล";
-            document.getElementById('cancelBtn').style.display = "block";
             showSection('add');
         };
+
         window.deleteTask = async (id) => { if(confirm("ลบงานนี้?")) await deleteDoc(doc(db, "tasks", id)); };
+        
         function renderChart() {
             const ctx = document.getElementById('statusChart').getContext('2d');
             const counts = { 'เสร็จสิ้น': 0, 'กำลังทำ': 0, 'รอดำเนินการ': 0 };
@@ -207,7 +190,18 @@
             if(statusChart) statusChart.destroy();
             statusChart = new Chart(ctx, { type: 'doughnut', data: { labels: Object.keys(counts), datasets: [{ data: Object.values(counts), backgroundColor: ['#10b981', '#f59e0b', '#ef4444'] }] } });
         }
-        document.getElementById('cameraInput').onchange = (e) => { for (let f of e.target.files) { const r = new FileReader(); r.onload = (ev) => { selectedPhotos.push(ev.target.result); const img = document.createElement('img'); img.src = ev.target.result; img.style = "width:40px; height:40px; object-fit:cover; border-radius:5px;"; document.getElementById('preview-area').appendChild(img); }; r.readAsDataURL(f); } };
+
+        document.getElementById('cameraInput').onchange = (e) => {
+            for (let f of e.target.files) {
+                const r = new FileReader();
+                r.onload = (ev) => {
+                    selectedPhotos.push(ev.target.result);
+                    const img = document.createElement('img'); img.src = ev.target.result; img.style = "width:40px; height:40px; object-fit:cover; border-radius:5px;";
+                    document.getElementById('preview-area').appendChild(img);
+                };
+                r.readAsDataURL(f);
+            }
+        };
     </script>
 </body>
 </html>
