@@ -90,15 +90,18 @@
         import { getFirestore, collection, addDoc, onSnapshot, query, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = { 
-            apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ", authDomain: "mytaskapp-pro.firebaseapp.com", 
-            projectId: "mytaskapp-pro", storageBucket: "mytaskapp-pro.firebasestorage.app", 
-            messagingSenderId: "189296604432", appId: "1:189296604432:web:31dabc3c5e363b2c96a195" 
+            apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ", 
+            authDomain: "mytaskapp-pro.firebaseapp.com", 
+            projectId: "mytaskapp-pro", 
+            storageBucket: "mytaskapp-pro.firebasestorage.app", 
+            messagingSenderId: "189296604432", 
+            appId: "1:189296604432:web:31dabc3c5e363b2c96a195" 
         };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         let allTasks = [], selectedPhotos = [], statusChart, editingId = null;
-        const monthNames = ["ทั่วไป", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+        const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
         window.showSection = (name) => {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
@@ -125,25 +128,21 @@
         window.addTask = async () => {
             const raw = document.getElementById('taskFullInput').value;
             if(!raw) return alert("กรุณากรอกข้อมูลงาน");
-            
             const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
             const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
             const title = match ? match[3].trim() : raw;
-            
             const compressed = [];
             for(let p of selectedPhotos) { 
                 if(p.startsWith('data:image')) compressed.push(await compressImg(p));
                 else compressed.push(p);
             }
-
             const data = {
                 ors, title, detail: document.getElementById('taskDetail').value,
                 status: document.getElementById('taskStatus').value, photos: compressed, updatedAt: new Date().getTime()
             };
-
             try {
-                if(editingId) { await updateDoc(doc(db, "tasks", editingId), data); alert("แก้ไขสำเร็จ!"); }
-                else { data.createdAt = new Date().getTime(); await addDoc(collection(db, "tasks"), data); alert("บันทึกสำเร็จ!"); }
+                if(editingId) { await updateDoc(doc(db, "tasks", editingId), data); }
+                else { data.createdAt = new Date().getTime(); await addDoc(collection(db, "tasks"), data); }
                 resetForm(); location.reload();
             } catch (e) { alert("Error: " + e.message); }
         };
@@ -185,13 +184,7 @@
 
         onSnapshot(collection(db, "tasks"), (snap) => {
             allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            // เรียงลำดับ: เดือน (เลขหน้า /) -> เลขงาน (เลขหลัง /)
-            allTasks.sort((a, b) => {
-                const aParts = a.ors.replace('ORS.', '').split('/');
-                const bParts = b.ors.replace('ORS.', '').split('/');
-                if (parseInt(aParts[1]) !== parseInt(bParts[1])) return parseInt(aParts[1]) - parseInt(bParts[1]);
-                return parseInt(aParts[0]) - parseInt(bParts[0]);
-            });
+            allTasks.sort((a, b) => (a.ors || "").localeCompare(b.ors || ""));
             filterTasks();
         });
 
@@ -199,9 +192,13 @@
             const container = document.getElementById('task-container'); container.innerHTML = "";
             let lastM = ""; const search = document.getElementById('searchInput').value.toLowerCase();
             
-            allTasks.filter(t => t.title.toLowerCase().includes(search) || t.ors.includes(search)).forEach(t => {
-                const mIdx = parseInt(t.ors.split('/')[0].split('.')[1]) || 0;
-                const mName = monthNames[mIdx] || "ทั่วไป";
+            allTasks.filter(t => (t.title||"").toLowerCase().includes(search) || (t.ors||"").includes(search)).forEach(t => {
+                let mName = "ทั่วไป";
+                try {
+                    const mIdx = parseInt(t.ors.split('/')[0].split('.')[1]);
+                    if(mIdx > 0 && mIdx <= 12) mName = monthNames[mIdx];
+                } catch(e) {}
+
                 let c = t.status === "เสร็จสิ้น" ? "var(--status-done)" : (t.status === "กำลังทำ" ? "var(--status-doing)" : "var(--status-wait)");
                 
                 if (lastM !== mName) { lastM = mName; container.innerHTML += `<div class="month-header">📅 เดือน${mName}</div>`; }
