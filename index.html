@@ -3,305 +3,591 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>4M TASK - Beta 1.5 Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <title>4M TASK</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         :root {
-            --primary: #6366f1; --primary-light: #818cf8; --secondary: #10b981;
-            --dark: #1e293b; --text-main: #0f172a; --text-sub: #64748b;
-            --glass: rgba(255, 255, 255, 0.85); --glass-dark: rgba(15, 23, 42, 0.8);
-            --shadow: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.01);
-            --shadow-lg: 0 25px 50px -12px rgba(0,0,0,0.1);
-            --status-wait: #f43f5e; --status-doing: #fbbf24; --status-done: #10b981;
+            --bg:       #0f1117;
+            --surface:  #1a1d27;
+            --surface2: #22263a;
+            --border:   rgba(255,255,255,0.07);
+            --primary:  #4f8ef7;
+            --primary-glow: rgba(79,142,247,0.18);
+            --green:    #34d399;
+            --yellow:   #fbbf24;
+            --red:      #f87171;
+            --text:     #e8eaf0;
+            --text-sub: #6b7280;
+            --text-dim: #374151;
+            --radius:   16px;
+            --radius-sm: 10px;
         }
-        
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            font-family: 'Kanit', sans-serif; margin: 0; background: #f1f5f9;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            min-height: 100vh; color: var(--text-main); padding-bottom: 80px;
+        *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'IBM Plex Sans Thai', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100dvh;
+            padding-bottom: 90px;
+            overflow-x: hidden;
         }
 
-        /* ----------------------------- Background Decor ----------------------------- */
-        body::before {
-            content: ""; position: fixed; top: -10%; left: -15%; width: 50%; height: 50%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
-            z-index: -1; filter: blur(60px); animation: drift 15s infinite alternate ease-in-out;
+        /* ═══════════════════════ TOP BAR ═══════════════════════ */
+        .topbar {
+            position: sticky; top: 0; z-index: 200;
+            background: rgba(15,17,23,0.85);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 20px;
+            height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
         }
-        @keyframes drift { from { transform: translate(0, 0); } to { transform: translate(5%, 5%); } }
+        .topbar-brand {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .brand-icon {
+            width: 32px; height: 32px; background: var(--primary);
+            border-radius: 8px; display: grid; place-items: center;
+            font-size: 16px;
+        }
+        .brand-name {
+            font-size: 1.1rem; font-weight: 700; letter-spacing: 1.5px;
+            color: var(--text);
+        }
+        .brand-ver {
+            font-size: 0.6rem; background: var(--surface2); color: var(--text-sub);
+            padding: 2px 7px; border-radius: 20px; border: 1px solid var(--border);
+            font-family: 'IBM Plex Mono'; letter-spacing: 0.5px;
+        }
+        .topbar-right { display: flex; align-items: center; gap: 10px; }
+        #admin-indicator {
+            display: none; font-size: 0.7rem; font-weight: 600; color: var(--green);
+            background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3);
+            padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;
+        }
+        .admin-btn {
+            width: 36px; height: 36px; background: var(--surface2); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); display: grid; place-items: center;
+            cursor: pointer; font-size: 16px; transition: 0.2s;
+        }
+        .admin-btn:hover { background: var(--surface); border-color: var(--primary); }
 
-        /* --------------------------------- Header --------------------------------- */
-        .app-header { 
-            padding: 30px 20px 20px 20px; text-align: center; background: rgba(255,255,255,0.4);
-            backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.5);
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01), 0 2px 4px -1px rgba(0,0,0,0.005);
+        /* ═══════════════════════ NAV TABS ═══════════════════════ */
+        .nav-rail {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+            background: rgba(15,17,23,0.92); backdrop-filter: blur(24px);
+            border-top: 1px solid var(--border);
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            padding: 8px 16px 16px;
+            gap: 4px;
         }
-        .app-header h1 { margin: 0; font-weight: 700; color: var(--primary); font-size: 1.8rem; letter-spacing: 1px; }
-        .version-tag { font-size: 0.7rem; background: var(--primary); color: #fff; padding: 2px 10px; border-radius: 20px; display: inline-block; margin-top: 5px; }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            padding: 10px 8px; border-radius: var(--radius-sm); cursor: pointer;
+            transition: 0.2s; border: none; background: none; color: var(--text-sub);
+            font-family: 'IBM Plex Sans Thai'; font-size: 0.7rem; font-weight: 500;
+        }
+        .nav-item .nav-icon { font-size: 20px; line-height: 1; }
+        .nav-item:hover { color: var(--text); background: var(--surface); }
+        .nav-item.active { color: var(--primary); background: var(--primary-glow); }
+        .nav-item[style*="none"] { display: none !important; }
 
-        /* -------------------------------- Navigation -------------------------------- */
-        .nav-tabs { 
-            display: flex; justify-content: center; gap: 8px; padding: 15px; 
-            position: sticky; top: 0; z-index: 100; background: rgba(241, 245, 249, 0.7); backdrop-filter: blur(15px);
-        }
-        .tab-btn { 
-            padding: 12px 16px; border: none; border-radius: 16px; background: var(--glass);
-            color: var(--text-sub); font-family: 'Kanit'; font-weight: 500; cursor: pointer;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255,255,255,0.6);
-        }
-        .tab-btn:hover { background: #fff; color: var(--primary); }
-        .tab-btn.active { background: var(--primary); color: #fff; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
+        /* ═══════════════════════ LAYOUT ═══════════════════════ */
+        .container { max-width: 680px; margin: 0 auto; padding: 20px 16px; }
+        .page-section { display: none; }
+        .page-section.active { display: block; }
 
-        .container { max-width: 650px; margin: 0 auto; padding: 0 15px; }
-        
-        /* ------------------------------ General Cards ------------------------------ */
-        .glass-card { 
-            background: var(--glass); backdrop-filter: blur(20px); border-radius: 28px;
-            padding: 25px; border: 1px solid rgba(255,255,255,0.7); box-shadow: var(--shadow); 
-            margin-bottom: 25px; animation: slideUp 0.5s ease-out;
+        /* ═══════════════════════ CARDS ═══════════════════════ */
+        .card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
         }
-        @keyframes slideUp { from { transform: translateY(25px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        /* ------------------------------- Task Cards ------------------------------- */
-        .month-header { 
-            background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 16px 20px; 
-            border-radius: 18px; display: flex; justify-content: space-between; align-items: center; 
-            margin: 25px 0 12px 0; font-weight: 600; cursor: pointer; border: 1px solid rgba(99, 102, 241, 0.1);
-            transition: 0.3s;
+        .card-title {
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 1.2px;
+            text-transform: uppercase; color: var(--text-sub); margin-bottom: 18px;
         }
-        .month-header:hover { background: rgba(99, 102, 241, 0.15); }
-        .month-header .chevron { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1); }
-        .month-header.active .chevron { transform: rotate(180deg); }
 
-        .month-content { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .month-content.open { max-height: 5000px; /* arbitrary large value */ }
-
-        .task-card { 
-            background: #fff; border-radius: 24px; padding: 22px; margin-bottom: 20px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.03); border: 1px solid transparent; transition: 0.3s;
+        /* ═══════════════════════ FORM ELEMENTS ═══════════════════════ */
+        .form-group { margin-bottom: 14px; }
+        .form-label {
+            display: block; font-size: 0.75rem; font-weight: 500;
+            color: var(--text-sub); margin-bottom: 6px; letter-spacing: 0.5px;
         }
-        .task-card:hover { transform: translateY(-3px); border-color: rgba(99, 102, 241, 0.1); box-shadow: var(--shadow); }
-        
-        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 18px 0; }
-        .gallery img { 
-            width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; 
-            cursor: pointer; transition: 0.3s; border: 2px solid transparent;
+        .form-input, .form-textarea, .form-select {
+            width: 100%; padding: 13px 16px;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text);
+            font-family: 'IBM Plex Sans Thai'; font-size: 0.95rem;
+            transition: 0.2s; outline: none;
+            -webkit-appearance: none; appearance: none;
         }
-        .gallery img:hover { transform: scale(1.05); border-color: #fff; box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
-
-        /* ------------------------------- Premium Image Viewer (Lightbox) ------------------------------- */
-        .viewer-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 10000; backdrop-filter: blur(10px);
-            align-items: center; justify-content: center; animation: fadeIn 0.3s ease;
+        .form-input::placeholder, .form-textarea::placeholder { color: var(--text-dim); }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow);
         }
-        .viewer-overlay.active { display: flex; }
-        .viewer-img { max-width: 92%; max-height: 85%; border-radius: 12px; box-shadow: var(--shadow-lg); transition: transform 0.3s ease; }
-        .viewer-close { position: absolute; top: 25px; right: 25px; color: #fff; font-size: 30px; cursor: pointer; opacity: 0.7; transition: 0.2s; }
-        .viewer-close:hover { opacity: 1; }
-        .viewer-nav { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; transform: translateY(-50%); }
-        .viewer-nav-btn { background: rgba(255,255,255,0.1); color: #fff; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 1.5rem; cursor: pointer; transition: 0.2s; -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
-        .viewer-nav-btn:hover { background: rgba(255,255,255,0.2); }
+        .form-textarea { resize: vertical; min-height: 90px; }
+        .form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+        .form-select option { background: var(--surface); color: var(--text); }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* General UI Elements */
-        input, textarea, select { 
-            width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 14px;
-            border: 1px solid #e2e8f0; background: rgba(255,255,255,0.8);
-            font-family: 'Kanit'; font-size: 1rem; transition: 0.3s;
+        /* ═══════════════════════ BUTTONS ═══════════════════════ */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 13px 20px; border-radius: var(--radius-sm); border: none;
+            font-family: 'IBM Plex Sans Thai'; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: 0.2s; letter-spacing: 0.3px;
         }
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
-        
-        .btn-main { 
-            background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
-            color: #fff; border: none; padding: 16px; border-radius: 18px; width: 100%;
-            font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 1.1rem;
+        .btn-primary { background: var(--primary); color: #fff; width: 100%; }
+        .btn-primary:hover { filter: brightness(1.1); }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-ghost {
+            background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+            padding: 10px 16px; border-radius: var(--radius-sm); font-size: 0.85rem;
         }
-        .btn-main:active { transform: scale(0.98); }
+        .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-danger { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); padding: 10px 16px; border-radius: var(--radius-sm); font-size: 0.85rem; }
+        .btn-danger:hover { background: rgba(248,113,113,0.2); }
+        .btn-upload {
+            width: 100%; padding: 14px; border: 1.5px dashed var(--border);
+            border-radius: var(--radius-sm); background: var(--bg);
+            color: var(--text-sub); font-family: 'IBM Plex Sans Thai'; font-size: 0.9rem;
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-upload:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-glow); }
 
-        .modal-overlay { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(15,23,42,0.8); z-index: 9999; justify-content: center; align-items: center; 
-            backdrop-filter: blur(8px); animation: fadeIn 0.2s;
+        /* ═══════════════════════ PHOTO PREVIEW ═══════════════════════ */
+        .preview-strip { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; margin-bottom: 4px; }
+        .preview-strip:empty { display: none; }
+        .preview-thumb {
+            position: relative; flex-shrink: 0;
+            width: 72px; height: 72px; border-radius: var(--radius-sm);
+            overflow: visible;
+        }
+        .preview-thumb img { width: 72px; height: 72px; object-fit: cover; border-radius: var(--radius-sm); display: block; }
+        .preview-thumb-remove {
+            position: absolute; top: -6px; right: -6px;
+            background: var(--red); color: #fff; border: none; border-radius: 50%;
+            width: 20px; height: 20px; font-size: 10px; cursor: pointer;
+            display: grid; place-items: center; font-weight: 700;
+        }
+
+        /* ═══════════════════════ SEARCH ═══════════════════════ */
+        .search-wrap { position: relative; margin-bottom: 16px; }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text-sub); pointer-events: none; }
+        .search-input {
+            width: 100%; padding: 13px 16px 13px 42px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text);
+            font-family: 'IBM Plex Sans Thai'; font-size: 0.95rem; outline: none; transition: 0.2s;
+        }
+        .search-input::placeholder { color: var(--text-dim); }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+
+        /* ═══════════════════════ MONTH SECTION ═══════════════════════ */
+        .month-section { margin-bottom: 8px; }
+        .month-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; border-radius: var(--radius-sm); cursor: pointer;
+            background: var(--surface2); border: 1px solid var(--border);
+            margin-bottom: 8px; transition: 0.2s; user-select: none;
+        }
+        .month-header:hover { border-color: var(--primary); background: var(--primary-glow); }
+        .month-header-left { display: flex; align-items: center; gap: 10px; }
+        .month-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+        .month-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
+        .month-count {
+            font-size: 0.7rem; background: var(--bg); color: var(--text-sub);
+            padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border);
+            font-family: 'IBM Plex Mono';
+        }
+        .month-chevron { color: var(--text-sub); font-size: 12px; transition: transform 0.3s; }
+        .month-header.open .month-chevron { transform: rotate(180deg); }
+        .month-body { display: none; padding-left: 0; }
+        .month-body.open { display: block; }
+
+        /* ═══════════════════════ TASK CARD ═══════════════════════ */
+        .task-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 18px 20px; margin-bottom: 10px;
+            transition: 0.2s; position: relative; overflow: hidden;
+        }
+        .task-card::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+        }
+        .task-card.status-wait::before { background: var(--red); }
+        .task-card.status-doing::before { background: var(--yellow); }
+        .task-card.status-done::before { background: var(--green); }
+        .task-card:hover { border-color: rgba(255,255,255,0.12); }
+
+        .task-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .task-ors {
+            font-family: 'IBM Plex Mono'; font-size: 0.75rem; font-weight: 500;
+            color: var(--text-sub); letter-spacing: 0.5px;
+        }
+        .task-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+            letter-spacing: 0.3px;
+        }
+        .badge-wait { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+        .badge-doing { background: rgba(251,191,36,0.12); color: var(--yellow); border: 1px solid rgba(251,191,36,0.2); }
+        .badge-done { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+
+        .task-title { font-size: 1rem; font-weight: 600; margin-bottom: 6px; color: var(--text); line-height: 1.4; }
+        .task-detail { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 14px; white-space: pre-wrap; line-height: 1.6; }
+
+        .task-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px; }
+        .task-gallery img {
+            width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px;
+            cursor: pointer; transition: 0.2s; border: 1px solid var(--border);
+        }
+        .task-gallery img:hover { transform: scale(1.04); border-color: var(--primary); }
+
+        .task-actions { display: flex; gap: 8px; justify-content: flex-end; }
+        .task-device-info {
+            font-size: 0.7rem; color: var(--text-dim); margin-top: 12px;
+            padding-top: 12px; border-top: 1px dashed var(--border);
+            font-family: 'IBM Plex Mono'; line-height: 1.6;
+        }
+
+        /* ═══════════════════════ DASHBOARD ═══════════════════════ */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+        .stat-box {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 18px 14px; text-align: center;
+        }
+        .stat-num { font-size: 1.8rem; font-weight: 700; font-family: 'IBM Plex Mono'; }
+        .stat-label { font-size: 0.72rem; color: var(--text-sub); margin-top: 2px; font-weight: 500; }
+        .stat-box.s-total .stat-num { color: var(--primary); }
+        .stat-box.s-done .stat-num { color: var(--green); }
+        .stat-box.s-wait .stat-num { color: var(--red); }
+
+        .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
+        .chart-label { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+
+        /* ═══════════════════════ MODALS ═══════════════════════ */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; z-index: 9000;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+            align-items: flex-end; justify-content: center;
         }
         .modal-overlay.active { display: flex; }
-        .modal-content { 
-            background: #fff; padding: 35px; border-radius: 30px; width: 92%; max-width: 450px; 
-            box-shadow: var(--shadow-lg); animation: popUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        .modal-sheet {
+            background: var(--surface); border-radius: 24px 24px 0 0;
+            border: 1px solid var(--border); border-bottom: none;
+            padding: 28px 24px 40px; width: 100%; max-width: 680px;
+            animation: slideSheet 0.3s cubic-bezier(0.34,1.2,0.64,1);
+            max-height: 92dvh; overflow-y: auto;
         }
-        @keyframes popUp { from { transform: scale(0.85) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        @keyframes slideSheet { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 24px; }
+        .modal-title { font-size: 1rem; font-weight: 700; margin-bottom: 20px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-actions .btn-primary { flex: 1; }
+        .modal-actions .btn-ghost { flex: 0.5; }
 
-        .admin-fab { 
-            position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px;
-            background: var(--dark); color: white; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); cursor: pointer; z-index: 500; font-size: 22px;
+        /* ═══════════════════════ IMAGE VIEWER ═══════════════════════ */
+        .viewer-overlay {
+            display: none; position: fixed; inset: 0; z-index: 99999;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(20px);
+            align-items: center; justify-content: center;
         }
+        .viewer-overlay.active { display: flex; }
+        .viewer-img { max-width: 94%; max-height: 88dvh; border-radius: 10px; display: block; }
+        .viewer-close {
+            position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
+            background: rgba(255,255,255,0.1); border: none; border-radius: 50%;
+            color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; transition: 0.2s;
+        }
+        .viewer-close:hover { background: rgba(255,255,255,0.2); }
+        .viewer-nav { position: absolute; bottom: 24px; display: flex; gap: 12px; }
+        .viewer-nav-btn {
+            background: rgba(255,255,255,0.1); color: #fff; border: none;
+            border-radius: 50%; width: 48px; height: 48px; font-size: 1.3rem;
+            cursor: pointer; transition: 0.2s;
+        }
+        .viewer-nav-btn:hover { background: rgba(255,255,255,0.2); }
+
+        /* ═══════════════════════ CONFIRM MODAL ═══════════════════════ */
+        .confirm-modal {
+            background: var(--surface); border-radius: 20px; padding: 30px;
+            width: calc(100% - 48px); max-width: 380px; text-align: center;
+            border: 1px solid var(--border); animation: popUp 0.25s ease;
+        }
+        @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        #deleteModal { align-items: center; }
+        .confirm-icon { font-size: 2.5rem; margin-bottom: 12px; }
+        .confirm-title { font-size: 1rem; font-weight: 700; color: var(--red); margin-bottom: 6px; }
+        .confirm-sub { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 20px; }
+        .confirm-actions { display: flex; gap: 10px; }
+        .confirm-actions button { flex: 1; padding: 12px; border-radius: var(--radius-sm); font-family: 'IBM Plex Sans Thai'; font-weight: 600; cursor: pointer; }
+        .btn-cancel { background: var(--surface2); border: 1px solid var(--border); color: var(--text); }
+        .btn-delete-confirm { background: var(--red); border: none; color: #fff; }
+
+        /* ═══════════════════════ LOGIN MODAL ═══════════════════════ */
+        #loginModal { align-items: center; }
+        .login-card { background: var(--surface); border-radius: 20px; padding: 30px; width: calc(100% - 48px); max-width: 380px; border: 1px solid var(--border); animation: popUp 0.25s ease; }
+        .login-title { font-size: 1rem; font-weight: 700; margin-bottom: 20px; }
+        .login-cancel { width: 100%; margin-top: 10px; padding: 10px; background: none; border: none; color: var(--text-sub); cursor: pointer; font-family: 'IBM Plex Sans Thai'; }
+
+        /* ═══════════════════════ EMPTY STATE ═══════════════════════ */
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-sub); }
+        .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
+        .empty-text { font-size: 0.9rem; }
+
+        /* ═══════════════════════ PAGE HEADER ═══════════════════════ */
+        .page-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: var(--text); letter-spacing: -0.3px; }
+        .page-title span { color: var(--text-sub); font-weight: 400; font-size: 0.85rem; margin-left: 8px; }
+
+        /* ═══════════════════════ LOGS ═══════════════════════ */
+        .log-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 8px; display: flex; gap: 12px; }
+        .log-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; margin-top: 6px; }
+        .log-text { font-size: 0.8rem; color: var(--text-sub); font-family: 'IBM Plex Mono'; line-height: 1.6; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 2px; }
+
+        /* Edit preview section */
+        .edit-photos-section { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 14px; }
+
     </style>
 </head>
 <body>
 
+    <!-- Image Viewer -->
     <div id="imageViewer" class="viewer-overlay">
-        <span class="viewer-close" onclick="closeImageViewer()">✕</span>
+        <button class="viewer-close" onclick="closeImageViewer()">✕</button>
+        <img id="viewerImg" src="" class="viewer-img" onclick="closeImageViewer()">
         <div class="viewer-nav">
             <button class="viewer-nav-btn" onclick="navViewer(-1)">❮</button>
             <button class="viewer-nav-btn" onclick="navViewer(1)">❯</button>
         </div>
-        <img id="viewerImg" src="" class="viewer-img" onclick="closeImageViewer()">
     </div>
 
-    <div class="app-header">
-        <h1>4M TASK</h1>
-        <div class="version-tag">Beta 1.5 Premium</div>
-        <div id="admin-indicator" style="display:none; color: var(--secondary); font-size: 0.8rem; font-weight: bold; margin-top:5px;">🛡️ ADMIN MODE</div>
-    </div>
+    <!-- Top Bar -->
+    <header class="topbar">
+        <div class="topbar-brand">
+            <div class="brand-icon">⚡</div>
+            <span class="brand-name">4M TASK</span>
+            <span class="brand-ver">v1.5</span>
+        </div>
+        <div class="topbar-right">
+            <div id="admin-indicator">🛡 ADMIN</div>
+            <div class="admin-btn" onclick="openLoginModal()">🔐</div>
+        </div>
+    </header>
 
-    <div class="nav-tabs">
-        <button id="nav-add" class="tab-btn active" onclick="showSection('add')">✨ เพิ่มงาน</button>
-        <button id="nav-view" class="tab-btn" onclick="showSection('view')">📂 คลังงาน</button>
-        <button id="nav-dash" class="tab-btn" onclick="showSection('dash')">📊 สถิติ</button>
-        <button id="nav-logs" class="tab-btn" onclick="showSection('logs')" style="display:none;">📜 ล็อก</button>
-    </div>
-
+    <!-- Main Content -->
     <div class="container">
+
+        <!-- ADD TASK -->
         <div id="section-add" class="page-section active">
-            <div class="glass-card">
-                <h3 style="margin-top:0;">🚀 สร้างงานใหม่</h3>
-                <input type="text" id="taskFullInput" placeholder="เลข-เดือน ชื่องาน (เช่น 05-21 ติดตั้งระบบ)">
-                <button onclick="document.getElementById('cameraInput').click()" class="btn-main" style="background:#fff; color:var(--primary); border:2px dashed var(--primary); margin-bottom:15px; font-weight:500;">📸 เพิ่มรูปถ่ายงาน</button>
+            <div class="page-title">สร้างงานใหม่</div>
+            <div class="card">
+                <div class="card-title">ข้อมูลงาน</div>
+                <div class="form-group">
+                    <label class="form-label">รหัส - เดือน / ชื่องาน</label>
+                    <input class="form-input" type="text" id="taskFullInput" placeholder="เช่น 05-21 ติดตั้งระบบ">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">รายละเอียด</label>
+                    <textarea class="form-textarea" id="taskDetail" placeholder="ระบุรายละเอียดงาน..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">สถานะ</label>
+                    <select class="form-select" id="taskStatus">
+                        <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
+                        <option value="กำลังทำ">🟡 กำลังทำ</option>
+                        <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">รูปภาพงาน</div>
+                <div class="preview-strip" id="preview-area"></div>
+                <button class="btn-upload" onclick="document.getElementById('cameraInput').click()">
+                    📸 เพิ่มรูปถ่าย
+                </button>
                 <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
-                <div id="preview-area" style="display:flex; gap:10px; overflow-x:auto;"></div>
-                <textarea id="taskDetail" rows="4" placeholder="ระบุรายละเอียดงาน..."></textarea>
-                <select id="taskStatus">
+            </div>
+            <button class="btn btn-primary" id="saveBtn" onclick="addTask()">ยืนยันบันทึกงาน</button>
+        </div>
+
+        <!-- VIEW TASKS -->
+        <div id="section-view" class="page-section">
+            <div class="page-title">คลังงานทั้งหมด <span id="total-count"></span></div>
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input class="search-input" type="text" id="searchInput" placeholder="ค้นหาเลข ORS หรือชื่องาน..." onkeyup="filterTasks()">
+            </div>
+            <div id="task-container">
+                <div class="empty-state">
+                    <div class="empty-icon">📂</div>
+                    <div class="empty-text">กำลังโหลดข้อมูล...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="section-dash" class="page-section">
+            <div class="page-title">สถิติภาพรวม</div>
+            <div class="stats-grid">
+                <div class="stat-box s-total">
+                    <div class="stat-num" id="stat-total">0</div>
+                    <div class="stat-label">ทั้งหมด</div>
+                </div>
+                <div class="stat-box s-done">
+                    <div class="stat-num" id="stat-done">0</div>
+                    <div class="stat-label">สำเร็จ</div>
+                </div>
+                <div class="stat-box s-wait">
+                    <div class="stat-num" id="stat-wait">0</div>
+                    <div class="stat-label">รอดำเนินการ</div>
+                </div>
+            </div>
+            <div class="chart-wrap">
+                <div class="chart-label">สัดส่วนสถานะงาน</div>
+                <canvas id="statusChart"></canvas>
+            </div>
+            <button class="btn btn-primary" style="background: #166534;" onclick="exportToExcel()">📗 ส่งออก Excel</button>
+        </div>
+
+        <!-- LOGS -->
+        <div id="section-logs" class="page-section">
+            <div class="page-title">ประวัติการเข้าใช้งาน</div>
+            <div id="log-container"></div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="nav-rail">
+        <button id="nav-add" class="nav-item active" onclick="showSection('add')">
+            <span class="nav-icon">✨</span>เพิ่มงาน
+        </button>
+        <button id="nav-view" class="nav-item" onclick="showSection('view')">
+            <span class="nav-icon">📂</span>คลังงาน
+        </button>
+        <button id="nav-dash" class="nav-item" onclick="showSection('dash')">
+            <span class="nav-icon">📊</span>สถิติ
+        </button>
+        <button id="nav-logs" class="nav-item" onclick="showSection('logs')" style="display:none;">
+            <span class="nav-icon">📜</span>ล็อก
+        </button>
+    </nav>
+
+    <!-- Edit Modal (Bottom Sheet) -->
+    <div id="editModal" class="modal-overlay">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title">✏️ แก้ไขงาน</div>
+            <div class="form-group">
+                <label class="form-label">รหัส - เดือน / ชื่องาน</label>
+                <input class="form-input" type="text" id="editFullInput">
+            </div>
+            <div class="form-group">
+                <label class="form-label">รายละเอียด</label>
+                <textarea class="form-textarea" id="editDetail" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">สถานะ</label>
+                <select class="form-select" id="editStatus">
                     <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
                     <option value="กำลังทำ">🟡 กำลังทำ</option>
                     <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
                 </select>
-                <button class="btn-main" id="saveBtn" onclick="addTask()">ยืนยันบันทึกงาน</button>
             </div>
-        </div>
-
-        <div id="section-view" class="page-section">
-            <input type="text" id="searchInput" placeholder="🔍 ค้นหาเลข ORS หรือ ชื่องาน..." onkeyup="filterTasks()">
-            <div id="task-container"></div>
-        </div>
-
-        <div id="section-dash" class="page-section">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:20px;">
-                <div class="glass-card" style="text-align:center; padding:20px; margin-bottom:0;"><div id="stat-total" style="font-size:2rem; font-weight:700;">0</div><div style="color:var(--text-sub)">รวม</div></div>
-                <div class="glass-card" style="text-align:center; padding:20px; margin-bottom:0;"><div id="stat-done" style="font-size:2rem; font-weight:700; color:var(--secondary)">0</div><div style="color:var(--text-sub)">สำเร็จ</div></div>
-            </div>
-            <div class="glass-card" style="padding:40px;"><canvas id="statusChart"></canvas></div>
-            <button class="btn-main" style="background:var(--secondary)" onclick="exportToExcel()">📗 ส่งออก Excel</button>
-        </div>
-
-        <div id="section-logs" class="page-section">
-            <div id="log-container"></div>
-        </div>
-    </div>
-
-    <div id="editModal" class="modal-overlay">
-        <div class="modal-content">
-            <h3 style="margin-top:0;">📝 แก้ไขงาน</h3>
-            <input type="text" id="editFullInput">
-            <textarea id="editDetail" rows="4"></textarea>
-            
-            <div style="background:#f1f5f9; padding:12px; border-radius:14px; margin-bottom:15px;">
-                <div id="edit-preview-area" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:10px;"></div>
-                <button onclick="document.getElementById('editCameraInput').click()" style="width:100%; padding:8px; border-radius:10px; border:1px solid #ddd; background:#fff; cursor:pointer;">➕ เพิ่มรูปใหม่</button>
+            <div class="edit-photos-section">
+                <label class="form-label" style="margin-bottom:10px;">รูปภาพ</label>
+                <div class="preview-strip" id="edit-preview-area"></div>
+                <button class="btn-upload" onclick="document.getElementById('editCameraInput').click()">➕ เพิ่มรูปใหม่</button>
                 <input type="file" id="editCameraInput" accept="image/*" multiple style="display:none;">
             </div>
-
-            <select id="editStatus"><option value="รอดำเนินการ">🔴 รอดำเนินการ</option><option value="กำลังทำ">🟡 กำลังทำ</option><option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option></select>
-            <div style="display:flex; gap:10px;">
-                <button class="btn-main" onclick="saveEdit()">อัปเดตข้อมูล</button>
-                <button onclick="closeEditModal()" style="flex:1; background:#f1f5f9; border:none; border-radius:18px; cursor:pointer;">ปิด</button>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="saveEdit()">อัปเดต</button>
+                <button class="btn btn-ghost" onclick="closeEditModal()">ยกเลิก</button>
             </div>
         </div>
     </div>
 
-    <div id="loginModal" class="modal-overlay">
-        <div class="modal-content">
-            <h3 style="margin-top:0;">🔐 Admin Login</h3>
-            <input type="text" id="adminUser" placeholder="User">
-            <input type="password" id="adminPass" placeholder="Password">
-            <button class="btn-main" onclick="adminLogin()">Unlock</button>
-            <button onclick="closeLoginModal()" style="width:100%; background:none; border:none; margin-top:10px; color:#94a3b8; cursor:pointer;">Cancel</button>
-        </div>
-    </div>
-
+    <!-- Delete Confirm Modal -->
     <div id="deleteModal" class="modal-overlay">
-        <div class="modal-content" style="text-align: center;">
-            <div style="font-size: 3rem;">⚠️</div>
-            <h3 style="color: #ef4444; margin-top: 0;">ยืนยันการลบ?</h3>
-            <div style="display: flex; gap: 10px;">
-                <button onclick="closeDeleteModal()" style="flex:1; padding:12px; border-radius:12px; border:1px solid #ddd; background:#fff; font-family:'Kanit';">ยกเลิก</button>
-                <button id="btn-confirm-delete" onclick="confirmDeleteTask()" style="flex:1; padding:12px; border-radius:12px; border:none; background:#ef4444; color:#fff; font-weight:600; font-family:'Kanit';">ลบข้อมูล</button>
+        <div class="confirm-modal">
+            <div class="confirm-icon">🗑️</div>
+            <div class="confirm-title">ยืนยันการลบ?</div>
+            <div class="confirm-sub">ข้อมูลจะถูกลบถาวร ไม่สามารถกู้คืนได้</div>
+            <div class="confirm-actions">
+                <button class="btn-cancel" onclick="closeDeleteModal()">ยกเลิก</button>
+                <button class="btn-delete-confirm" onclick="confirmDeleteTask()">ลบข้อมูล</button>
             </div>
         </div>
     </div>
 
-    <div class="admin-fab" onclick="openLoginModal()">🛡️</div>
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="login-card">
+            <div class="login-title">🔐 Admin Login</div>
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input class="form-input" type="text" id="adminUser" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input class="form-input" type="password" id="adminPass" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" onclick="adminLogin()">เข้าสู่ระบบ</button>
+            <button class="login-cancel" onclick="closeLoginModal()">ยกเลิก</button>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = { 
-            apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ", authDomain: "mytaskapp-pro.firebaseapp.com", 
-            projectId: "mytaskapp-pro", storageBucket: "mytaskapp-pro.firebasestorage.app", 
-            messagingSenderId: "189296604432", appId: "1:189296604432:web:31dabc3c5e363b2c96a195" 
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
+            authDomain: "mytaskapp-pro.firebaseapp.com",
+            projectId: "mytaskapp-pro",
+            storageBucket: "mytaskapp-pro.firebasestorage.app",
+            messagingSenderId: "189296604432",
+            appId: "1:189296604432:web:31dabc3c5e363b2c96a195"
         };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         let allTasks = [], selectedPhotos = [], editPhotos = [], statusChart, isAdmin = false;
         let editingId = null, taskToDeleteId = null;
-        
-        // Viewer state
-        let currentPhotosArray = [];
-        let currentPhotoIndex = 0;
+        let currentPhotosArray = [], currentPhotoIndex = 0;
 
-        const monthNames = ["ทั่วไป", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+        const monthNames = ["ทั่วไป","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 
-        // 📱 Device Forensic
         const getDeviceInfo = () => {
             const ua = navigator.userAgent; const h = window.screen.height; let d = "Device Unknown";
             if (/android/i.test(ua)) { const m = ua.match(/Android.*;\s([^;]+)\sBuild/); d = m ? `Android (${m[1]})` : "Android"; }
-            else if (/iPhone/i.test(ua)) { if(h===852) d="iPhone 15/14 Pro"; else if(h===932) d="iPhone 15/14 Pro Max"; else d="iPhone"; }
+            else if (/iPhone/i.test(ua)) { d = "iPhone"; }
             return d + ` [${window.screen.width}x${h}]`;
         };
 
-        // --- Premium Image Viewer ---
+        // --- Viewer ---
         window.openImageViewer = (photos, index) => {
-            currentPhotosArray = photos;
-            currentPhotoIndex = index;
-            const viewer = document.getElementById('imageViewer');
-            const viewerImg = document.getElementById('viewerImg');
-            viewerImg.src = currentPhotosArray[currentPhotoIndex];
-            viewer.classList.add('active');
-            
-            // ป้องกันการ Scroll พื้นหลัง
+            currentPhotosArray = photos; currentPhotoIndex = index;
+            document.getElementById('viewerImg').src = currentPhotosArray[currentPhotoIndex];
+            document.getElementById('imageViewer').classList.add('active');
             document.body.style.overflow = 'hidden';
         };
-
         window.closeImageViewer = () => {
             document.getElementById('imageViewer').classList.remove('active');
-            document.body.style.overflow = ''; // คืนค่า Scroll
+            document.body.style.overflow = '';
         };
-
         window.navViewer = (step) => {
-            currentPhotoIndex += step;
-            if (currentPhotoIndex < 0) currentPhotoIndex = currentPhotosArray.length - 1;
-            if (currentPhotoIndex >= currentPhotosArray.length) currentPhotoIndex = 0;
+            currentPhotoIndex = (currentPhotoIndex + step + currentPhotosArray.length) % currentPhotosArray.length;
             document.getElementById('viewerImg').src = currentPhotosArray[currentPhotoIndex];
         };
-
-        // รองรับการใช้ปุ่มคีย์บอร์ดซ้าย-ขวา เลื่อนรูป
         document.addEventListener('keydown', (e) => {
             if (!document.getElementById('imageViewer').classList.contains('active')) return;
             if (e.key === 'ArrowLeft') navViewer(-1);
@@ -309,24 +595,29 @@
             else if (e.key === 'Escape') closeImageViewer();
         });
 
-        // --- Core Functions ---
+        // --- Add Task ---
         window.addTask = async () => {
-            const raw = document.getElementById('taskFullInput').value;
-            if(!raw) return alert("กรุณาระบุชื่องาน");
-            const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.innerText="กำลังบันทึก...";
+            const raw = document.getElementById('taskFullInput').value.trim();
+            if (!raw) return alert("กรุณาระบุชื่องาน");
+            const btn = document.getElementById('saveBtn');
+            btn.disabled = true; btn.innerText = "กำลังบันทึก...";
             try {
                 const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
                 const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
                 const title = match ? match[3].trim() : raw;
                 await addDoc(collection(db, "tasks"), {
-                    ors, title, detail: document.getElementById('taskDetail').value,
+                    ors, title,
+                    detail: document.getElementById('taskDetail').value,
                     status: document.getElementById('taskStatus').value,
-                    photos: selectedPhotos, createdAt: new Date().getTime(), createdByDevice: getDeviceInfo()
+                    photos: selectedPhotos,
+                    createdAt: new Date().getTime(),
+                    createdByDevice: getDeviceInfo()
                 });
                 location.reload();
-            } catch (e) { alert(e.message); btn.disabled = false; btn.innerText="ยืนยันบันทึกงาน"; }
+            } catch (e) { alert(e.message); btn.disabled = false; btn.innerText = "ยืนยันบันทึกงาน"; }
         };
 
+        // --- Edit ---
         window.openEditModal = (id) => {
             const t = allTasks.find(x => x.id === id); editingId = id;
             document.getElementById('editFullInput').value = t.ors.replace('ORS.','') + " " + t.title;
@@ -336,7 +627,6 @@
             renderEditPreview();
             document.getElementById('editModal').classList.add('active');
         };
-
         window.saveEdit = async () => {
             const raw = document.getElementById('editFullInput').value;
             const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
@@ -345,94 +635,215 @@
                 title: match ? match[3].trim() : raw,
                 detail: document.getElementById('editDetail').value,
                 status: document.getElementById('editStatus').value,
-                photos: editPhotos, lastEditedByDevice: getDeviceInfo()
+                photos: editPhotos,
+                lastEditedByDevice: getDeviceInfo()
             });
             closeEditModal();
         };
+        window.closeEditModal = () => document.getElementById('editModal').classList.remove('active');
 
+        // --- Delete ---
         window.openDeleteModal = (id) => { taskToDeleteId = id; document.getElementById('deleteModal').classList.add('active'); };
         window.closeDeleteModal = () => document.getElementById('deleteModal').classList.remove('active');
         window.confirmDeleteTask = async () => { await deleteDoc(doc(db, "tasks", taskToDeleteId)); closeDeleteModal(); };
 
-        // --- Render Helpers ---
+        // --- Render ---
         window.filterTasks = () => {
-            const container = document.getElementById('task-container'); container.innerHTML = "";
+            const container = document.getElementById('task-container');
+            container.innerHTML = "";
             const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allTasks.filter(t => (t.title||"").toLowerCase().includes(search) || (t.ors||"").toLowerCase().includes(search));
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">ไม่พบงานที่ค้นหา</div></div>`;
+                return;
+            }
+
+            document.getElementById('total-count').textContent = `(${filtered.length})`;
+
             const grouped = {};
-            allTasks.filter(t => (t.title||"").toLowerCase().includes(search) || (t.ors||"").includes(search)).forEach(t => {
-                let m = "ทั่วไป"; try { const idx = parseInt(t.ors.split('/')[0].split('.')[1]); if(idx>0 && idx<=12) m = monthNames[idx]; } catch(e){}
-                if(!grouped[m]) grouped[m] = []; grouped[m].push(t);
+            filtered.forEach(t => {
+                let m = "ทั่วไป";
+                try { const idx = parseInt(t.ors.split('/')[0].split('.')[1]); if(idx>0 && idx<=12) m = monthNames[idx]; } catch(e){}
+                if(!grouped[m]) grouped[m] = [];
+                grouped[m].push(t);
             });
+
             monthNames.filter(m => grouped[m]).forEach(mName => {
-                const sId = 'm-' + mName.replace(/\s+/g, '');
-                
-                // หัวข้อเดือน (set เป็น collapsed ในตัว style)
-                let html = `<div class="month-header" onclick="toggleMonth('${sId}', this)">
-                                <span>📅 เดือน${mName} (${grouped[mName].length})</span>
-                                <span class="chevron">▼</span>
-                            </div>
-                            <div id="${sId}" class="month-content">`;
+                const sId = 'ms-' + mName;
+                const badgeClass = { 'เสร็จสิ้น': 'badge-done', 'กำลังทำ': 'badge-doing', 'รอดำเนินการ': 'badge-wait' };
+                const cardClass  = { 'เสร็จสิ้น': 'status-done', 'กำลังทำ': 'status-doing', 'รอดำเนินการ': 'status-wait' };
+                const badgeDot   = { 'เสร็จสิ้น': '●', 'กำลังทำ': '●', 'รอดำเนินการ': '●' };
+
+                let html = `
+                <div class="month-section">
+                    <div class="month-header" onclick="toggleMonth('${sId}', this)">
+                        <div class="month-header-left">
+                            <div class="month-dot"></div>
+                            <span class="month-name">เดือน${mName}</span>
+                            <span class="month-count">${grouped[mName].length}</span>
+                        </div>
+                        <span class="month-chevron">▼</span>
+                    </div>
+                    <div id="${sId}" class="month-body open">`;
 
                 grouped[mName].forEach(t => {
-                    let color = t.status === "เสร็จสิ้น" ? "var(--status-done)" : (t.status === "กำลังทำ" ? "var(--status-doing)" : "var(--status-wait)");
-                    
-                    // แปลง array รูปภาพงานนั้นๆ ให้เป็น JSON string เพื่อส่งเข้าไปใน onclick
                     const photosJSON = JSON.stringify(t.photos || []).replace(/"/g, '&quot;');
-
-                    html += `<div class="task-card" style="border-left: 6px solid ${color}">
-                        <div style="display:flex; justify-content:space-between; font-size:0.8rem;"><b style="color:${color}">${t.ors}</b> <span>${t.status}</span></div>
-                        <div style="margin:10px 0; font-weight:600; font-size:1.1rem;">${t.title}</div>
-                        ${t.detail ? `<div style="font-size:0.9rem; color:#64748b; margin-bottom:12px; white-space:pre-wrap;">${t.detail}</div>` : ''}
-                        
-                        <div class="gallery">${(t.photos||[]).map((p, index) => `<img src="${p}" onclick="openImageViewer(${photosJSON}, ${index})">`).join('')}</div>
-                        
-                        <div style="display:flex; gap:10px; justify-content:flex-end;">
-                            <button onclick="openEditModal('${t.id}')" style="background:#f1f5f9; border:none; padding:8px 15px; border-radius:10px; cursor:pointer; font-family:'Kanit';">แก้ไข</button>
-                            <button onclick="openDeleteModal('${t.id}')" style="background:#fff1f2; color:#f43f5e; border:none; padding:8px 15px; border-radius:10px; cursor:pointer; font-family:'Kanit';">ลบ</button>
+                    const status = t.status || 'รอดำเนินการ';
+                    html += `
+                    <div class="task-card ${cardClass[status] || 'status-wait'}">
+                        <div class="task-header">
+                            <span class="task-ors">${t.ors}</span>
+                            <span class="task-badge ${badgeClass[status] || 'badge-wait'}">${status}</span>
                         </div>
-                        ${isAdmin ? `<div style="font-size:0.75rem; color:#94a3b8; margin-top:10px; padding-top:10px; border-top:1px dashed #e2e8f0;">➕ สร้าง: ${t.createdByDevice || '-'}<br>🛠️ ล่าสุด: ${t.lastEditedByDevice || '-'}</div>` : ''}
+                        <div class="task-title">${t.title}</div>
+                        ${t.detail ? `<div class="task-detail">${t.detail}</div>` : ''}
+                        ${(t.photos && t.photos.length) ? `
+                        <div class="task-gallery">
+                            ${t.photos.map((p, i) => `<img src="${p}" onclick="openImageViewer(${photosJSON}, ${i})" loading="lazy">`).join('')}
+                        </div>` : ''}
+                        <div class="task-actions">
+                            <button class="btn btn-ghost" onclick="openEditModal('${t.id}')">✏️ แก้ไข</button>
+                            <button class="btn btn-danger" onclick="openDeleteModal('${t.id}')">🗑️ ลบ</button>
+                        </div>
+                        ${isAdmin ? `<div class="task-device-info">➕ สร้าง: ${t.createdByDevice||'-'}<br>🛠️ ล่าสุด: ${t.lastEditedByDevice||'-'}</div>` : ''}
                     </div>`;
                 });
-                html += `</div>`; container.innerHTML += html;
+                html += `</div></div>`;
+                container.innerHTML += html;
             });
         };
 
-        // --- Logic สำหรับยุบ-ขยายเดือน ---
         window.toggleMonth = (mId, headerEl) => {
-            const content = document.getElementById(mId);
-            headerEl.classList.toggle('active');
-            content.classList.toggle('open');
+            const body = document.getElementById(mId);
+            headerEl.classList.toggle('open');
+            body.classList.toggle('open');
         };
 
-        // ... (ส่วน Logic อื่นๆ เช่น Login, Preview รูป เหมือนเดิม) ...
+        // --- Edit Photo Preview ---
         const renderEditPreview = () => {
-            document.getElementById('edit-preview-area').innerHTML = editPhotos.map((s, i) => 
-                `<div style="position:relative; flex-shrink:0;"><img src="${s}" style="width:80px; height:80px; object-fit:cover; border-radius:10px;"><button onclick="removeEditPhoto(${i})" style="position:absolute; top:-5px; right:-5px; background:#f43f5e; color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px;">✕</button></div>`).join('');
+            document.getElementById('edit-preview-area').innerHTML = editPhotos.map((s, i) =>
+                `<div class="preview-thumb"><img src="${s}"><button class="preview-thumb-remove" onclick="removeEditPhoto(${i})">✕</button></div>`
+            ).join('');
         };
         window.removeEditPhoto = (i) => { editPhotos.splice(i, 1); renderEditPreview(); };
-        
-        // --- ส่วนที่เหลือเหมือนเดิม ---
-        onSnapshot(collection(db, "tasks"), (snap) => { allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() })); allTasks.sort((a,b)=>a.ors.localeCompare(b.ors)); filterTasks(); updateDashboard(); });
-        window.showSection = (n) => { document.querySelectorAll('.page-section, .tab-btn').forEach(el => el.classList.remove('active')); document.getElementById('section-'+n).classList.add('active'); document.getElementById('nav-'+n).classList.add('active'); };
-        window.closeEditModal = () => document.getElementById('editModal').classList.remove('active');
-        window.openLoginModal = () => document.getElementById('loginModal').classList.add('active');
-        window.closeLoginModal = () => document.getElementById('loginModal').classList.remove('active');
-        window.adminLogin = () => { if(document.getElementById('adminUser').value === "Admin" && document.getElementById('adminPass').value === "Admin444") { isAdmin = true; document.getElementById('nav-logs').style.display="block"; document.getElementById('admin-indicator').style.display="block"; closeLoginModal(); filterTasks(); } else alert("Error"); };
-        
-        // Image Processing เหมือนเดิม (Resize)
-        const processFiles = (files, target, previewId) => {
-            for(let f of files) { const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.src = ev.target.result; img.onload = () => { const cv = document.createElement('canvas'); const mx=600; let w=img.width, h=img.height; if(w>h){ if(w>mx){ h*=mx/w; w=mx; } }else{ if(h>mx){ w*=mx/h; h=mx; } } cv.width=w; cv.height=h; cv.getContext('2d').drawImage(img, 0,0,w,h); target.push(cv.toDataURL('image/jpeg', 0.6)); renderPrevs(target, previewId); } }; r.readAsDataURL(f); }
-        };
-        const renderPrevs = (arr, id) => { document.getElementById(id).innerHTML = arr.map((s,i)=>`<div style="position:relative; flex-shrink:0;"><img src="${s}" style="width:70px; height:70px; object-fit:cover; border-radius:10px;"><button onclick="remPhoto(${i}, '${id}')" style="position:absolute; top:-5px; right:-5px; background:#f43f5e; color:#fff; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px;">✕</button></div>`).join(''); };
-        window.remPhoto = (i, id) => { selectedPhotos.splice(i,1); renderPrevs(selectedPhotos, id); };
-        document.getElementById('cameraInput').onchange = (e) => processFiles(e.target.files, selectedPhotos, 'preview-area');
-        document.getElementById('editCameraInput').onchange = (e) => {
-            for(let f of e.target.files) { const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.src = ev.target.result; img.onload = () => { const cv = document.createElement('canvas'); const mx=600; let w=img.width, h=img.height; if(w>h){ if(w>mx){ h*=mx/w; w=mx; } }else{ if(h>mx){ w*=mx/h; h=max; } } cv.width=w; cv.height=h; cv.getContext('2d').drawImage(img, 0,0,w,h); editPhotos.push(cv.toDataURL('image/jpeg', 0.6)); renderEditPreview(); } }; r.readAsDataURL(f); }
+
+        // --- Firebase Listen ---
+        onSnapshot(collection(db, "tasks"), (snap) => {
+            allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            allTasks.sort((a, b) => a.ors.localeCompare(b.ors));
+            filterTasks();
+            updateDashboard();
+        });
+
+        // --- Sections ---
+        window.showSection = (n) => {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('section-' + n).classList.add('active');
+            document.getElementById('nav-' + n).classList.add('active');
         };
 
-        // Chart & Excel เหมือนเดิม
-        let sObj; window.updateDashboard = () => { const cs = {'เสร็จสิ้น': 0, 'กำลังทำ': 0, 'รอดำเนินการ': 0}; allTasks.forEach(t=>cs[t.status]++); document.getElementById('stat-total').innerText = allTasks.length; document.getElementById('stat-done').innerText = cs['เสร็จสิ้น']; const cx = document.getElementById('statusChart')?.getContext('2d'); if(!cx) return; if(sObj) sObj.destroy(); sObj = new Chart(cx, {type: 'doughnut', data: { labels: Object.keys(cs), datasets: [{ data: Object.values(cs), backgroundColor: ['#10b981', '#fbbf24', '#f43f5e'] }] }}); };
-        window.exportToExcel = () => { const d = allTasks.map(t=>({"วันที่สร้าง": new Date(t.createdAt).toLocaleDateString('th-TH'), "ORS": t.ors, "ชื่องาน": t.title, "สถานะ": t.status, "รายละเอียด": t.detail})); const ws = XLSX.utils.json_to_sheet(d); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "WorkLog"); XLSX.writeFile(wb, `Report_${new Date().toISOString().split('T')[0]}.xlsx`); };
+        // --- Login ---
+        window.openLoginModal = () => document.getElementById('loginModal').classList.add('active');
+        window.closeLoginModal = () => document.getElementById('loginModal').classList.remove('active');
+        window.adminLogin = () => {
+            if (document.getElementById('adminUser').value === "Admin" && document.getElementById('adminPass').value === "Admin444") {
+                isAdmin = true;
+                document.getElementById('nav-logs').style.display = '';
+                document.getElementById('admin-indicator').style.display = 'block';
+                closeLoginModal();
+                filterTasks();
+            } else { alert("รหัสผ่านไม่ถูกต้อง"); }
+        };
+
+        // --- Image Processing ---
+        const processFiles = (files, target, previewId) => {
+            for (let f of files) {
+                const r = new FileReader();
+                r.onload = (ev) => {
+                    const img = new Image(); img.src = ev.target.result;
+                    img.onload = () => {
+                        const cv = document.createElement('canvas');
+                        const mx = 600; let w = img.width, h = img.height;
+                        if (w > h) { if (w > mx) { h *= mx/w; w = mx; } } else { if (h > mx) { w *= mx/h; h = mx; } }
+                        cv.width = w; cv.height = h;
+                        cv.getContext('2d').drawImage(img, 0, 0, w, h);
+                        target.push(cv.toDataURL('image/jpeg', 0.6));
+                        renderPrevs(target, previewId);
+                    };
+                };
+                r.readAsDataURL(f);
+            }
+        };
+        const renderPrevs = (arr, id) => {
+            document.getElementById(id).innerHTML = arr.map((s, i) =>
+                `<div class="preview-thumb"><img src="${s}"><button class="preview-thumb-remove" onclick="remPhoto(${i},'${id}')">✕</button></div>`
+            ).join('');
+        };
+        window.remPhoto = (i, id) => { selectedPhotos.splice(i, 1); renderPrevs(selectedPhotos, id); };
+        document.getElementById('cameraInput').onchange = (e) => processFiles(e.target.files, selectedPhotos, 'preview-area');
+        document.getElementById('editCameraInput').onchange = (e) => {
+            for (let f of e.target.files) {
+                const r = new FileReader();
+                r.onload = (ev) => {
+                    const img = new Image(); img.src = ev.target.result;
+                    img.onload = () => {
+                        const cv = document.createElement('canvas');
+                        const mx = 600; let w = img.width, h = img.height;
+                        if (w > h) { if (w > mx) { h *= mx/w; w = mx; } } else { if (h > mx) { w *= mx/h; h = mx; } }
+                        cv.width = w; cv.height = h;
+                        cv.getContext('2d').drawImage(img, 0, 0, w, h);
+                        editPhotos.push(cv.toDataURL('image/jpeg', 0.6));
+                        renderEditPreview();
+                    };
+                };
+                r.readAsDataURL(f);
+            }
+        };
+
+        // --- Dashboard ---
+        let sObj;
+        window.updateDashboard = () => {
+            const cs = {'เสร็จสิ้น': 0, 'กำลังทำ': 0, 'รอดำเนินการ': 0};
+            allTasks.forEach(t => { if (cs[t.status] !== undefined) cs[t.status]++; });
+            document.getElementById('stat-total').innerText = allTasks.length;
+            document.getElementById('stat-done').innerText = cs['เสร็จสิ้น'];
+            document.getElementById('stat-wait').innerText = cs['รอดำเนินการ'];
+            const cx = document.getElementById('statusChart')?.getContext('2d');
+            if (!cx) return;
+            if (sObj) sObj.destroy();
+            sObj = new Chart(cx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['เสร็จสิ้น', 'กำลังทำ', 'รอดำเนินการ'],
+                    datasets: [{
+                        data: Object.values(cs),
+                        backgroundColor: ['#34d399', '#fbbf24', '#f87171'],
+                        borderWidth: 0, hoverOffset: 8
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { labels: { color: '#9ca3af', font: { family: 'IBM Plex Sans Thai', size: 12 } } }
+                    }
+                }
+            });
+        };
+
+        // --- Export ---
+        window.exportToExcel = () => {
+            const d = allTasks.map(t => ({
+                "วันที่สร้าง": new Date(t.createdAt).toLocaleDateString('th-TH'),
+                "ORS": t.ors, "ชื่องาน": t.title,
+                "สถานะ": t.status, "รายละเอียด": t.detail
+            }));
+            const ws = XLSX.utils.json_to_sheet(d);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "WorkLog");
+            XLSX.writeFile(wb, `Report_${new Date().toISOString().split('T')[0]}.xlsx`);
+        };
+
     </script>
 </body>
 </html>
