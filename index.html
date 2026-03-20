@@ -1230,28 +1230,57 @@
                 { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } },
             ];
 
-            // ── Column widths ──
+            // ── Column widths (ปรับให้พอดี A4 portrait ~0.5" margin ทั้งสองข้าง) ──
             ws["!cols"] = [
-                { wch: 6 },   // ลำดับ
-                { wch: 14 },  // ORS
-                { wch: 36 },  // ชื่องาน
-                { wch: 14 },  // สถานะ
-                { wch: 40 },  // รายละเอียด
-                { wch: 16 },  // วันที่
+                { wch: 5  },  // ลำดับ
+                { wch: 12 },  // ORS
+                { wch: 24 },  // ชื่องาน
+                { wch: 12 },  // สถานะ
+                { wch: 28 },  // รายละเอียด
+                { wch: 13 },  // วันที่
             ];
 
             // ── Row heights ──
             ws["!rows"] = [
-                { hpt: 36 }, // title
-                { hpt: 20 }, // sub
+                { hpt: 38 }, // title
+                { hpt: 18 }, // sub
                 { hpt: 6  }, // spacer
                 { hpt: 22 }, // header
-                ...rows.map(() => ({ hpt: 18 })),
-                { hpt: 10 },
-                { hpt: 18 },
-                { hpt: 18 },
-                { hpt: 18 },
+                ...rows.map(() => ({ hpt: 20 })),
+                { hpt: 8  },
+                { hpt: 20 },
+                { hpt: 20 },
+                { hpt: 20 },
             ];
+
+            // ── A4 Print Settings ──
+            ws["!pageSetup"] = {
+                paperSize:   9,          // A4
+                orientation: "portrait",
+                fitToPage:   true,
+                fitToWidth:  1,
+                fitToHeight: 0,          // ยืดตามจำนวนแถว
+                scale:       100,
+                horizontalDpi: 300,
+                verticalDpi:   300,
+            };
+            ws["!printOptions"] = {
+                gridLines: false,
+                headings:  false,
+            };
+            ws["!margins"] = {
+                left:   0.5,   // นิ้ว
+                right:  0.5,
+                top:    0.75,
+                bottom: 0.75,
+                header: 0.3,
+                footer: 0.3,
+            };
+            // ── Header/Footer ──
+            ws["!headerFooter"] = {
+                oddHeader: `&C&"Calibri,Bold"&12&K14532D 4M TASK — รายงานสรุปงาน`,
+                oddFooter: `&Lพัฒนาโดย ธิติ พุกวิลัย&R&P / &N`,
+            };
 
             XLSX.utils.book_append_sheet(wb, ws, "WorkLog");
             XLSX.writeFile(wb, `4MTASK_Report_${now.toISOString().split("T")[0]}.xlsx`);
