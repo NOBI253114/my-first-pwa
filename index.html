@@ -24,14 +24,21 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); margin-bottom: 20px; }
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: 'Kanit'; box-sizing: border-box; font-size: 1rem; outline: none; }
-        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; }
+        .btn-main { background: var(--primary); color: #fff; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-main:active { transform: scale(0.98); }
         .btn-excel { background: #1d6f42; color: #fff; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: 600; cursor: pointer; margin-top: 15px; }
         .month-header { background: #dcfce7; color: var(--primary-dark); padding: 8px 18px; border-radius: 20px; display: inline-block; margin: 20px 0 10px 0; font-size: 0.9rem; font-weight: 700; }
-        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); }
+        .task-card { background: #fff; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow); position: relative; }
         .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 10px 0; }
         .gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-box { background: #fff; padding: 15px; border-radius: 15px; text-align: center; box-shadow: var(--shadow); }
+        /* สไตล์เพิ่มเติมสำหรับระบบจัดการ */
+        .task-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 10px; }
+        .btn-edit { background: #3b82f6; color: #fff; border: none; padding: 6px 15px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-family: 'Kanit'; }
+        .btn-del { background: #ef4444; color: #fff; border: none; padding: 6px 15px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-family: 'Kanit'; }
+        .preview-img-container { position: relative; display: inline-block; }
+        .remove-img-btn { position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -50,17 +57,19 @@
     <div class="container">
         <div id="section-add" class="page-section active">
             <div class="glass-card">
+                <h3 id="form-title" style="margin-top:0;">บันทึกข้อมูลใหม่</h3>
                 <input type="text" id="taskFullInput" placeholder="เลข-เดือน ชื่องาน (เช่น 01-21 งานทางหลวง)">
                 <button onclick="document.getElementById('cameraInput').click()" style="width:100%; padding:10px; border:2px dashed #ccc; border-radius:10px; background:none; margin-bottom:15px; cursor:pointer;">📸 แนบรูปถ่าย</button>
                 <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
-                <div id="preview-area" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:10px;"></div>
+                <div id="preview-area" style="display:flex; gap:8px; overflow-x:auto; margin-bottom:10px; padding: 5px 0;"></div>
                 <textarea id="taskDetail" rows="3" placeholder="รายละเอียดเพิ่มเติม"></textarea>
                 <select id="taskStatus">
                     <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
                     <option value="กำลังทำ">🟡 กำลังทำ</option>
                     <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
                 </select>
-                <button class="btn-main" onclick="addTask()">บันทึกข้อมูล</button>
+                <button id="save-btn" class="btn-main" onclick="addTask()">บันทึกข้อมูล</button>
+                <button id="cancel-edit" class="btn-main" style="background:#64748b; margin-top:10px; display:none;" onclick="resetForm()">ยกเลิกการแก้ไข</button>
             </div>
         </div>
 
@@ -81,14 +90,24 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ", authDomain: "mytaskapp-pro.firebaseapp.com", projectId: "mytaskapp-pro", storageBucket: "mytaskapp-pro.firebasestorage.app", messagingSenderId: "189296604432", appId: "1:189296604432:web:31dabc3c5e363b2c96a195" };
+        // --- Firebase Config ---
+        const firebaseConfig = { 
+            apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ", 
+            authDomain: "mytaskapp-pro.firebaseapp.com", 
+            projectId: "mytaskapp-pro", 
+            storageBucket: "mytaskapp-pro.firebasestorage.app", 
+            messagingSenderId: "189296604432", 
+            appId: "1:189296604432:web:31dabc3c5e363b2c96a195" 
+        };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let allTasks = [], selectedPhotos = [], statusChart;
+
+        let allTasks = [], selectedPhotos = [], statusChart, editingId = null;
         const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
+        // --- ส่วนการเปลี่ยนหน้า ---
         window.showSection = (name) => {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -97,7 +116,9 @@
             if(name === 'dash') updateDashboard();
         };
 
-        // ฟังก์ชันบีบอัดรูปให้เล็กมากเพื่อเลี่ยง Error 1MB
+        // --- ส่วนจัดการข้อมูล (CRUD) ---
+
+        // ฟังก์ชันบีบอัดรูป
         async function compressImg(base64) {
             return new Promise(res => {
                 const img = new Image(); img.src = base64;
@@ -107,12 +128,155 @@
                     if (w > h) { if(w > max) { h *= max/w; w = max; } } else { if(h > max) { w *= max/h; h = max; } }
                     canvas.width = w; canvas.height = h;
                     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    res(canvas.toDataURL('image/jpeg', 0.5)); // บีบเหลือ 50%
+                    res(canvas.toDataURL('image/jpeg', 0.5));
                 };
             });
         }
 
-        function updateDashboard() {
+        // เพิ่มหรือแก้ไขงาน
+        window.addTask = async () => {
+            const raw = document.getElementById('taskFullInput').value;
+            if(!raw) return alert("กรุณากรอกข้อมูลงาน");
+            
+            const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
+            const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
+            const title = match ? match[3].trim() : raw;
+            
+            const compressed = [];
+            for(let p of selectedPhotos) { 
+                if(p.startsWith('data:image')) compressed.push(await compressImg(p));
+                else compressed.push(p);
+            }
+
+            const payload = {
+                ors, title, detail: document.getElementById('taskDetail').value,
+                status: document.getElementById('taskStatus').value, photos: compressed, 
+                updatedAt: new Date().getTime()
+            };
+
+            try {
+                if(editingId) {
+                    await updateDoc(doc(db, "tasks", editingId), payload);
+                    alert("อัปเดตงานเรียบร้อย!");
+                } else {
+                    payload.createdAt = new Date().getTime();
+                    await addDoc(collection(db, "tasks"), payload);
+                    alert("บันทึกสำเร็จ!");
+                }
+                resetForm();
+                showSection('view');
+            } catch (e) { alert("เกิดข้อผิดพลาด: " + e.message); }
+        };
+
+        // ลบงาน
+        window.deleteTask = async (id) => {
+            if(confirm("คุณต้องการลบงานนี้ใช่หรือไม่?")) {
+                await deleteDoc(doc(db, "tasks", id));
+            }
+        };
+
+        // เตรียมแก้ไขงาน
+        window.editTask = (id) => {
+            const task = allTasks.find(t => t.id === id);
+            if(!task) return;
+            
+            editingId = id;
+            const orsParts = task.ors.replace('ORS.', '').split('/');
+            document.getElementById('taskFullInput').value = `${orsParts[0]}-${orsParts[1]} ${task.title}`;
+            document.getElementById('taskDetail').value = task.detail || "";
+            document.getElementById('taskStatus').value = task.status;
+            
+            selectedPhotos = [...(task.photos || [])];
+            renderPreview();
+            
+            document.getElementById('form-title').innerText = "แก้ไขงาน: " + task.ors;
+            document.getElementById('save-btn').innerText = "อัปเดตข้อมูล";
+            document.getElementById('cancel-edit').style.display = "block";
+            showSection('add');
+        };
+
+        window.resetForm = () => {
+            editingId = null;
+            document.getElementById('taskFullInput').value = "";
+            document.getElementById('taskDetail').value = "";
+            document.getElementById('taskStatus').value = "รอดำเนินการ";
+            selectedPhotos = [];
+            renderPreview();
+            document.getElementById('form-title').innerText = "บันทึกข้อมูลใหม่";
+            document.getElementById('save-btn').innerText = "บันทึกข้อมูล";
+            document.getElementById('cancel-edit').style.display = "none";
+        };
+
+        function renderPreview() {
+            const area = document.getElementById('preview-area');
+            area.innerHTML = "";
+            selectedPhotos.forEach((p, index) => {
+                const container = document.createElement('div');
+                container.className = "preview-img-container";
+                container.innerHTML = `
+                    <img src="${p}" style="width:60px; height:60px; object-fit:cover; border-radius:8px;">
+                    <button class="remove-img-btn" onclick="removePhoto(${index})">×</button>
+                `;
+                area.appendChild(container);
+            });
+        }
+
+        window.removePhoto = (index) => {
+            selectedPhotos.splice(index, 1);
+            renderPreview();
+        };
+
+        // --- ส่วนแสดงผลและการกรอง ---
+
+        onSnapshot(collection(db, "tasks"), (snap) => {
+            allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            
+            // Logic การเรียงลำดับ: 1. เรียงตามเดือน (ors ตัวแรก) 2. เรียงตามเลขงาน (ors ตัวหลัง)
+            allTasks.sort((a, b) => {
+                const partA = a.ors.replace('ORS.', '').split('/');
+                const partB = b.ors.replace('ORS.', '').split('/');
+                
+                const monthA = parseInt(partA[0]) || 0;
+                const monthB = parseInt(partB[0]) || 0;
+                const numA = parseInt(partA[1]) || 0;
+                const numB = parseInt(partB[1]) || 0;
+
+                if (monthA !== monthB) return monthA - monthB; 
+                return numA - numB;
+            });
+            
+            filterTasks();
+            if(document.getElementById('section-dash').classList.contains('active')) updateDashboard();
+        });
+
+        window.filterTasks = () => {
+            const container = document.getElementById('task-container');
+            container.innerHTML = ""; let lastM = "";
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            
+            allTasks.filter(t => t.title.toLowerCase().includes(search) || t.ors.includes(search)).forEach(t => {
+                const mNum = parseInt(t.ors.split('.')[1]?.split('/')[0]) || 0;
+                const mName = monthNames[mNum] || "ทั่วไป";
+                let c = t.status === "เสร็จสิ้น" ? "var(--status-done)" : (t.status === "กำลังทำ" ? "var(--status-doing)" : "var(--status-wait)");
+                
+                if (lastM !== mName) { lastM = mName; container.innerHTML += `<div class="month-header">📅 เดือน${mName}</div>`; }
+                
+                container.innerHTML += `
+                    <div class="task-card" style="border-left: 6px solid ${c}">
+                        <div style="display:flex; justify-content:space-between;"><b>${t.ors}</b> <span style="color:${c}; font-weight:600;">${t.status}</span></div>
+                        <div style="margin:10px 0; font-weight:600;">${t.title}</div>
+                        <div style="font-size:0.85rem; color:var(--text-sub); margin-bottom:10px;">${t.detail || ''}</div>
+                        <div class="gallery">${(t.photos||[]).map(p => `<img src="${p}">`).join('')}</div>
+                        <div class="task-actions">
+                            <button class="btn-edit" onclick="editTask('${t.id}')">แก้ไข</button>
+                            <button class="btn-del" onclick="deleteTask('${t.id}')">ลบ</button>
+                        </div>
+                    </div>`;
+            });
+        };
+
+        // --- ส่วน Dashboard & Excel ---
+        window.updateDashboard = () => {
             const counts = { 'เสร็จสิ้น': 0, 'กำลังทำ': 0, 'รอดำเนินการ': 0 };
             allTasks.forEach(t => counts[t.status]++);
             document.getElementById('stat-total').innerText = allTasks.length;
@@ -127,47 +291,6 @@
                     datasets: [{ data: Object.values(counts), backgroundColor: ['#10b981', '#f59e0b', '#ef4444'] }]
                 },
                 options: { plugins: { legend: { position: 'bottom', labels: { font: { family: 'Kanit' } } } } }
-            });
-        }
-
-        window.addTask = async () => {
-            const raw = document.getElementById('taskFullInput').value;
-            if(!raw) return alert("กรุณากรอกข้อมูลงาน");
-            const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
-            const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
-            const title = match ? match[3].trim() : raw;
-            const compressed = [];
-            for(let p of selectedPhotos) { compressed.push(await compressImg(p)); }
-            
-            await addDoc(collection(db, "tasks"), {
-                ors, title, detail: document.getElementById('taskDetail').value,
-                status: document.getElementById('taskStatus').value, photos: compressed, createdAt: new Date().getTime()
-            });
-            alert("บันทึกสำเร็จ!"); location.reload();
-        };
-
-        onSnapshot(query(collection(db, "tasks"), orderBy("ors", "asc")), (snap) => {
-            allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            filterTasks();
-        });
-
-        window.filterTasks = () => {
-            const container = document.getElementById('task-container');
-            container.innerHTML = ""; let lastM = "";
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            
-            allTasks.filter(t => t.title.toLowerCase().includes(search)).forEach(t => {
-                const mNum = parseInt(t.ors.split('.')[1]?.split('/')[0]) || 0;
-                const mName = monthNames[mNum] || "ทั่วไป";
-                let c = t.status === "เสร็จสิ้น" ? "var(--status-done)" : (t.status === "กำลังทำ" ? "var(--status-doing)" : "var(--status-wait)");
-                
-                if (lastM !== mName) { lastM = mName; container.innerHTML += `<div class="month-header">📅 เดือน${mName}</div>`; }
-                container.innerHTML += `
-                    <div class="task-card" style="border-left: 6px solid ${c}">
-                        <div style="display:flex; justify-content:space-between;"><b>${t.ors}</b> <span style="color:${c}; font-weight:600;">${t.status}</span></div>
-                        <div style="margin:10px 0; font-weight:600;">${t.title}</div>
-                        <div class="gallery">${(t.photos||[]).map(p => `<img src="${p}">`).join('')}</div>
-                    </div>`;
             });
         };
 
@@ -184,13 +307,16 @@
                 const r = new FileReader();
                 r.onload = (ev) => {
                     selectedPhotos.push(ev.target.result);
-                    const i = document.createElement('img'); i.src = ev.target.result;
-                    i.style = "width:50px; height:50px; object-fit:cover; border-radius:5px;";
-                    document.getElementById('preview-area').appendChild(i);
+                    renderPreview();
                 };
                 r.readAsDataURL(f);
             }
         };
+
+        // ผูกฟังก์ชันกับ Window เพื่อให้ HTML เรียกใช้งานได้
+        window.removePhoto = removePhoto;
+        window.editTask = editTask;
+        window.deleteTask = deleteTask;
     </script>
 </body>
 </html>
