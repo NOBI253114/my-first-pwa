@@ -374,7 +374,50 @@
         .page-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: var(--text); letter-spacing: -0.3px; }
         .page-title span { color: var(--text-sub); font-weight: 400; font-size: 0.85rem; margin-left: 8px; }
 
-        /* ═══════════════════════ LOGS ═══════════════════════ */
+        /* ═══════════════════════ FILTER BUTTONS ═══════════════════════ */
+        .filter-row {
+            display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto;
+            padding-bottom: 4px; -webkit-overflow-scrolling: touch;
+        }
+        .filter-btn {
+            flex-shrink: 0; padding: 8px 16px; border-radius: 20px;
+            border: 1.5px solid var(--border); background: var(--surface);
+            color: var(--text-sub); font-family: 'Prompt'; font-size: 0.78rem;
+            font-weight: 500; cursor: pointer; transition: 0.2s; white-space: nowrap;
+        }
+        .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+        .filter-btn.f-wait.active  { background: var(--red);     border-color: var(--red); }
+        .filter-btn.f-doing.active { background: var(--yellow);  border-color: var(--yellow); color: #7c2d12; }
+        .filter-btn.f-done.active  { background: var(--primary); border-color: var(--primary); }
+
+        /* ═══════════════════════ COMPLETED DATE ═══════════════════════ */
+        .completed-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 0.7rem; font-weight: 600; padding: 3px 9px;
+            border-radius: 20px; margin-top: 6px;
+            background: rgba(22,163,74,0.08); color: var(--primary);
+            border: 1px solid rgba(22,163,74,0.15);
+        }
+
+        /* ═══════════════════════ FILE ATTACHMENTS ═══════════════════════ */
+        .file-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+        .file-item {
+            display: flex; align-items: center; gap: 10px;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 10px 12px;
+        }
+        .file-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .file-info { flex: 1; min-width: 0; }
+        .file-name { font-size: 0.8rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-size { font-size: 0.68rem; color: var(--text-sub); }
+        .file-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .file-btn {
+            padding: 5px 10px; border-radius: 6px; font-size: 0.72rem;
+            font-weight: 600; cursor: pointer; border: none; font-family: 'Prompt';
+        }
+        .file-btn-dl { background: var(--primary-glow); color: var(--primary); border: 1px solid var(--border); }
+        .file-btn-rm { background: rgba(220,38,38,0.08); color: var(--red); border: 1px solid rgba(220,38,38,0.15); }
         .log-card {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: var(--radius); padding: 18px 20px; margin-bottom: 12px;
@@ -469,7 +512,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v2.0 Beta</span>
+            <span class="brand-ver">v2.3 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -510,12 +553,20 @@
                 </button>
                 <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
             </div>
+            <div class="card">
+                <div class="card-title">เอกสารแนบ</div>
+                <div class="file-list" id="file-list-add"></div>
+                <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+                    📎 แนบเอกสาร (PDF, Word, Excel)
+                </button>
+                <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" multiple style="display:none;">
+            </div>
             <button class="btn btn-primary" id="saveBtn" onclick="addTask()">ยืนยันบันทึกงาน</button>
 
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v2.0 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v2.3 Beta</div>
             </div>
         </div>
 
@@ -525,6 +576,12 @@
             <div class="search-wrap">
                 <span class="search-icon">🔍</span>
                 <input class="search-input" type="text" id="searchInput" placeholder="ค้นหาเลข ORS หรือชื่องาน..." onkeyup="filterTasks()">
+            </div>
+            <div class="filter-row">
+                <button class="filter-btn active" data-filter="ทั้งหมด" onclick="setFilter('ทั้งหมด')">📋 ทั้งหมด</button>
+                <button class="filter-btn f-wait"  data-filter="รอดำเนินการ" onclick="setFilter('รอดำเนินการ')">🔴 รอดำเนินการ</button>
+                <button class="filter-btn f-doing" data-filter="กำลังทำ"    onclick="setFilter('กำลังทำ')">🟡 กำลังทำ</button>
+                <button class="filter-btn f-done"  data-filter="เสร็จสิ้น"  onclick="setFilter('เสร็จสิ้น')">🟢 เสร็จสิ้น</button>
             </div>
             <div id="task-container">
                 <div class="empty-state">
@@ -596,19 +653,29 @@
                 <textarea class="form-textarea" id="editDetail" rows="4"></textarea>
             </div>
             <div class="form-group">
-                <label class="form-label">สถานะ</label>
-                <select class="form-select" id="editStatus">
-                    <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
-                    <option value="กำลังทำ">🟡 กำลังทำ</option>
-                    <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
-                </select>
-            </div>
-            <div class="edit-photos-section">
-                <label class="form-label" style="margin-bottom:10px;">รูปภาพ</label>
-                <div class="preview-strip" id="edit-preview-area"></div>
-                <button class="btn-upload" onclick="document.getElementById('editCameraInput').click()">➕ เพิ่มรูปใหม่</button>
-                <input type="file" id="editCameraInput" accept="image/*" multiple style="display:none;">
-            </div>
+                    <label class="form-label">สถานะ</label>
+                    <select class="form-select" id="editStatus">
+                        <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
+                        <option value="กำลังทำ">🟡 กำลังทำ</option>
+                        <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">วันที่เสร็จงาน</label>
+                    <input class="form-input" type="date" id="editCompletedDate">
+                </div>
+                <div class="edit-photos-section">
+                    <label class="form-label" style="margin-bottom:10px;">รูปภาพ</label>
+                    <div class="preview-strip" id="edit-preview-area"></div>
+                    <button class="btn-upload" onclick="document.getElementById('editCameraInput').click()">➕ เพิ่มรูปใหม่</button>
+                    <input type="file" id="editCameraInput" accept="image/*" multiple style="display:none;">
+                </div>
+                <div class="edit-photos-section">
+                    <label class="form-label" style="margin-bottom:10px;">เอกสารแนบ</label>
+                    <div class="file-list" id="edit-file-list"></div>
+                    <button class="btn-upload" onclick="document.getElementById('editFileInput').click()">📎 แนบเอกสารเพิ่ม</button>
+                    <input type="file" id="editFileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" multiple style="display:none;">
+                </div>
             <div class="modal-actions">
                 <button class="btn btn-primary" onclick="saveEdit()">อัปเดต</button>
                 <button class="btn btn-ghost" onclick="closeEditModal()">ยกเลิก</button>
@@ -665,6 +732,8 @@
         let editingId = null, taskToDeleteId = null, editingSnapshot = null;
         let currentPhotosArray = [], currentPhotoIndex = 0;
         let logsUnsubscribe = null;
+        let selectedFiles = [], editFiles = [];  // เอกสารแนบ
+        let activeFilter = 'ทั้งหมด';             // ฟิลเตอร์สถานะ
 
         const monthNames = ["ทั่วไป","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 
@@ -758,7 +827,9 @@
                     ors, title,
                     detail: document.getElementById('taskDetail').value,
                     status: document.getElementById('taskStatus').value,
+                    completedDate: null,
                     photos: selectedPhotos,
+                    files: selectedFiles,
                     createdAt: new Date().getTime(),
                     createdByDevice: getDeviceInfo()
                 };
@@ -766,7 +837,7 @@
                 await writeLog('ADD', {
                     taskId: ref.id,
                     taskRef: `${ors} ${title}`,
-                    after: { ors, title, detail: taskData.detail, status: taskData.status }
+                    after: { ors, title, detail: taskData.detail, status: taskData.status, completedDate: taskData.completedDate }
                 });
                 location.reload();
             } catch (e) { alert(e.message); btn.disabled = false; btn.innerText = "ยืนยันบันทึกงาน"; }
@@ -775,13 +846,15 @@
         // ── แก้ไขงาน ──
         window.openEditModal = (id) => {
             const t = allTasks.find(x => x.id === id); editingId = id;
-            // เก็บ snapshot ก่อนแก้ไข
-            editingSnapshot = { ors: t.ors, title: t.title, detail: t.detail || "", status: t.status };
+            editingSnapshot = { ors: t.ors, title: t.title, detail: t.detail || "", status: t.status, completedDate: t.completedDate || "" };
             document.getElementById('editFullInput').value = t.ors.replace('ORS.','') + " " + t.title;
             document.getElementById('editDetail').value = t.detail || "";
             document.getElementById('editStatus').value = t.status;
+            document.getElementById('editCompletedDate').value = t.completedDate || "";
             editPhotos = [...(t.photos || [])];
+            editFiles  = [...(t.files  || [])];
             renderEditPreview();
+            renderFileList(editFiles, 'edit-file-list', true);
             document.getElementById('editModal').classList.add('active');
         };
         window.saveEdit = async () => {
@@ -792,7 +865,9 @@
                 title: match ? match[3].trim() : raw,
                 detail: document.getElementById('editDetail').value,
                 status: document.getElementById('editStatus').value,
+                completedDate: document.getElementById('editCompletedDate').value || null,
                 photos: editPhotos,
+                files: editFiles,
                 lastEditedByDevice: getDeviceInfo()
             };
             await updateDoc(doc(db, "tasks", editingId), newData);
@@ -800,7 +875,7 @@
                 taskId: editingId,
                 taskRef: `${newData.ors} ${newData.title}`,
                 before: editingSnapshot,
-                after: { ors: newData.ors, title: newData.title, detail: newData.detail, status: newData.status }
+                after: { ors: newData.ors, title: newData.title, detail: newData.detail, status: newData.status, completedDate: newData.completedDate }
             });
             closeEditModal();
         };
@@ -820,12 +895,70 @@
             closeDeleteModal();
         };
 
+        // ── Filter ──
+        window.setFilter = (f) => {
+            activeFilter = f;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.filter-btn[data-filter="${f}"]`).classList.add('active');
+            filterTasks();
+        };
+
+        // ── Completed Date Helper ──
+        const getCompletedBadge = (completedDate) => {
+            if (!completedDate) return '';
+            const d = new Date(completedDate).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'numeric' });
+            return `<span class="completed-badge">✅ เสร็จเมื่อ ${d}</span>`;
+        };
+
+        // ── Render Files in card ──
+        const fileIcon = (name) => {
+            const ext = (name || '').split('.').pop().toLowerCase();
+            if (ext === 'pdf')  return '📄';
+            if (['doc','docx'].includes(ext)) return '📝';
+            if (['xls','xlsx'].includes(ext)) return '📊';
+            return '📎';
+        };
+        window.renderFileList = (files, containerId, isEdit = false) => {
+            const el = document.getElementById(containerId);
+            if (!el) return;
+            el.innerHTML = files.map((f, i) => `
+            <div class="file-item">
+                <span class="file-icon">${fileIcon(f.name)}</span>
+                <div class="file-info">
+                    <div class="file-name">${f.name}</div>
+                    <div class="file-size">${f.size}</div>
+                </div>
+                <div class="file-actions">
+                    <button class="file-btn file-btn-dl" onclick="downloadFile(${isEdit ? 'editFiles' : 'selectedFiles'}, ${i})">⬇️</button>
+                    ${isEdit ? `<button class="file-btn file-btn-rm" onclick="removeEditFile(${i})">✕</button>` 
+                             : `<button class="file-btn file-btn-rm" onclick="removeAddFile(${i})">✕</button>`}
+                </div>
+            </div>`).join('');
+        };
+        window.downloadFile = (arrName, i) => {
+            const arr = arrName === 'editFiles' ? editFiles : selectedFiles;
+            const f = arr[i]; if (!f) return;
+            const a = document.createElement('a');
+            a.href = f.data; a.download = f.name; a.click();
+        };
+        window.removeAddFile  = (i) => { selectedFiles.splice(i, 1); renderFileList(selectedFiles, 'file-list-add', false); };
+        window.removeEditFile = (i) => { editFiles.splice(i, 1);     renderFileList(editFiles,     'edit-file-list', true); };
+
         // ── Render Tasks ──
         window.filterTasks = () => {
             const container = document.getElementById('task-container');
             container.innerHTML = "";
             const search = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allTasks.filter(t => (t.title||"").toLowerCase().includes(search) || (t.ors||"").toLowerCase().includes(search));
+            const today  = new Date(); today.setHours(0,0,0,0);
+
+            let filtered = allTasks.filter(t =>
+                (t.title||"").toLowerCase().includes(search) ||
+                (t.ors||"").toLowerCase().includes(search)
+            );
+
+            if (activeFilter !== 'ทั้งหมด') {
+                filtered = filtered.filter(t => t.status === activeFilter);
+            }
 
             if (filtered.length === 0) {
                 container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">ไม่พบงานที่ค้นหา</div></div>`;
@@ -861,18 +994,34 @@
                 grouped[mName].forEach(t => {
                     const photosJSON = JSON.stringify(t.photos || []).replace(/"/g, '&quot;');
                     const status = t.status || 'รอดำเนินการ';
+                    const overdue = false;
+                    const dueBadge = getCompletedBadge(t.completedDate);
+                    const filesHtml = (t.files && t.files.length) ? `
+                        <div class="file-list" style="margin-bottom:12px;">
+                            ${t.files.map((f, fi) => {
+                                const fJSON = JSON.stringify(t.files).replace(/"/g, '&quot;');
+                                return `<div class="file-item">
+                                    <span class="file-icon">${fileIcon(f.name)}</span>
+                                    <div class="file-info"><div class="file-name">${f.name}</div><div class="file-size">${f.size}</div></div>
+                                    <div class="file-actions"><button class="file-btn file-btn-dl" onclick="downloadFileFromCard('${t.id}',${fi})">⬇️</button></div>
+                                </div>`;
+                            }).join('')}
+                        </div>` : '';
+
                     html += `
-                    <div class="task-card ${cardClass[status] || 'status-wait'}">
+                    <div class="task-card ${cardClass[status] || 'status-wait'}${overdue ? ' overdue-card' : ''}">
                         <div class="task-header">
                             <span class="task-ors">${t.ors}</span>
                             <span class="task-badge ${badgeClass[status] || 'badge-wait'}">${status}</span>
                         </div>
                         <div class="task-title">${t.title}</div>
+                        ${dueBadge}
                         ${t.detail ? `<div class="task-detail">${t.detail}</div>` : ''}
                         ${(t.photos && t.photos.length) ? `
                         <div class="task-gallery">
                             ${t.photos.map((p, i) => `<img src="${p}" onclick="openImageViewer(${photosJSON}, ${i})" loading="lazy">`).join('')}
                         </div>` : ''}
+                        ${filesHtml}
                         <div class="task-actions">
                             <button class="btn btn-ghost" onclick="openEditModal('${t.id}')">✏️ แก้ไข</button>
                             <button class="btn btn-danger" onclick="openDeleteModal('${t.id}')">🗑️ ลบ</button>
@@ -882,6 +1031,14 @@
                 html += `</div></div>`;
                 container.innerHTML += html;
             });
+        };
+
+        window.downloadFileFromCard = (taskId, fileIndex) => {
+            const t = allTasks.find(x => x.id === taskId);
+            if (!t || !t.files || !t.files[fileIndex]) return;
+            const f = t.files[fileIndex];
+            const a = document.createElement('a');
+            a.href = f.data; a.download = f.name; a.click();
         };
 
         window.toggleMonth = (mId, headerEl) => {
@@ -1050,6 +1207,27 @@
         };
         window.remPhoto = (i, id) => { selectedPhotos.splice(i, 1); renderPrevs(selectedPhotos, id); };
         document.getElementById('cameraInput').onchange = (e) => processFiles(e.target.files, selectedPhotos, 'preview-area');
+
+        // ── File Attachment Processing ──
+        const formatFileSize = (bytes) => {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+        };
+        const processDocFiles = (fileInputEl, targetArr, listId, isEdit) => {
+            for (let f of fileInputEl.files) {
+                if (f.size > 5 * 1024 * 1024) { alert(`ไฟล์ ${f.name} ใหญ่เกิน 5MB`); continue; }
+                const r = new FileReader();
+                r.onload = (ev) => {
+                    targetArr.push({ name: f.name, size: formatFileSize(f.size), data: ev.target.result, type: f.type });
+                    renderFileList(targetArr, listId, isEdit);
+                };
+                r.readAsDataURL(f);
+            }
+            fileInputEl.value = '';
+        };
+        document.getElementById('fileInput').onchange     = (e) => processDocFiles(e.target, selectedFiles, 'file-list-add', false);
+        document.getElementById('editFileInput').onchange = (e) => processDocFiles(e.target, editFiles,     'edit-file-list', true);
         document.getElementById('editCameraInput').onchange = (e) => {
             for (let f of e.target.files) {
                 const r = new FileReader();
