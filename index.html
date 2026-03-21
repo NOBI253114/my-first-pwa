@@ -607,7 +607,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v3.0 Beta</span>
+            <span class="brand-ver">v3.1 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -653,7 +653,7 @@
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v3.0 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v3.1 Beta</div>
             </div>
         </div>
 
@@ -796,6 +796,15 @@
         </div>
     </div>
 
+    <!-- Clear stale Service Worker cache -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(regs => {
+                regs.forEach(r => r.unregister());
+            });
+            caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+        }
+    </script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -1139,13 +1148,26 @@
 
         // ── Firebase Tasks Listener ──
         let firstLoad = true;
-        onSnapshot(collection(db, "tasks"), (snap) => {
-            allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            allTasks.sort((a, b) => a.ors.localeCompare(b.ors));
-            filterTasks();
-            updateDashboard();
-            if (firstLoad) { firstLoad = false; window.finishLoading && window.finishLoading(); }
-        });
+        onSnapshot(
+            collection(db, "tasks"),
+            (snap) => {
+                allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                allTasks.sort((a, b) => a.ors.localeCompare(b.ors));
+                filterTasks();
+                updateDashboard();
+                if (firstLoad) { firstLoad = false; window.finishLoading && window.finishLoading(); }
+            },
+            (error) => {
+                console.error("Firestore error:", error);
+                window.finishLoading && window.finishLoading();
+                const c = document.getElementById('task-container');
+                if (c) c.innerHTML = `<div class="empty-state">
+                    <div class="empty-icon">⚠️</div>
+                    <div class="empty-text" style="color:#dc2626;">โหลดข้อมูลไม่สำเร็จ<br><small style="font-size:0.7rem;color:#6b7280;">${error.code || error.message}</small></div>
+                    <button class="btn btn-primary" style="margin-top:16px;max-width:200px;" onclick="location.reload()">🔄 โหลดใหม่</button>
+                </div>`;
+            }
+        );
 
         // ── Render Logs (admin only) ──
         const renderLogs = (logs) => {
@@ -1293,12 +1315,6 @@
         window.remPhoto = (i, id) => { selectedPhotos.splice(i, 1); renderPrevs(selectedPhotos, id); };
         document.getElementById('cameraInput').onchange = (e) => processFiles(e.target.files, selectedPhotos, 'preview-area');
 
-        // ── File Attachment Processing ──
-            if (bytes < 1024) return bytes + ' B';
-            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-            return (bytes / 1024 / 1024).toFixed(1) + ' MB';
-        };
-        };
         document.getElementById('editCameraInput').onchange = (e) => {
             for (let f of e.target.files) {
                 const r = new FileReader();
