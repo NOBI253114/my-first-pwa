@@ -509,9 +509,88 @@
 
         .edit-photos-section { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 14px; }
 
+        /* ═══════════════════════ LOADING SCREEN ═══════════════════════ */
+        #loadingScreen {
+            position: fixed; inset: 0; z-index: 99999;
+            background: var(--bg);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 20px;
+            transition: opacity 0.5s ease;
+        }
+        #loadingScreen.hidden { opacity: 0; pointer-events: none; }
+        .loading-logo { display: flex; align-items: center; gap: 12px; }
+        .loading-logo-icon {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border-radius: 14px; display: grid; place-items: center;
+            font-size: 24px; box-shadow: 0 4px 16px rgba(22,163,74,0.35);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }
+        .loading-logo-name { font-size: 1.6rem; font-weight: 700; color: var(--text); letter-spacing: 2px; }
+        .loading-bar-wrap {
+            width: 220px; background: var(--surface2);
+            border-radius: 20px; height: 8px; overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .loading-bar {
+            height: 100%; width: 0%; border-radius: 20px;
+            background: linear-gradient(90deg, #16a34a, #4ade80);
+            transition: width 0.25s ease;
+            box-shadow: 0 0 8px rgba(22,163,74,0.5);
+        }
+        .loading-pct { font-size: 0.8rem; font-weight: 600; color: var(--primary); font-family: 'IBM Plex Mono'; }
+        .loading-msg { font-size: 0.75rem; color: var(--text-sub); }
+
+        /* ═══════════════════════ MADE DATE MODAL ═══════════════════════ */
+        #madeDateModal { align-items: center; }
+        .made-date-card {
+            background: var(--surface); border-radius: 20px; padding: 28px 24px;
+            width: calc(100% - 48px); max-width: 360px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            animation: popUp 0.25s ease;
+        }
+        .made-date-icon { font-size: 2.2rem; text-align: center; margin-bottom: 10px; }
+        .made-date-title { font-size: 1rem; font-weight: 700; text-align: center; margin-bottom: 4px; color: var(--text); }
+        .made-date-sub { font-size: 0.8rem; color: var(--text-sub); text-align: center; margin-bottom: 18px; }
+        .made-date-actions { display: flex; gap: 10px; margin-top: 16px; }
+        .made-date-actions .btn-primary { flex: 1; background: linear-gradient(135deg, #0891b2, #0e7490); box-shadow: 0 4px 12px rgba(8,145,178,0.25); }
+        .made-date-actions .btn-ghost   { flex: 0.5; }
+
     </style>
 </head>
 <body>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="loading-logo">
+            <div class="loading-logo-icon">⚡</div>
+            <span class="loading-logo-name">4M TASK</span>
+        </div>
+        <div class="loading-bar-wrap">
+            <div class="loading-bar" id="loadingBar"></div>
+        </div>
+        <div class="loading-pct" id="loadingPct">0%</div>
+        <div class="loading-msg" id="loadingMsg">กำลังเชื่อมต่อระบบ...</div>
+    </div>
+
+    <!-- Made Date Modal -->
+    <div id="madeDateModal" class="modal-overlay">
+        <div class="made-date-card">
+            <div class="made-date-icon">🏭</div>
+            <div class="made-date-title">ยืนยันผลิตเสร็จแล้ว</div>
+            <div class="made-date-sub" id="madeDateTaskName">—</div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">วันที่ผลิตเสร็จ</label>
+                <input class="form-input" type="date" id="madeDateInput">
+            </div>
+            <div class="made-date-actions">
+                <button class="btn btn-primary" onclick="confirmMadeDate()">✅ ยืนยัน</button>
+                <button class="btn btn-ghost"    onclick="closeMadeDateModal()">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Image Viewer -->
     <div id="imageViewer" class="viewer-overlay">
@@ -528,7 +607,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v2.4 Beta</span>
+            <span class="brand-ver">v2.5 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -584,7 +663,7 @@
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v2.4 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v2.5 Beta</div>
             </div>
         </div>
 
@@ -904,15 +983,32 @@
         window.closeEditModal = () => document.getElementById('editModal').classList.remove('active');
 
         // ── Quick Status Update ──
+        let madeTaskId = null;
         window.quickStatus = async (id, newStatus) => {
+            if (newStatus === 'ผลิตเสร็จแล้ว') {
+                madeTaskId = id;
+                const t = allTasks.find(x => x.id === id);
+                document.getElementById('madeDateTaskName').textContent = t ? `${t.ors} ${t.title}` : '—';
+                document.getElementById('madeDateInput').value = new Date().toISOString().split('T')[0];
+                document.getElementById('madeDateModal').classList.add('active');
+                return;
+            }
             const t = allTasks.find(x => x.id === id); if (!t) return;
             await updateDoc(doc(db, "tasks", id), { status: newStatus, lastEditedByDevice: getDeviceInfo() });
-            await writeLog('EDIT', {
-                taskId: id,
-                taskRef: `${t.ors} ${t.title}`,
-                before: { status: t.status },
-                after:  { status: newStatus }
+            await writeLog('EDIT', { taskId: id, taskRef: `${t.ors} ${t.title}`, before: { status: t.status }, after: { status: newStatus } });
+        };
+        window.closeMadeDateModal = () => { document.getElementById('madeDateModal').classList.remove('active'); madeTaskId = null; };
+        window.confirmMadeDate = async () => {
+            if (!madeTaskId) return;
+            const t = allTasks.find(x => x.id === madeTaskId); if (!t) return;
+            const dateVal = document.getElementById('madeDateInput').value;
+            await updateDoc(doc(db, "tasks", madeTaskId), {
+                status: 'ผลิตเสร็จแล้ว',
+                completedDate: dateVal || null,
+                lastEditedByDevice: getDeviceInfo()
             });
+            await writeLog('EDIT', { taskId: madeTaskId, taskRef: `${t.ors} ${t.title}`, before: { status: t.status }, after: { status: 'ผลิตเสร็จแล้ว', completedDate: dateVal } });
+            closeMadeDateModal();
         };
 
         // ── ลบงาน ──
@@ -1112,11 +1208,13 @@
         window.removeEditPhoto = (i) => { editPhotos.splice(i, 1); renderEditPreview(); };
 
         // ── Firebase Tasks Listener ──
+        let firstLoad = true;
         onSnapshot(collection(db, "tasks"), (snap) => {
             allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             allTasks.sort((a, b) => a.ors.localeCompare(b.ors));
             filterTasks();
             updateDashboard();
+            if (firstLoad) { firstLoad = false; finishLoading(); }
         });
 
         // ── Render Logs (admin only) ──
@@ -1536,6 +1634,27 @@
 
             XLSX.utils.book_append_sheet(wb, ws, "WorkLog");
             XLSX.writeFile(wb, `4MTASK_Report_${now.toISOString().split("T")[0]}.xlsx`);
+        };
+
+        // ── Loading Screen ──
+        const loadingBar  = document.getElementById('loadingBar');
+        const loadingPct  = document.getElementById('loadingPct');
+        const loadingMsg  = document.getElementById('loadingMsg');
+        const loadingMsgs = ['กำลังเชื่อมต่อระบบ...', 'โหลดข้อมูลงาน...', 'เตรียมหน้าจอ...', 'เกือบเสร็จแล้ว...'];
+        let pct = 0;
+        const loadingTimer = setInterval(() => {
+            pct = Math.min(pct + Math.random() * 18 + 4, 90);
+            loadingBar.style.width = pct + '%';
+            loadingPct.textContent = Math.round(pct) + '%';
+            loadingMsg.textContent = loadingMsgs[Math.min(Math.floor(pct / 25), 3)];
+        }, 300);
+        const finishLoading = () => {
+            clearInterval(loadingTimer);
+            loadingBar.style.width = '100%';
+            loadingPct.textContent = '100%';
+            loadingMsg.textContent = 'พร้อมใช้งาน ✅';
+            setTimeout(() => document.getElementById('loadingScreen').classList.add('hidden'), 500);
+            setTimeout(() => document.getElementById('loadingScreen').remove(), 1100);
         };
 
         // ── Theme Toggle ──
