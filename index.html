@@ -607,7 +607,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v2.6 Beta</span>
+            <span class="brand-ver">v2.7 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -637,8 +637,6 @@
                         <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
                         <option value="กำลังทำ">🟡 กำลังทำ</option>
                         <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
-                        <option value="ตัดตัวครบแล้ว">✂️ ตัดตัวครบแล้ว</option>
-                        <option value="ผลิตเสร็จแล้ว">🏭 ผลิตเสร็จแล้ว</option>
                     </select>
                 </div>
             </div>
@@ -650,20 +648,12 @@
                 </button>
                 <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
             </div>
-            <div class="card">
-                <div class="card-title">เอกสารแนบ</div>
-                <div class="file-list" id="file-list-add"></div>
-                <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
-                    📎 แนบเอกสาร (PDF, Word, Excel) · สูงสุด 400 KB
-                </button>
-                <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" multiple style="display:none;">
-            </div>
             <button class="btn btn-primary" id="saveBtn" onclick="addTask()">ยืนยันบันทึกงาน</button>
 
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v2.6 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v2.7 Beta</div>
             </div>
         </div>
 
@@ -757,8 +747,6 @@
                         <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
                         <option value="กำลังทำ">🟡 กำลังทำ</option>
                         <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
-                        <option value="ตัดตัวครบแล้ว">✂️ ตัดตัวครบแล้ว</option>
-                        <option value="ผลิตเสร็จแล้ว">🏭 ผลิตเสร็จแล้ว</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -770,12 +758,6 @@
                     <div class="preview-strip" id="edit-preview-area"></div>
                     <button class="btn-upload" onclick="document.getElementById('editCameraInput').click()">➕ เพิ่มรูปใหม่</button>
                     <input type="file" id="editCameraInput" accept="image/*" multiple style="display:none;">
-                </div>
-                <div class="edit-photos-section">
-                    <label class="form-label" style="margin-bottom:10px;">เอกสารแนบ</label>
-                    <div class="file-list" id="edit-file-list"></div>
-                    <button class="btn-upload" onclick="document.getElementById('editFileInput').click()">📎 แนบเอกสารเพิ่ม · สูงสุด 400 KB</button>
-                    <input type="file" id="editFileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" multiple style="display:none;">
                 </div>
             <div class="modal-actions">
                 <button class="btn btn-primary" onclick="saveEdit()">อัปเดต</button>
@@ -833,7 +815,6 @@
         let editingId = null, taskToDeleteId = null, editingSnapshot = null;
         let currentPhotosArray = [], currentPhotoIndex = 0;
         let logsUnsubscribe = null;
-        let selectedFiles = [], editFiles = [];  // เอกสารแนบ
         let activeFilter = 'ทั้งหมด';             // ฟิลเตอร์สถานะ
 
         const monthNames = ["ทั่วไป","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
@@ -930,7 +911,6 @@
                     status: document.getElementById('taskStatus').value,
                     completedDate: null,
                     photos: selectedPhotos,
-                    files: selectedFiles,
                     createdAt: new Date().getTime(),
                     createdByDevice: getDeviceInfo()
                 };
@@ -960,9 +940,7 @@
             document.getElementById('editStatus').value = t.status;
             document.getElementById('editCompletedDate').value = t.completedDate || "";
             editPhotos = [...(t.photos || [])];
-            editFiles  = [...(t.files  || [])];
             renderEditPreview();
-            renderFileList(editFiles, 'edit-file-list', true);
             document.getElementById('editModal').classList.add('active');
         };
         window.saveEdit = async () => {
@@ -975,7 +953,6 @@
                 status: document.getElementById('editStatus').value,
                 completedDate: document.getElementById('editCompletedDate').value || null,
                 photos: editPhotos,
-                files: editFiles,
                 lastEditedByDevice: getDeviceInfo()
             };
             await updateDoc(doc(db, "tasks", editingId), newData);
@@ -1047,40 +1024,6 @@
             return `<span class="completed-badge">✅ เสร็จเมื่อ ${d}</span>`;
         };
 
-        // ── Render Files in card ──
-        const fileIcon = (name) => {
-            const ext = (name || '').split('.').pop().toLowerCase();
-            if (ext === 'pdf')  return '📄';
-            if (['doc','docx'].includes(ext)) return '📝';
-            if (['xls','xlsx'].includes(ext)) return '📊';
-            return '📎';
-        };
-        window.renderFileList = (files, containerId, isEdit = false) => {
-            const el = document.getElementById(containerId);
-            if (!el) return;
-            el.innerHTML = files.map((f, i) => `
-            <div class="file-item">
-                <span class="file-icon">${fileIcon(f.name)}</span>
-                <div class="file-info">
-                    <div class="file-name">${f.name}</div>
-                    <div class="file-size">${f.size}</div>
-                </div>
-                <div class="file-actions">
-                    <button class="file-btn file-btn-dl" onclick="downloadFile(${isEdit ? 'editFiles' : 'selectedFiles'}, ${i})">⬇️</button>
-                    ${isEdit ? `<button class="file-btn file-btn-rm" onclick="removeEditFile(${i})">✕</button>` 
-                             : `<button class="file-btn file-btn-rm" onclick="removeAddFile(${i})">✕</button>`}
-                </div>
-            </div>`).join('');
-        };
-        window.downloadFile = (arrName, i) => {
-            const arr = arrName === 'editFiles' ? editFiles : selectedFiles;
-            const f = arr[i]; if (!f) return;
-            const a = document.createElement('a');
-            a.href = f.data; a.download = f.name; a.click();
-        };
-        window.removeAddFile  = (i) => { selectedFiles.splice(i, 1); renderFileList(selectedFiles, 'file-list-add', false); };
-        window.removeEditFile = (i) => { editFiles.splice(i, 1);     renderFileList(editFiles,     'edit-file-list', true); };
-
         // ── Render Tasks ──
         window.filterTasks = () => {
             const container = document.getElementById('task-container');
@@ -1145,17 +1088,6 @@
                     const status = t.status || 'รอดำเนินการ';
                     const overdue = false;
                     const dueBadge = getCompletedBadge(t.completedDate);
-                    const filesHtml = (t.files && t.files.length) ? `
-                        <div class="file-list" style="margin-bottom:12px;">
-                            ${t.files.map((f, fi) => {
-                                const fJSON = JSON.stringify(t.files).replace(/"/g, '&quot;');
-                                return `<div class="file-item">
-                                    <span class="file-icon">${fileIcon(f.name)}</span>
-                                    <div class="file-info"><div class="file-name">${f.name}</div><div class="file-size">${f.size}</div></div>
-                                    <div class="file-actions"><button class="file-btn file-btn-dl" onclick="downloadFileFromCard('${t.id}',${fi})">⬇️</button></div>
-                                </div>`;
-                            }).join('')}
-                        </div>` : '';
 
                     const isCut  = status === 'ตัดตัวครบแล้ว' || status === 'ผลิตเสร็จแล้ว' || status === 'เสร็จสิ้น';
                     const isMade = status === 'ผลิตเสร็จแล้ว' || status === 'เสร็จสิ้น';
@@ -1173,7 +1105,6 @@
                         <div class="task-gallery">
                             ${t.photos.map((p, i) => `<img src="${p}" onclick="openImageViewer(${photosJSON}, ${i})" loading="lazy">`).join('')}
                         </div>` : ''}
-                        ${filesHtml}
                         <div class="quick-actions">
                             <button class="btn-quick btn-cut${isCut ? ' done-state' : ''}" onclick="${isCut ? '' : `quickStatus('${t.id}','ตัดตัวครบแล้ว')`}">
                                 ${isCut ? '✅' : '✂️'} ตัดตัวครบแล้ว
@@ -1191,14 +1122,6 @@
                 html += `</div></div>`;
                 container.innerHTML += html;
             });
-        };
-
-        window.downloadFileFromCard = (taskId, fileIndex) => {
-            const t = allTasks.find(x => x.id === taskId);
-            if (!t || !t.files || !t.files[fileIndex]) return;
-            const f = t.files[fileIndex];
-            const a = document.createElement('a');
-            a.href = f.data; a.download = f.name; a.click();
         };
 
         window.toggleMonth = (mId, headerEl) => {
@@ -1371,28 +1294,11 @@
         document.getElementById('cameraInput').onchange = (e) => processFiles(e.target.files, selectedPhotos, 'preview-area');
 
         // ── File Attachment Processing ──
-        const formatFileSize = (bytes) => {
             if (bytes < 1024) return bytes + ' B';
             if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
             return (bytes / 1024 / 1024).toFixed(1) + ' MB';
         };
-        const processDocFiles = (fileInputEl, targetArr, listId, isEdit) => {
-            for (let f of fileInputEl.files) {
-                if (f.size > 400 * 1024) {
-                    alert(`❌ ไฟล์ "${f.name}" มีขนาด ${(f.size/1024).toFixed(0)} KB\nรองรับสูงสุด 400 KB เท่านั้น\nกรุณาบีบอัดไฟล์ก่อนแนบ`);
-                    continue;
-                }
-                const r = new FileReader();
-                r.onload = (ev) => {
-                    targetArr.push({ name: f.name, size: formatFileSize(f.size), data: ev.target.result, type: f.type });
-                    renderFileList(targetArr, listId, isEdit);
-                };
-                r.readAsDataURL(f);
-            }
-            fileInputEl.value = '';
         };
-        document.getElementById('fileInput').onchange     = (e) => processDocFiles(e.target, selectedFiles, 'file-list-add', false);
-        document.getElementById('editFileInput').onchange = (e) => processDocFiles(e.target, editFiles,     'edit-file-list', true);
         document.getElementById('editCameraInput').onchange = (e) => {
             for (let f of e.target.files) {
                 const r = new FileReader();
