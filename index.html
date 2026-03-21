@@ -607,7 +607,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v2.8 Beta</span>
+            <span class="brand-ver">v2.9 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -653,7 +653,7 @@
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v2.8 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v2.9 Beta</div>
             </div>
         </div>
 
@@ -1552,36 +1552,39 @@
             XLSX.writeFile(wb, `4MTASK_Report_${now.toISOString().split("T")[0]}.xlsx`);
         };
 
-        // ── Loading Screen ──
-        const loadingBar  = document.getElementById('loadingBar');
-        const loadingPct  = document.getElementById('loadingPct');
-        const loadingMsg  = document.getElementById('loadingMsg');
-        const loadingMsgs = ['กำลังเชื่อมต่อระบบ...', 'โหลดข้อมูลงาน...', 'เตรียมหน้าจอ...', 'เกือบเสร็จแล้ว...'];
-        let pct = 0;
-        const loadingTimer = setInterval(() => {
-            pct = Math.min(pct + Math.random() * 18 + 4, 90);
-            loadingBar.style.width = pct + '%';
-            loadingPct.textContent = Math.round(pct) + '%';
-            loadingMsg.textContent = loadingMsgs[Math.min(Math.floor(pct / 25), 3)];
-        }, 300);
-        let loadingDone = false;
-        const finishLoading = () => {
-            if (loadingDone) return;
-            loadingDone = true;
-            clearInterval(loadingTimer);
-            loadingBar.style.width = '100%';
-            loadingPct.textContent = '100%';
-            loadingMsg.textContent = 'พร้อมใช้งาน ✅';
-            setTimeout(() => document.getElementById('loadingScreen')?.classList.add('hidden'), 500);
-            setTimeout(() => document.getElementById('loadingScreen')?.remove(), 1100);
-        };
-        // Fallback: ถ้า 8 วินาทียังไม่โหลดเสร็จ ให้ปิด loading screen อัตโนมัติ
-        setTimeout(() => finishLoading(), 8000);
 
         // ── Theme Toggle ──
         const html = document.documentElement;
         html.setAttribute('data-theme', 'light');
 
+    </script>
+
+    <!-- Loading Screen Logic — แยกออกจาก module เพื่อให้รันได้ทันที -->
+    <script>
+        (function() {
+            const bar  = document.getElementById('loadingBar');
+            const pct  = document.getElementById('loadingPct');
+            const msg  = document.getElementById('loadingMsg');
+            const msgs = ['กำลังเชื่อมต่อระบบ...','โหลดข้อมูลงาน...','เตรียมหน้าจอ...','เกือบเสร็จแล้ว...'];
+            let p = 0, done = false;
+            const timer = setInterval(() => {
+                p = Math.min(p + Math.random() * 15 + 5, 90);
+                if (bar)  bar.style.width = p + '%';
+                if (pct)  pct.textContent = Math.round(p) + '%';
+                if (msg)  msg.textContent = msgs[Math.min(Math.floor(p / 25), 3)];
+            }, 280);
+            window.finishLoading = function() {
+                if (done) return; done = true;
+                clearInterval(timer);
+                if (bar) bar.style.width = '100%';
+                if (pct) pct.textContent = '100%';
+                if (msg) msg.textContent = 'พร้อมใช้งาน ✅';
+                setTimeout(() => { const s = document.getElementById('loadingScreen'); if(s) s.classList.add('hidden'); }, 400);
+                setTimeout(() => { const s = document.getElementById('loadingScreen'); if(s) s.remove(); }, 1000);
+            };
+            // Fallback 10 วินาที
+            setTimeout(() => window.finishLoading(), 10000);
+        })();
     </script>
 </body>
 </html>
