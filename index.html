@@ -607,7 +607,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v2.5 Beta</span>
+            <span class="brand-ver">v2.6 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -654,7 +654,7 @@
                 <div class="card-title">เอกสารแนบ</div>
                 <div class="file-list" id="file-list-add"></div>
                 <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
-                    📎 แนบเอกสาร (PDF, Word, Excel)
+                    📎 แนบเอกสาร (PDF, Word, Excel) · สูงสุด 400 KB
                 </button>
                 <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" multiple style="display:none;">
             </div>
@@ -663,7 +663,7 @@
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v2.5 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v2.6 Beta</div>
             </div>
         </div>
 
@@ -774,7 +774,7 @@
                 <div class="edit-photos-section">
                     <label class="form-label" style="margin-bottom:10px;">เอกสารแนบ</label>
                     <div class="file-list" id="edit-file-list"></div>
-                    <button class="btn-upload" onclick="document.getElementById('editFileInput').click()">📎 แนบเอกสารเพิ่ม</button>
+                    <button class="btn-upload" onclick="document.getElementById('editFileInput').click()">📎 แนบเอกสารเพิ่ม · สูงสุด 400 KB</button>
                     <input type="file" id="editFileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" multiple style="display:none;">
                 </div>
             <div class="modal-actions">
@@ -941,7 +941,14 @@
                     after: { ors, title, detail: taskData.detail, status: taskData.status, completedDate: taskData.completedDate }
                 });
                 location.reload();
-            } catch (e) { alert(e.message); btn.disabled = false; btn.innerText = "ยืนยันบันทึกงาน"; }
+            } catch (e) {
+                let msg = e.message || '';
+                if (msg.includes('invalid nested') || msg.includes('entity')) {
+                    msg = '❌ บันทึกไม่สำเร็จ\nขนาดข้อมูลรวมเกินที่ระบบรองรับ\nลองลดจำนวนรูปหรือลบเอกสารแนบออกบ้าง';
+                }
+                alert(msg);
+                btn.disabled = false; btn.innerText = "ยืนยันบันทึกงาน";
+            }
         };
 
         // ── แก้ไขงาน ──
@@ -1371,7 +1378,10 @@
         };
         const processDocFiles = (fileInputEl, targetArr, listId, isEdit) => {
             for (let f of fileInputEl.files) {
-                if (f.size > 5 * 1024 * 1024) { alert(`ไฟล์ ${f.name} ใหญ่เกิน 5MB`); continue; }
+                if (f.size > 400 * 1024) {
+                    alert(`❌ ไฟล์ "${f.name}" มีขนาด ${(f.size/1024).toFixed(0)} KB\nรองรับสูงสุด 400 KB เท่านั้น\nกรุณาบีบอัดไฟล์ก่อนแนบ`);
+                    continue;
+                }
                 const r = new FileReader();
                 r.onload = (ev) => {
                     targetArr.push({ name: f.name, size: formatFileSize(f.size), data: ev.target.result, type: f.type });
