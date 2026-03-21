@@ -349,6 +349,12 @@
             color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; transition: 0.2s;
         }
         .viewer-close:hover { background: rgba(255,255,255,0.2); }
+        .viewer-download {
+            position: absolute; top: 20px; left: 20px; width: 40px; height: 40px;
+            background: rgba(255,255,255,0.1); border: none; border-radius: 50%;
+            color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; transition: 0.2s;
+        }
+        .viewer-download:hover { background: rgba(255,255,255,0.25); }
         .viewer-nav { position: absolute; bottom: 24px; display: flex; gap: 12px; }
         .viewer-nav-btn {
             background: rgba(255,255,255,0.1); color: #fff; border: none;
@@ -595,6 +601,7 @@
     <!-- Image Viewer -->
     <div id="imageViewer" class="viewer-overlay">
         <button class="viewer-close" onclick="closeImageViewer()">✕</button>
+        <button class="viewer-download" onclick="downloadViewerImage()" title="บันทึกรูป">⬇️</button>
         <img id="viewerImg" src="" class="viewer-img" onclick="closeImageViewer()">
         <div class="viewer-nav">
             <button class="viewer-nav-btn" onclick="navViewer(-1)">❮</button>
@@ -607,7 +614,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v3.1 Beta</span>
+            <span class="brand-ver">v3.2 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -653,7 +660,7 @@
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v3.1 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v3.2 Beta</div>
             </div>
         </div>
 
@@ -896,6 +903,14 @@
         window.navViewer = (step) => {
             currentPhotoIndex = (currentPhotoIndex + step + currentPhotosArray.length) % currentPhotosArray.length;
             document.getElementById('viewerImg').src = currentPhotosArray[currentPhotoIndex];
+        };
+        window.downloadViewerImage = () => {
+            const src = currentPhotosArray[currentPhotoIndex];
+            if (!src) return;
+            const a = document.createElement('a');
+            a.href = src;
+            a.download = `4MTASK_photo_${Date.now()}.jpg`;
+            a.click();
         };
         document.addEventListener('keydown', (e) => {
             if (!document.getElementById('imageViewer').classList.contains('active')) return;
@@ -1296,11 +1311,11 @@
                     const img = new Image(); img.src = ev.target.result;
                     img.onload = () => {
                         const cv = document.createElement('canvas');
-                        const mx = 600; let w = img.width, h = img.height;
+                        const mx = 1600; let w = img.width, h = img.height;
                         if (w > h) { if (w > mx) { h *= mx/w; w = mx; } } else { if (h > mx) { w *= mx/h; h = mx; } }
                         cv.width = w; cv.height = h;
                         cv.getContext('2d').drawImage(img, 0, 0, w, h);
-                        target.push(cv.toDataURL('image/jpeg', 0.6));
+                        target.push(cv.toDataURL('image/jpeg', 0.92));
                         renderPrevs(target, previewId);
                     };
                 };
@@ -1322,11 +1337,11 @@
                     const img = new Image(); img.src = ev.target.result;
                     img.onload = () => {
                         const cv = document.createElement('canvas');
-                        const mx = 600; let w = img.width, h = img.height;
+                        const mx = 1600; let w = img.width, h = img.height;
                         if (w > h) { if (w > mx) { h *= mx/w; w = mx; } } else { if (h > mx) { w *= mx/h; h = mx; } }
                         cv.width = w; cv.height = h;
                         cv.getContext('2d').drawImage(img, 0, 0, w, h);
-                        editPhotos.push(cv.toDataURL('image/jpeg', 0.6));
+                        editPhotos.push(cv.toDataURL('image/jpeg', 0.92));
                         renderEditPreview();
                     };
                 };
