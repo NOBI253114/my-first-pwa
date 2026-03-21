@@ -515,6 +515,27 @@
 
         .edit-photos-section { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 14px; }
 
+        /* ═══════════════════════ TOAST ═══════════════════════ */
+        #toast-container {
+            position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+            z-index: 99998; display: flex; flex-direction: column; align-items: center; gap: 8px;
+            pointer-events: none;
+        }
+        .toast {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 11px 18px; border-radius: 30px;
+            font-family: 'Prompt'; font-size: 0.85rem; font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+            white-space: nowrap;
+        }
+        .toast.success { background: #16a34a; color: #fff; }
+        .toast.error   { background: #dc2626; color: #fff; }
+        .toast.info    { background: #0891b2; color: #fff; }
+        .toast.out     { animation: toastOut 0.3s ease forwards; }
+        @keyframes toastIn  { from { opacity:0; transform:translateY(-12px) scale(0.9); } to { opacity:1; transform:translateY(0) scale(1); } }
+        @keyframes toastOut { from { opacity:1; transform:translateY(0) scale(1); }       to { opacity:0; transform:translateY(-8px) scale(0.95); } }
+
         /* ═══════════════════════ LOADING SCREEN ═══════════════════════ */
         #loadingScreen {
             position: fixed; inset: 0; z-index: 99999;
@@ -609,12 +630,15 @@
         </div>
     </div>
 
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
     <!-- Top Bar -->
     <header class="topbar">
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v3.2 Beta</span>
+            <span class="brand-ver">v3.4 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -660,7 +684,7 @@
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v3.2 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v3.4 Beta</div>
             </div>
         </div>
 
@@ -812,6 +836,91 @@
             caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
         }
     </script>
+
+    <!-- Sound Engine + Toast -->
+    <script>
+    // ── Toast ──
+    window.showToast = function(msg, type = 'success', duration = 2800) {
+        const c = document.getElementById('toast-container');
+        if (!c) return;
+        const t = document.createElement('div');
+        const icons = { success:'✅', error:'❌', info:'ℹ️' };
+        t.className = `toast ${type}`;
+        t.innerHTML = `<span>${icons[type]||'💬'}</span><span>${msg}</span>`;
+        c.appendChild(t);
+        setTimeout(() => {
+            t.classList.add('out');
+            setTimeout(() => t.remove(), 350);
+        }, duration);
+    };
+
+    // ── Web Audio Engine ──
+    let _ctx = null;
+    const ac = () => {
+        if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (_ctx.state === 'suspended') _ctx.resume();
+        return _ctx;
+    };
+
+    const tone = (freq, type, start, dur, vol, ctx) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type = type; o.frequency.setValueAtTime(freq, ctx.currentTime + start);
+        g.gain.setValueAtTime(0, ctx.currentTime + start);
+        g.gain.linearRampToValueAtTime(vol, ctx.currentTime + start + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
+        o.start(ctx.currentTime + start);
+        o.stop(ctx.currentTime + start + dur + 0.01);
+    };
+
+    const noise = (start, dur, vol, ctx) => {
+        const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+        const src = ctx.createBufferSource();
+        const g = ctx.createGain();
+        const f = ctx.createBiquadFilter();
+        f.type = 'bandpass'; f.frequency.value = 800; f.Q.value = 0.5;
+        src.buffer = buf; src.connect(f); f.connect(g); g.connect(ctx.destination);
+        g.gain.setValueAtTime(vol, ctx.currentTime + start);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
+        src.start(ctx.currentTime + start);
+        src.stop(ctx.currentTime + start + dur + 0.01);
+    };
+
+    window.SFX = {
+        // 🎵 เสียงคลิกปุ่มทั่วไป — นุ่มๆ สั้น
+        click: () => { try { const c = ac(); tone(660, 'sine', 0, 0.08, 0.12, c); tone(880, 'sine', 0.04, 0.06, 0.06, c); } catch(e){} },
+
+        // ✅ บันทึก/อัปเดตสำเร็จ — เสียงขึ้น 3 โน้ต
+        success: () => { try { const c = ac(); [523,659,784].forEach((f,i) => tone(f,'sine',i*0.1,0.18,0.15,c)); } catch(e){} },
+
+        // ➕ เพิ่มงานสำเร็จ — เสียงเปิดกว้างขึ้น
+        add: () => { try { const c = ac(); [392,523,659,784].forEach((f,i) => tone(f,'triangle',i*0.08,0.2,0.13,c)); } catch(e){} },
+
+        // 🗑️ ลบ — เสียงลงต่ำ
+        delete: () => { try { const c = ac(); tone(440,'square',0,0.05,0.08,c); tone(330,'square',0.05,0.05,0.08,c); tone(220,'square',0.1,0.1,0.07,c); } catch(e){} },
+
+        // ✂️ ตัดตัว — เสียง snip
+        cut: () => { try { const c = ac(); noise(0,0.04,0.18,c); tone(1200,'square',0,0.03,0.07,c); noise(0.04,0.03,0.12,c); tone(900,'square',0.04,0.03,0.05,c); } catch(e){} },
+
+        // 🏭 ผลิตเสร็จ — fanfare สั้น
+        made: () => { try { const c = ac(); [523,659,784,1047].forEach((f,i) => tone(f,'sine',i*0.09,0.22,0.14,c)); tone(784,'sine',0.36,0.3,0.1,c); } catch(e){} },
+
+        // 🔐 Login สำเร็จ — unlock
+        unlock: () => { try { const c = ac(); tone(440,'sine',0,0.08,0.1,c); tone(660,'sine',0.1,0.08,0.1,c); tone(880,'sine',0.2,0.15,0.12,c); } catch(e){} },
+
+        // ⚠️ Error — buzz
+        error: () => { try { const c = ac(); tone(180,'sawtooth',0,0.08,0.12,c); tone(160,'sawtooth',0.08,0.08,0.1,c); } catch(e){} },
+
+        // 🚀 เปิดแอป — fanfare เล็ก
+        launch: () => { try { const c = ac(); [330,392,523,659,784].forEach((f,i) => tone(f,'sine',i*0.07,0.25,0.11,c)); tone(1047,'sine',0.35,0.4,0.09,c); } catch(e){} },
+
+        // 🔔 แจ้งเตือน/ping
+        ping: () => { try { const c = ac(); tone(1047,'sine',0,0.05,0.1,c); tone(1319,'sine',0.06,0.12,0.08,c); } catch(e){} },
+    };
+    </script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -944,7 +1053,9 @@
                     taskRef: `${ors} ${title}`,
                     after: { ors, title, detail: taskData.detail, status: taskData.status, completedDate: taskData.completedDate }
                 });
-                location.reload();
+                window.SFX?.add();
+                window.showToast?.('บันทึกงานสำเร็จ! 🎉', 'success');
+                setTimeout(() => location.reload(), 800);
             } catch (e) {
                 let msg = e.message || '';
                 if (msg.includes('invalid nested') || msg.includes('entity')) {
@@ -968,25 +1079,36 @@
             document.getElementById('editModal').classList.add('active');
         };
         window.saveEdit = async () => {
-            const raw = document.getElementById('editFullInput').value;
-            const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
-            const newData = {
-                ors: match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00",
-                title: match ? match[3].trim() : raw,
-                detail: document.getElementById('editDetail').value,
-                status: document.getElementById('editStatus').value,
-                completedDate: document.getElementById('editCompletedDate').value || null,
-                photos: editPhotos,
-                lastEditedByDevice: getDeviceInfo()
-            };
-            await updateDoc(doc(db, "tasks", editingId), newData);
-            await writeLog('EDIT', {
-                taskId: editingId,
-                taskRef: `${newData.ors} ${newData.title}`,
-                before: editingSnapshot,
-                after: { ors: newData.ors, title: newData.title, detail: newData.detail, status: newData.status, completedDate: newData.completedDate }
-            });
-            closeEditModal();
+            const btn = document.querySelector('#editModal .btn-primary');
+            if (btn) { btn.disabled = true; btn.innerText = 'กำลังบันทึก...'; }
+            try {
+                const raw = document.getElementById('editFullInput').value;
+                const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
+                const newData = {
+                    ors: match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00",
+                    title: match ? match[3].trim() : raw,
+                    detail: document.getElementById('editDetail').value,
+                    status: document.getElementById('editStatus').value,
+                    completedDate: document.getElementById('editCompletedDate').value || null,
+                    photos: editPhotos,
+                    lastEditedByDevice: getDeviceInfo()
+                };
+                await updateDoc(doc(db, "tasks", editingId), newData);
+                await writeLog('EDIT', {
+                    taskId: editingId,
+                    taskRef: `${newData.ors} ${newData.title}`,
+                    before: editingSnapshot,
+                    after: { ors: newData.ors, title: newData.title, detail: newData.detail, status: newData.status, completedDate: newData.completedDate }
+                });
+                window.SFX?.success();
+                window.showToast?.('อัปเดตสำเร็จ ✅', 'success');
+            } catch(e) {
+                window.SFX?.error();
+                alert('บันทึกไม่สำเร็จ: ' + e.message);
+            } finally {
+                closeEditModal();
+                if (btn) { btn.disabled = false; btn.innerText = 'อัปเดต'; }
+            }
         };
         window.closeEditModal = () => document.getElementById('editModal').classList.remove('active');
 
@@ -994,6 +1116,7 @@
         let madeTaskId = null;
         window.quickStatus = async (id, newStatus) => {
             if (newStatus === 'ผลิตเสร็จแล้ว') {
+                window.SFX?.ping();
                 madeTaskId = id;
                 const t = allTasks.find(x => x.id === id);
                 document.getElementById('madeDateTaskName').textContent = t ? `${t.ors} ${t.title}` : '—';
@@ -1004,6 +1127,8 @@
             const t = allTasks.find(x => x.id === id); if (!t) return;
             await updateDoc(doc(db, "tasks", id), { status: newStatus, lastEditedByDevice: getDeviceInfo() });
             await writeLog('EDIT', { taskId: id, taskRef: `${t.ors} ${t.title}`, before: { status: t.status }, after: { status: newStatus } });
+            window.SFX?.cut();
+            window.showToast?.('✂️ ตัดตัวครบแล้ว!', 'success', 2200);
         };
         window.closeMadeDateModal = () => { document.getElementById('madeDateModal').classList.remove('active'); madeTaskId = null; };
         window.confirmMadeDate = async () => {
@@ -1016,6 +1141,8 @@
                 lastEditedByDevice: getDeviceInfo()
             });
             await writeLog('EDIT', { taskId: madeTaskId, taskRef: `${t.ors} ${t.title}`, before: { status: t.status }, after: { status: 'ผลิตเสร็จแล้ว', completedDate: dateVal } });
+            window.SFX?.made();
+            window.showToast?.('🏭 ผลิตเสร็จแล้ว!', 'success', 2500);
             closeMadeDateModal();
         };
 
@@ -1030,6 +1157,8 @@
                 taskRef: t ? `${t.ors} ${t.title}` : taskToDeleteId,
                 before: t ? { ors: t.ors, title: t.title, detail: t.detail || "", status: t.status } : null
             });
+            window.SFX?.delete();
+            window.showToast?.('ลบข้อมูลแล้ว', 'info', 2000);
             closeDeleteModal();
         };
 
@@ -1292,15 +1421,19 @@
                 isAdmin = true;
                 document.getElementById('nav-logs').style.display = '';
                 document.getElementById('admin-indicator').style.display = 'block';
+                window.SFX?.unlock();
+                window.showToast?.('🛡️ เข้าสู่ระบบ Admin แล้ว', 'info');
                 closeLoginModal();
                 filterTasks();
-                // Subscribe logs เฉพาะตอน admin เข้าระบบ
                 const logsQ = query(collection(db, "logs"), orderBy("timestamp", "desc"), limit(100));
                 logsUnsubscribe = onSnapshot(logsQ, (snap) => {
                     const logs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                     renderLogs(logs);
                 });
-            } else { alert("รหัสผ่านไม่ถูกต้อง"); }
+            } else {
+                window.SFX?.error();
+                alert("รหัสผ่านไม่ถูกต้อง");
+            }
         };
 
         // ── Image Processing ──
@@ -1610,6 +1743,7 @@
                 if (bar) bar.style.width = '100%';
                 if (pct) pct.textContent = '100%';
                 if (msg) msg.textContent = 'พร้อมใช้งาน ✅';
+                setTimeout(() => { window.SFX?.launch(); }, 200);
                 setTimeout(() => { const s = document.getElementById('loadingScreen'); if(s) s.classList.add('hidden'); }, 300);
                 setTimeout(() => { const s = document.getElementById('loadingScreen'); if(s) s.remove(); }, 900);
             };
@@ -1625,6 +1759,16 @@
                 if (s) s.classList.add('active');
                 if (b) b.classList.add('active');
             };
+
+            // ── Global click sound ──
+            document.addEventListener('click', (e) => {
+                const el = e.target.closest('button, .nav-item, .admin-btn, .month-header, .filter-btn');
+                if (!el) return;
+                if (el.classList.contains('btn-delete-confirm')) return; // ลบมีเสียงเอง
+                if (el.classList.contains('btn-quick')) return;          // quick มีเสียงเอง
+                if (el.id === 'saveBtn') return;                         // save มีเสียงเอง
+                window.SFX?.click();
+            }, { passive: true });
         })();
     </script>
 </body>
