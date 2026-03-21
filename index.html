@@ -607,7 +607,7 @@
         <div class="topbar-brand">
             <div class="brand-icon">⚡</div>
             <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v2.7 Beta</span>
+            <span class="brand-ver">v2.8 Beta</span>
         </div>
         <div class="topbar-right">
             <div id="admin-indicator">🛡 ADMIN</div>
@@ -653,7 +653,7 @@
             <div class="footer-credit">
                 <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
                 <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v2.7 Beta</div>
+                <div class="footer-credit-role">4M TASK Management System · v2.8 Beta</div>
             </div>
         </div>
 
@@ -1564,14 +1564,19 @@
             loadingPct.textContent = Math.round(pct) + '%';
             loadingMsg.textContent = loadingMsgs[Math.min(Math.floor(pct / 25), 3)];
         }, 300);
+        let loadingDone = false;
         const finishLoading = () => {
+            if (loadingDone) return;
+            loadingDone = true;
             clearInterval(loadingTimer);
             loadingBar.style.width = '100%';
             loadingPct.textContent = '100%';
             loadingMsg.textContent = 'พร้อมใช้งาน ✅';
-            setTimeout(() => document.getElementById('loadingScreen').classList.add('hidden'), 500);
-            setTimeout(() => document.getElementById('loadingScreen').remove(), 1100);
+            setTimeout(() => document.getElementById('loadingScreen')?.classList.add('hidden'), 500);
+            setTimeout(() => document.getElementById('loadingScreen')?.remove(), 1100);
         };
+        // Fallback: ถ้า 8 วินาทียังไม่โหลดเสร็จ ให้ปิด loading screen อัตโนมัติ
+        setTimeout(() => finishLoading(), 8000);
 
         // ── Theme Toggle ──
         const html = document.documentElement;
