@@ -28,8 +28,6 @@
             --modal-backdrop: rgba(20,83,45,0.35);
             --shadow-card: 0 2px 8px rgba(22,163,74,0.06);
         }
-        html[data-theme="dark"] { display: none; }
-        /* Theme transition removed */
         *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
         body {
@@ -69,7 +67,6 @@
             padding: 2px 7px; border-radius: 20px; border: 1px solid var(--border);
             font-family: 'IBM Plex Mono'; letter-spacing: 0.5px;
         }
-        /* ─── Footer credit ─── */
         .footer-credit {
             text-align: center;
             padding: 18px 20px 6px;
@@ -118,7 +115,6 @@
         .nav-item .nav-icon { font-size: 20px; line-height: 1; }
         .nav-item:hover { color: var(--text); background: var(--surface); }
         .nav-item.active { color: var(--primary); background: var(--primary-glow); font-weight: 600; }
-        .nav-item[style*="none"] { display: none !important; }
 
         /* ═══════════════════════ LAYOUT ═══════════════════════ */
         .container { max-width: 680px; margin: 0 auto; padding: 20px 16px; }
@@ -176,29 +172,6 @@
         .btn-ghost:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-glow); }
         .btn-danger { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); padding: 10px 16px; border-radius: var(--radius-sm); font-size: 0.85rem; }
         .btn-danger:hover { background: rgba(248,113,113,0.2); }
-        .btn-upload {
-            width: 100%; padding: 14px; border: 1.5px dashed var(--border);
-            border-radius: var(--radius-sm); background: var(--bg);
-            color: var(--text-sub); font-family: 'Prompt'; font-size: 0.9rem;
-            cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .btn-upload:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-glow); }
-
-        /* ═══════════════════════ PHOTO PREVIEW ═══════════════════════ */
-        .preview-strip { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; margin-bottom: 4px; }
-        .preview-strip:empty { display: none; }
-        .preview-thumb {
-            position: relative; flex-shrink: 0;
-            width: 72px; height: 72px; border-radius: var(--radius-sm);
-            overflow: visible;
-        }
-        .preview-thumb img { width: 72px; height: 72px; object-fit: cover; border-radius: var(--radius-sm); display: block; }
-        .preview-thumb-remove {
-            position: absolute; top: -6px; right: -6px;
-            background: var(--red); color: #fff; border: none; border-radius: 50%;
-            width: 20px; height: 20px; font-size: 10px; cursor: pointer;
-            display: grid; place-items: center; font-weight: 700;
-        }
 
         /* ═══════════════════════ SEARCH ═══════════════════════ */
         .search-wrap { position: relative; margin-bottom: 16px; }
@@ -282,20 +255,7 @@
         .task-ors { font-family: 'IBM Plex Mono'; font-size: 0.75rem; font-weight: 500; color: var(--text-sub); letter-spacing: 0.5px; }
         .task-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.3px; }
         .task-detail { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 14px; white-space: pre-wrap; line-height: 1.6; }
-
-        .task-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px; }
-        .task-gallery img {
-            width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px;
-            cursor: pointer; transition: 0.2s; border: 1px solid var(--border);
-        }
-        .task-gallery img:hover { transform: scale(1.04); border-color: var(--primary); }
-
         .task-actions { display: flex; gap: 8px; justify-content: flex-end; }
-        .task-device-info {
-            font-size: 0.7rem; color: var(--text-dim); margin-top: 12px;
-            padding-top: 12px; border-top: 1px dashed var(--border);
-            font-family: 'IBM Plex Mono'; line-height: 1.6;
-        }
 
         /* ═══════════════════════ DASHBOARD ═══════════════════════ */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
@@ -334,34 +294,6 @@
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         .modal-actions .btn-primary { flex: 1; }
         .modal-actions .btn-ghost { flex: 0.5; }
-
-        /* ═══════════════════════ IMAGE VIEWER ═══════════════════════ */
-        .viewer-overlay {
-            display: none; position: fixed; inset: 0; z-index: 99999;
-            background: rgba(0,0,0,0.95); backdrop-filter: blur(20px);
-            align-items: center; justify-content: center;
-        }
-        .viewer-overlay.active { display: flex; }
-        .viewer-img { max-width: 94%; max-height: 88dvh; border-radius: 10px; display: block; }
-        .viewer-close {
-            position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
-            background: rgba(255,255,255,0.1); border: none; border-radius: 50%;
-            color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; transition: 0.2s;
-        }
-        .viewer-close:hover { background: rgba(255,255,255,0.2); }
-        .viewer-download {
-            position: absolute; top: 20px; left: 20px; width: 40px; height: 40px;
-            background: rgba(255,255,255,0.1); border: none; border-radius: 50%;
-            color: #fff; font-size: 18px; cursor: pointer; display: grid; place-items: center; transition: 0.2s;
-        }
-        .viewer-download:hover { background: rgba(255,255,255,0.25); }
-        .viewer-nav { position: absolute; bottom: 24px; display: flex; gap: 12px; }
-        .viewer-nav-btn {
-            background: rgba(255,255,255,0.1); color: #fff; border: none;
-            border-radius: 50%; width: 48px; height: 48px; font-size: 1.3rem;
-            cursor: pointer; transition: 0.2s;
-        }
-        .viewer-nav-btn:hover { background: rgba(255,255,255,0.2); }
 
         /* ═══════════════════════ CONFIRM MODAL ═══════════════════════ */
         .confirm-modal {
@@ -422,24 +354,6 @@
             border: 1px solid rgba(22,163,74,0.15);
         }
 
-        /* ═══════════════════════ FILE ATTACHMENTS ═══════════════════════ */
-        .file-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-        .file-item {
-            display: flex; align-items: center; gap: 10px;
-            background: var(--bg); border: 1px solid var(--border);
-            border-radius: var(--radius-sm); padding: 10px 12px;
-        }
-        .file-icon { font-size: 1.2rem; flex-shrink: 0; }
-        .file-info { flex: 1; min-width: 0; }
-        .file-name { font-size: 0.8rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .file-size { font-size: 0.68rem; color: var(--text-sub); }
-        .file-actions { display: flex; gap: 6px; flex-shrink: 0; }
-        .file-btn {
-            padding: 5px 10px; border-radius: 6px; font-size: 0.72rem;
-            font-weight: 600; cursor: pointer; border: none; font-family: 'Prompt';
-        }
-        .file-btn-dl { background: var(--primary-glow); color: var(--primary); border: 1px solid var(--border); }
-        .file-btn-rm { background: rgba(220,38,38,0.08); color: var(--red); border: 1px solid rgba(220,38,38,0.15); }
         .log-card {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: var(--radius); padding: 18px 20px; margin-bottom: 12px;
@@ -512,8 +426,6 @@
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #c4e0cc; border-radius: 2px; }
-
-        .edit-photos-section { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 14px; }
 
         /* ═══════════════════════ TOAST ═══════════════════════ */
         #toast-container {
@@ -619,17 +531,6 @@
         </div>
     </div>
 
-    <!-- Image Viewer -->
-    <div id="imageViewer" class="viewer-overlay">
-        <button class="viewer-close" onclick="closeImageViewer()">✕</button>
-        <button class="viewer-download" onclick="downloadViewerImage()" title="บันทึกรูป">⬇️</button>
-        <img id="viewerImg" src="" class="viewer-img" onclick="closeImageViewer()">
-        <div class="viewer-nav">
-            <button class="viewer-nav-btn" onclick="navViewer(-1)">❮</button>
-            <button class="viewer-nav-btn" onclick="navViewer(1)">❯</button>
-        </div>
-    </div>
-
     <!-- Toast Container -->
     <div id="toast-container"></div>
 
@@ -670,14 +571,6 @@
                         <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
                     </select>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-title">รูปภาพงาน</div>
-                <div class="preview-strip" id="preview-area"></div>
-                <button class="btn-upload" onclick="document.getElementById('cameraInput').click()">
-                    📸 เพิ่มรูปถ่าย
-                </button>
-                <input type="file" id="cameraInput" accept="image/*" multiple style="display:none;">
             </div>
             <button class="btn btn-primary" id="saveBtn" onclick="addTask()">ยืนยันบันทึกงาน</button>
 
@@ -773,23 +666,17 @@
                 <textarea class="form-textarea" id="editDetail" rows="4"></textarea>
             </div>
             <div class="form-group">
-                    <label class="form-label">สถานะ</label>
-                    <select class="form-select" id="editStatus">
-                        <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
-                        <option value="กำลังทำ">🟡 กำลังทำ</option>
-                        <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">วันที่เสร็จงาน</label>
-                    <input class="form-input" type="date" id="editCompletedDate">
-                </div>
-                <div class="edit-photos-section">
-                    <label class="form-label" style="margin-bottom:10px;">รูปภาพ</label>
-                    <div class="preview-strip" id="edit-preview-area"></div>
-                    <button class="btn-upload" onclick="document.getElementById('editCameraInput').click()">➕ เพิ่มรูปใหม่</button>
-                    <input type="file" id="editCameraInput" accept="image/*" multiple style="display:none;">
-                </div>
+                <label class="form-label">สถานะ</label>
+                <select class="form-select" id="editStatus">
+                    <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
+                    <option value="กำลังทำ">🟡 กำลังทำ</option>
+                    <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">วันที่เสร็จงาน</label>
+                <input class="form-input" type="date" id="editCompletedDate">
+            </div>
             <div class="modal-actions">
                 <button class="btn btn-primary" onclick="saveEdit()">อัปเดต</button>
                 <button class="btn btn-ghost" onclick="closeEditModal()">ยกเลิก</button>
@@ -839,7 +726,6 @@
 
     <!-- Sound Engine + Toast -->
     <script>
-    // ── Toast ──
     window.showToast = function(msg, type = 'success', duration = 2800) {
         const c = document.getElementById('toast-container');
         if (!c) return;
@@ -854,14 +740,12 @@
         }, duration);
     };
 
-    // ── Web Audio Engine ──
     let _ctx = null;
     const ac = () => {
         if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
         if (_ctx.state === 'suspended') _ctx.resume();
         return _ctx;
     };
-
     const tone = (freq, type, start, dur, vol, ctx) => {
         const o = ctx.createOscillator();
         const g = ctx.createGain();
@@ -873,7 +757,6 @@
         o.start(ctx.currentTime + start);
         o.stop(ctx.currentTime + start + dur + 0.01);
     };
-
     const noise = (start, dur, vol, ctx) => {
         const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
         const d = buf.getChannelData(0);
@@ -888,39 +771,20 @@
         src.start(ctx.currentTime + start);
         src.stop(ctx.currentTime + start + dur + 0.01);
     };
-
     window.SFX = {
-        // 🎵 เสียงคลิกปุ่มทั่วไป — นุ่มๆ สั้น
-        click: () => { try { const c = ac(); tone(660, 'sine', 0, 0.08, 0.12, c); tone(880, 'sine', 0.04, 0.06, 0.06, c); } catch(e){} },
-
-        // ✅ บันทึก/อัปเดตสำเร็จ — เสียงขึ้น 3 โน้ต
+        click:   () => { try { const c = ac(); tone(660,'sine',0,0.08,0.12,c); tone(880,'sine',0.04,0.06,0.06,c); } catch(e){} },
         success: () => { try { const c = ac(); [523,659,784].forEach((f,i) => tone(f,'sine',i*0.1,0.18,0.15,c)); } catch(e){} },
-
-        // ➕ เพิ่มงานสำเร็จ — เสียงเปิดกว้างขึ้น
-        add: () => { try { const c = ac(); [392,523,659,784].forEach((f,i) => tone(f,'triangle',i*0.08,0.2,0.13,c)); } catch(e){} },
-
-        // 🗑️ ลบ — เสียงลงต่ำ
-        delete: () => { try { const c = ac(); tone(440,'square',0,0.05,0.08,c); tone(330,'square',0.05,0.05,0.08,c); tone(220,'square',0.1,0.1,0.07,c); } catch(e){} },
-
-        // ✂️ ตัดตัว — เสียง snip
-        cut: () => { try { const c = ac(); noise(0,0.04,0.18,c); tone(1200,'square',0,0.03,0.07,c); noise(0.04,0.03,0.12,c); tone(900,'square',0.04,0.03,0.05,c); } catch(e){} },
-
-        // 🏭 ผลิตเสร็จ — fanfare สั้น
-        made: () => { try { const c = ac(); [523,659,784,1047].forEach((f,i) => tone(f,'sine',i*0.09,0.22,0.14,c)); tone(784,'sine',0.36,0.3,0.1,c); } catch(e){} },
-
-        // 🔐 Login สำเร็จ — unlock
-        unlock: () => { try { const c = ac(); tone(440,'sine',0,0.08,0.1,c); tone(660,'sine',0.1,0.08,0.1,c); tone(880,'sine',0.2,0.15,0.12,c); } catch(e){} },
-
-        // ⚠️ Error — buzz
-        error: () => { try { const c = ac(); tone(180,'sawtooth',0,0.08,0.12,c); tone(160,'sawtooth',0.08,0.08,0.1,c); } catch(e){} },
-
-        // 🚀 เปิดแอป — fanfare เล็ก
-        launch: () => { try { const c = ac(); [330,392,523,659,784].forEach((f,i) => tone(f,'sine',i*0.07,0.25,0.11,c)); tone(1047,'sine',0.35,0.4,0.09,c); } catch(e){} },
-
-        // 🔔 แจ้งเตือน/ping
-        ping: () => { try { const c = ac(); tone(1047,'sine',0,0.05,0.1,c); tone(1319,'sine',0.06,0.12,0.08,c); } catch(e){} },
+        add:     () => { try { const c = ac(); [392,523,659,784].forEach((f,i) => tone(f,'triangle',i*0.08,0.2,0.13,c)); } catch(e){} },
+        delete:  () => { try { const c = ac(); tone(440,'square',0,0.05,0.08,c); tone(330,'square',0.05,0.05,0.08,c); tone(220,'square',0.1,0.1,0.07,c); } catch(e){} },
+        cut:     () => { try { const c = ac(); noise(0,0.04,0.18,c); tone(1200,'square',0,0.03,0.07,c); noise(0.04,0.03,0.12,c); tone(900,'square',0.04,0.03,0.05,c); } catch(e){} },
+        made:    () => { try { const c = ac(); [523,659,784,1047].forEach((f,i) => tone(f,'sine',i*0.09,0.22,0.14,c)); tone(784,'sine',0.36,0.3,0.1,c); } catch(e){} },
+        unlock:  () => { try { const c = ac(); tone(440,'sine',0,0.08,0.1,c); tone(660,'sine',0.1,0.08,0.1,c); tone(880,'sine',0.2,0.15,0.12,c); } catch(e){} },
+        error:   () => { try { const c = ac(); tone(180,'sawtooth',0,0.08,0.12,c); tone(160,'sawtooth',0.08,0.08,0.1,c); } catch(e){} },
+        launch:  () => { try { const c = ac(); [330,392,523,659,784].forEach((f,i) => tone(f,'sine',i*0.07,0.25,0.11,c)); tone(1047,'sine',0.35,0.4,0.09,c); } catch(e){} },
+        ping:    () => { try { const c = ac(); tone(1047,'sine',0,0.05,0.1,c); tone(1319,'sine',0.06,0.12,0.08,c); } catch(e){} },
     };
     </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -936,11 +800,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let allTasks = [], selectedPhotos = [], editPhotos = [], statusChart, isAdmin = false;
+        let allTasks = [], statusChart, isAdmin = false;
         let editingId = null, taskToDeleteId = null, editingSnapshot = null;
-        let currentPhotosArray = [], currentPhotoIndex = 0;
         let logsUnsubscribe = null;
-        let activeFilter = 'ทั้งหมด';             // ฟิลเตอร์สถานะ
+        let activeFilter = 'ทั้งหมด';
 
         const monthNames = ["ทั่วไป","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 
@@ -948,8 +811,6 @@
         const getDeviceInfo = () => {
             const ua = navigator.userAgent;
             let brand = "Unknown", model = "Unknown", os = "Unknown", browser = "Unknown";
-
-            // OS + Brand + Model
             if (/android/i.test(ua)) {
                 os = "Android";
                 const verM = ua.match(/Android\s([\d.]+)/);
@@ -969,8 +830,6 @@
             } else if (/Mac/i.test(ua)) {
                 os = "macOS"; brand = "Apple";
             }
-
-            // Browser
             if (/Chrome\/[\d]+/.test(ua) && !/Edg\//.test(ua) && !/OPR\//.test(ua)) {
                 const v = ua.match(/Chrome\/([\d]+)/); browser = "Chrome" + (v ? " " + v[1] : "");
             } else if (/Safari\//.test(ua) && !/Chrome/.test(ua)) {
@@ -982,51 +841,19 @@
             } else if (/SamsungBrowser/.test(ua)) {
                 browser = "Samsung Internet";
             }
-
             return { brand, model, os, browser, screen: `${window.screen.width}×${window.screen.height}`, ua };
         };
 
-        // ── บันทึก Log ──
         const writeLog = async (action, data = {}) => {
             try {
                 await addDoc(collection(db, "logs"), {
-                    action,          // 'ADD' | 'EDIT' | 'DELETE'
+                    action,
                     timestamp: new Date().getTime(),
                     device: getDeviceInfo(),
                     ...data
                 });
             } catch(e) { console.warn("Log write failed:", e); }
         };
-
-        // ── Image Viewer ──
-        window.openImageViewer = (photos, index) => {
-            currentPhotosArray = photos; currentPhotoIndex = index;
-            document.getElementById('viewerImg').src = currentPhotosArray[currentPhotoIndex];
-            document.getElementById('imageViewer').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-        window.closeImageViewer = () => {
-            document.getElementById('imageViewer').classList.remove('active');
-            document.body.style.overflow = '';
-        };
-        window.navViewer = (step) => {
-            currentPhotoIndex = (currentPhotoIndex + step + currentPhotosArray.length) % currentPhotosArray.length;
-            document.getElementById('viewerImg').src = currentPhotosArray[currentPhotoIndex];
-        };
-        window.downloadViewerImage = () => {
-            const src = currentPhotosArray[currentPhotoIndex];
-            if (!src) return;
-            const a = document.createElement('a');
-            a.href = src;
-            a.download = `4MTASK_photo_${Date.now()}.jpg`;
-            a.click();
-        };
-        document.addEventListener('keydown', (e) => {
-            if (!document.getElementById('imageViewer').classList.contains('active')) return;
-            if (e.key === 'ArrowLeft') navViewer(-1);
-            else if (e.key === 'ArrowRight') navViewer(1);
-            else if (e.key === 'Escape') closeImageViewer();
-        });
 
         // ── เพิ่มงาน ──
         window.addTask = async () => {
@@ -1043,7 +870,6 @@
                     detail: document.getElementById('taskDetail').value,
                     status: document.getElementById('taskStatus').value,
                     completedDate: null,
-                    photos: selectedPhotos,
                     createdAt: new Date().getTime(),
                     createdByDevice: getDeviceInfo()
                 };
@@ -1057,11 +883,7 @@
                 window.showToast?.('บันทึกงานสำเร็จ! 🎉', 'success');
                 setTimeout(() => location.reload(), 800);
             } catch (e) {
-                let msg = e.message || '';
-                if (msg.includes('invalid nested') || msg.includes('entity')) {
-                    msg = '❌ บันทึกไม่สำเร็จ\nขนาดข้อมูลรวมเกินที่ระบบรองรับ\nลองลดจำนวนรูปหรือลบเอกสารแนบออกบ้าง';
-                }
-                alert(msg);
+                alert(e.message);
                 btn.disabled = false; btn.innerText = "ยืนยันบันทึกงาน";
             }
         };
@@ -1074,8 +896,6 @@
             document.getElementById('editDetail').value = t.detail || "";
             document.getElementById('editStatus').value = t.status;
             document.getElementById('editCompletedDate').value = t.completedDate || "";
-            editPhotos = [...(t.photos || [])];
-            renderEditPreview();
             document.getElementById('editModal').classList.add('active');
         };
         window.saveEdit = async () => {
@@ -1090,7 +910,6 @@
                     detail: document.getElementById('editDetail').value,
                     status: document.getElementById('editStatus').value,
                     completedDate: document.getElementById('editCompletedDate').value || null,
-                    photos: editPhotos,
                     lastEditedByDevice: getDeviceInfo()
                 };
                 await updateDoc(doc(db, "tasks", editingId), newData);
@@ -1170,7 +989,6 @@
             filterTasks();
         };
 
-        // ── Completed Date Helper ──
         const getCompletedBadge = (completedDate) => {
             if (!completedDate) return '';
             const d = new Date(completedDate).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'numeric' });
@@ -1182,7 +1000,6 @@
             const container = document.getElementById('task-container');
             container.innerHTML = "";
             const search = document.getElementById('searchInput').value.toLowerCase();
-            const today  = new Date(); today.setHours(0,0,0,0);
 
             let filtered = allTasks.filter(t =>
                 (t.title||"").toLowerCase().includes(search) ||
@@ -1237,16 +1054,13 @@
                     <div id="${sId}" class="month-body">`;
 
                 grouped[mName].forEach(t => {
-                    const photosJSON = JSON.stringify(t.photos || []).replace(/"/g, '&quot;');
                     const status = t.status || 'รอดำเนินการ';
-                    const overdue = false;
                     const dueBadge = getCompletedBadge(t.completedDate);
-
                     const isCut  = status === 'ตัดตัวครบแล้ว' || status === 'ผลิตเสร็จแล้ว' || status === 'เสร็จสิ้น';
                     const isMade = status === 'ผลิตเสร็จแล้ว' || status === 'เสร็จสิ้น';
 
                     html += `
-                    <div class="task-card ${cardClass[status] || 'status-wait'}${overdue ? ' overdue-card' : ''}">
+                    <div class="task-card ${cardClass[status] || 'status-wait'}">
                         <div class="task-header">
                             <span class="task-ors">${t.ors}</span>
                             <span class="task-badge ${badgeClass[status] || 'badge-wait'}">${status}</span>
@@ -1254,10 +1068,6 @@
                         <div class="task-title">${t.title}</div>
                         ${dueBadge}
                         ${t.detail ? `<div class="task-detail">${t.detail}</div>` : ''}
-                        ${(t.photos && t.photos.length) ? `
-                        <div class="task-gallery">
-                            ${t.photos.map((p, i) => `<img src="${p}" onclick="openImageViewer(${photosJSON}, ${i})" loading="lazy">`).join('')}
-                        </div>` : ''}
                         <div class="quick-actions">
                             <button class="btn-quick btn-cut${isCut ? ' done-state' : ''}" onclick="${isCut ? '' : `quickStatus('${t.id}','ตัดตัวครบแล้ว')`}">
                                 ${isCut ? '✅' : '✂️'} ตัดตัวครบแล้ว
@@ -1282,14 +1092,6 @@
             headerEl.classList.toggle('open');
         };
 
-        // ── Edit Photo Preview ──
-        const renderEditPreview = () => {
-            document.getElementById('edit-preview-area').innerHTML = editPhotos.map((s, i) =>
-                `<div class="preview-thumb"><img src="${s}"><button class="preview-thumb-remove" onclick="removeEditPhoto(${i})">✕</button></div>`
-            ).join('');
-        };
-        window.removeEditPhoto = (i) => { editPhotos.splice(i, 1); renderEditPreview(); };
-
         // ── Firebase Tasks Listener ──
         let firstLoad = true;
         onSnapshot(
@@ -1313,7 +1115,7 @@
             }
         );
 
-        // ── Render Logs (admin only) ──
+        // ── Render Logs ──
         const renderLogs = (logs) => {
             const container = document.getElementById('log-container');
             if (!logs.length) {
@@ -1379,26 +1181,11 @@
                     </div>
                     <div class="log-taskref">${log.taskRef || '—'}</div>
                     <div class="log-device-block">
-                        <div class="log-device-row">
-                            <span class="log-device-key">ยี่ห้อ</span>
-                            <span class="log-device-val">${d.brand || '—'}</span>
-                        </div>
-                        <div class="log-device-row">
-                            <span class="log-device-key">รุ่น</span>
-                            <span class="log-device-val">${d.model || '—'}</span>
-                        </div>
-                        <div class="log-device-row">
-                            <span class="log-device-key">OS</span>
-                            <span class="log-device-val">${d.os || '—'}</span>
-                        </div>
-                        <div class="log-device-row">
-                            <span class="log-device-key">เบราว์เซอร์</span>
-                            <span class="log-device-val">${d.browser || '—'}</span>
-                        </div>
-                        <div class="log-device-row">
-                            <span class="log-device-key">หน้าจอ</span>
-                            <span class="log-device-val">${d.screen || '—'}</span>
-                        </div>
+                        <div class="log-device-row"><span class="log-device-key">ยี่ห้อ</span><span class="log-device-val">${d.brand || '—'}</span></div>
+                        <div class="log-device-row"><span class="log-device-key">รุ่น</span><span class="log-device-val">${d.model || '—'}</span></div>
+                        <div class="log-device-row"><span class="log-device-key">OS</span><span class="log-device-val">${d.os || '—'}</span></div>
+                        <div class="log-device-row"><span class="log-device-key">เบราว์เซอร์</span><span class="log-device-val">${d.browser || '—'}</span></div>
+                        <div class="log-device-row"><span class="log-device-key">หน้าจอ</span><span class="log-device-val">${d.screen || '—'}</span></div>
                     </div>
                     ${diffHtml}
                 </div>`;
@@ -1436,52 +1223,6 @@
             }
         };
 
-        // ── Image Processing ──
-        const processFiles = (files, target, previewId) => {
-            for (let f of files) {
-                const r = new FileReader();
-                r.onload = (ev) => {
-                    const img = new Image(); img.src = ev.target.result;
-                    img.onload = () => {
-                        const cv = document.createElement('canvas');
-                        const mx = 1600; let w = img.width, h = img.height;
-                        if (w > h) { if (w > mx) { h *= mx/w; w = mx; } } else { if (h > mx) { w *= mx/h; h = mx; } }
-                        cv.width = w; cv.height = h;
-                        cv.getContext('2d').drawImage(img, 0, 0, w, h);
-                        target.push(cv.toDataURL('image/jpeg', 0.92));
-                        renderPrevs(target, previewId);
-                    };
-                };
-                r.readAsDataURL(f);
-            }
-        };
-        const renderPrevs = (arr, id) => {
-            document.getElementById(id).innerHTML = arr.map((s, i) =>
-                `<div class="preview-thumb"><img src="${s}"><button class="preview-thumb-remove" onclick="remPhoto(${i},'${id}')">✕</button></div>`
-            ).join('');
-        };
-        window.remPhoto = (i, id) => { selectedPhotos.splice(i, 1); renderPrevs(selectedPhotos, id); };
-        document.getElementById('cameraInput').onchange = (e) => processFiles(e.target.files, selectedPhotos, 'preview-area');
-
-        document.getElementById('editCameraInput').onchange = (e) => {
-            for (let f of e.target.files) {
-                const r = new FileReader();
-                r.onload = (ev) => {
-                    const img = new Image(); img.src = ev.target.result;
-                    img.onload = () => {
-                        const cv = document.createElement('canvas');
-                        const mx = 1600; let w = img.width, h = img.height;
-                        if (w > h) { if (w > mx) { h *= mx/w; w = mx; } } else { if (h > mx) { w *= mx/h; h = mx; } }
-                        cv.width = w; cv.height = h;
-                        cv.getContext('2d').drawImage(img, 0, 0, w, h);
-                        editPhotos.push(cv.toDataURL('image/jpeg', 0.92));
-                        renderEditPreview();
-                    };
-                };
-                r.readAsDataURL(f);
-            }
-        };
-
         // ── Dashboard ──
         let sObj;
         window.updateDashboard = () => {
@@ -1511,219 +1252,86 @@
             });
         };
 
-        // ── Export Excel (Styled) ──
+        // ── Export Excel ──
         window.exportToExcel = () => {
             const wb = XLSX.utils.book_new();
-
-            // ── สีหลัก ──
-            const C_GREEN_DARK  = "14532D"; // header bg
-            const C_GREEN_MID   = "16A34A"; // subheader / accent
-            const C_GREEN_LIGHT = "DCFCE7"; // done row
-            const C_YELLOW_LIGHT= "FEF9C3"; // doing row
-            const C_RED_LIGHT   = "FEE2E2"; // wait row
+            const C_GREEN_DARK  = "14532D";
+            const C_GREEN_MID   = "16A34A";
+            const C_GREEN_LIGHT = "DCFCE7";
+            const C_YELLOW_LIGHT= "FEF9C3";
+            const C_RED_LIGHT   = "FEE2E2";
             const C_WHITE       = "FFFFFF";
-            const C_GRAY_LIGHT  = "F0FDF4"; // alternate row
-
             const fontMain  = { name: "Calibri", sz: 9 };
             const fontBold  = { name: "Calibri", sz: 9, bold: true };
             const fontTitle = { name: "Calibri", sz: 14, bold: true, color: { rgb: C_WHITE } };
             const fontSub   = { name: "Calibri", sz: 8, color: { rgb: "4B7A5A" } };
             const fontHeader= { name: "Calibri", sz: 9, bold: true, color: { rgb: C_WHITE } };
             const fontMono  = { name: "Courier New", sz: 8 };
-
-            const border = {
-                top:    { style: "thin", color: { rgb: "BBF7D0" } },
-                bottom: { style: "thin", color: { rgb: "BBF7D0" } },
-                left:   { style: "thin", color: { rgb: "BBF7D0" } },
-                right:  { style: "thin", color: { rgb: "BBF7D0" } },
-            };
-            const borderHeader = {
-                top:    { style: "medium", color: { rgb: C_GREEN_DARK } },
-                bottom: { style: "medium", color: { rgb: C_GREEN_DARK } },
-                left:   { style: "medium", color: { rgb: C_GREEN_DARK } },
-                right:  { style: "medium", color: { rgb: C_GREEN_DARK } },
-            };
-
-            const align_c = { horizontal: "center", vertical: "center", wrapText: false };
-            const align_l = { horizontal: "left",   vertical: "center", wrapText: false };
-            const align_wrap = { horizontal: "left", vertical: "center", wrapText: true };
-
-            // สไตล์ Header row
-            const sHeader = (col) => ({
-                v: col, t: "s",
-                s: { font: fontHeader, fill: { fgColor: { rgb: C_GREEN_DARK } }, alignment: align_c, border: borderHeader }
-            });
-
-            // สไตล์ตาม status
-            const rowBg = (status) => {
-                if (status === "เสร็จสิ้น") return C_GREEN_LIGHT;
-                if (status === "กำลังทำ")   return C_YELLOW_LIGHT;
-                return C_RED_LIGHT;
-            };
-            const sCell = (val, status, mono = false, center = false, wrap = false) => ({
-                v: val ?? "", t: "s",
-                s: {
-                    font: mono ? { ...fontMono, color: { rgb: "166534" } } : fontMain,
-                    fill: { fgColor: { rgb: rowBg(status) } },
-                    alignment: wrap ? align_wrap : (center ? align_c : align_l),
-                    border
-                }
-            });
+            const border = { top:{style:"thin",color:{rgb:"BBF7D0"}}, bottom:{style:"thin",color:{rgb:"BBF7D0"}}, left:{style:"thin",color:{rgb:"BBF7D0"}}, right:{style:"thin",color:{rgb:"BBF7D0"}} };
+            const borderHeader = { top:{style:"medium",color:{rgb:C_GREEN_DARK}}, bottom:{style:"medium",color:{rgb:C_GREEN_DARK}}, left:{style:"medium",color:{rgb:C_GREEN_DARK}}, right:{style:"medium",color:{rgb:C_GREEN_DARK}} };
+            const align_c = { horizontal:"center", vertical:"center", wrapText:false };
+            const align_l = { horizontal:"left",   vertical:"center", wrapText:false };
+            const align_wrap = { horizontal:"left", vertical:"center", wrapText:true };
+            const sHeader = (col) => ({ v:col, t:"s", s:{font:fontHeader, fill:{fgColor:{rgb:C_GREEN_DARK}}, alignment:align_c, border:borderHeader} });
+            const rowBg = (status) => { if(status==="เสร็จสิ้น") return C_GREEN_LIGHT; if(status==="กำลังทำ") return C_YELLOW_LIGHT; return C_RED_LIGHT; };
+            const sCell = (val, status, mono=false, center=false, wrap=false) => ({ v:val??"", t:"s", s:{font:mono?{...fontMono,color:{rgb:"166534"}}:fontMain, fill:{fgColor:{rgb:rowBg(status)}}, alignment:wrap?align_wrap:(center?align_c:align_l), border} });
             const sStatus = (status) => {
-                const color = status === "เสร็จสิ้น" ? "166534" : status === "กำลังทำ" ? "92400E" : "991B1B";
-                const bg    = status === "เสร็จสิ้น" ? C_GREEN_LIGHT : status === "กำลังทำ" ? C_YELLOW_LIGHT : C_RED_LIGHT;
-                return {
-                    v: status, t: "s",
-                    s: { font: { ...fontBold, color: { rgb: color } }, fill: { fgColor: { rgb: bg } }, alignment: align_c, border }
-                };
+                const color = status==="เสร็จสิ้น"?"166534":status==="กำลังทำ"?"92400E":"991B1B";
+                const bg    = status==="เสร็จสิ้น"?C_GREEN_LIGHT:status==="กำลังทำ"?C_YELLOW_LIGHT:C_RED_LIGHT;
+                return { v:status, t:"s", s:{font:{...fontBold,color:{rgb:color}}, fill:{fgColor:{rgb:bg}}, alignment:align_c, border} };
             };
-
-            // ── Title row ──
             const now = new Date();
-            const dateStr = now.toLocaleDateString("th-TH", { year: "numeric", month: "long", day: "numeric" });
-            const titleCell = {
-                v: `4M TASK — รายงานสรุปงานทั้งหมด`, t: "s",
-                s: { font: fontTitle, fill: { fgColor: { rgb: C_GREEN_MID } }, alignment: align_c }
-            };
-            const subCell = {
-                v: `ส่งออกเมื่อ: ${dateStr} · รวม ${allTasks.length} รายการ`, t: "s",
-                s: { font: fontSub, fill: { fgColor: { rgb: "F0FDF4" } }, alignment: align_c }
-            };
-
-            // ── Header row ──
-            const headers = ["ลำดับ", "เลข ORS", "ชื่องาน", "สถานะ", "รายละเอียด", "วันที่สร้าง"];
-
-            // ── Data rows ──
-            const rows = allTasks.map((t, i) => {
-                const status = t.status || "รอดำเนินการ";
-                const dateCreated = t.createdAt
-                    ? new Date(t.createdAt).toLocaleDateString("th-TH", { year: "numeric", month: "short", day: "numeric" })
-                    : "—";
+            const dateStr = now.toLocaleDateString("th-TH", { year:"numeric", month:"long", day:"numeric" });
+            const titleCell = { v:`4M TASK — รายงานสรุปงานทั้งหมด`, t:"s", s:{font:fontTitle, fill:{fgColor:{rgb:C_GREEN_MID}}, alignment:align_c} };
+            const subCell = { v:`ส่งออกเมื่อ: ${dateStr} · รวม ${allTasks.length} รายการ`, t:"s", s:{font:fontSub, fill:{fgColor:{rgb:"F0FDF4"}}, alignment:align_c} };
+            const headers = ["ลำดับ","เลข ORS","ชื่องาน","สถานะ","รายละเอียด","วันที่สร้าง"];
+            const rows = allTasks.map((t,i) => {
+                const status = t.status||"รอดำเนินการ";
+                const dateCreated = t.createdAt ? new Date(t.createdAt).toLocaleDateString("th-TH",{year:"numeric",month:"short",day:"numeric"}) : "—";
                 return [
-                    { v: i + 1, t: "n", s: { font: { ...fontBold, color: { rgb: "166534" } }, fill: { fgColor: { rgb: rowBg(status) } }, alignment: align_c, border } },
-                    sCell(t.ors, status, true, true),
-                    sCell(t.title, status, false, false, true),
+                    {v:i+1,t:"n",s:{font:{...fontBold,color:{rgb:"166534"}},fill:{fgColor:{rgb:rowBg(status)}},alignment:align_c,border}},
+                    sCell(t.ors,status,true,true),
+                    sCell(t.title,status,false,false,true),
                     sStatus(status),
-                    sCell(t.detail || "—", status, false, false, true),
-                    sCell(dateCreated, status, false, true),
+                    sCell(t.detail||"—",status,false,false,true),
+                    sCell(dateCreated,status,false,true),
                 ];
             });
-
-            // ── Summary rows ──
-            const done  = allTasks.filter(t => t.status === "เสร็จสิ้น").length;
-            const doing = allTasks.filter(t => t.status === "กำลังทำ").length;
-            const wait  = allTasks.filter(t => t.status === "รอดำเนินการ").length;
-
-            const sSum = (label, val, color, bg) => ([
-                { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
-                { v: label, t: "s", s: { font: { ...fontBold, color: { rgb: color } }, fill: { fgColor: { rgb: bg } }, alignment: align_c, border } },
-                { v: `${val} รายการ`, t: "s", s: { font: { name: "Calibri", sz: 9, color: { rgb: color } }, fill: { fgColor: { rgb: bg } }, alignment: align_c, border } },
-                { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
-                { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
-                { v: "", t: "s", s: { fill: { fgColor: { rgb: "F0FDF4" } } } },
+            const done  = allTasks.filter(t=>t.status==="เสร็จสิ้น").length;
+            const doing = allTasks.filter(t=>t.status==="กำลังทำ").length;
+            const wait  = allTasks.filter(t=>t.status==="รอดำเนินการ").length;
+            const sSum = (label,val,color,bg) => ([
+                {v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},
+                {v:label,t:"s",s:{font:{...fontBold,color:{rgb:color}},fill:{fgColor:{rgb:bg}},alignment:align_c,border}},
+                {v:`${val} รายการ`,t:"s",s:{font:{name:"Calibri",sz:9,color:{rgb:color}},fill:{fgColor:{rgb:bg}},alignment:align_c,border}},
+                {v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},
+                {v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},
+                {v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},
             ]);
-
-            // ── Build worksheet array ──
             const wsData = [
-                [titleCell, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }],
-                [subCell,   { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }],
-                [{ v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }],
+                [titleCell,{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],
+                [subCell,  {v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],
+                [{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],
                 headers.map(sHeader),
                 ...rows,
-                [{ v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }, { v:"",t:"s" }],
-                sSum("🟢 เสร็จสิ้น",   done,  "166534", C_GREEN_LIGHT),
-                sSum("🟡 กำลังทำ",    doing, "92400E", C_YELLOW_LIGHT),
-                sSum("🔴 รอดำเนินการ", wait,  "991B1B", C_RED_LIGHT),
+                [{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],
+                sSum("🟢 เสร็จสิ้น",  done,  "166534",C_GREEN_LIGHT),
+                sSum("🟡 กำลังทำ",   doing, "92400E",C_YELLOW_LIGHT),
+                sSum("🔴 รอดำเนินการ",wait, "991B1B",C_RED_LIGHT),
             ];
-
             const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-            // ── Merge title & sub cells ──
-            ws["!merges"] = [
-                { s: { r: 0, c: 0 }, e: { r: 0, c: 5 } },
-                { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } },
-            ];
-
-            // ── Column widths (A4 portrait พอดี: รวม ~82 wch) ──
-            ws["!cols"] = [
-                { wch: 4  },  // ลำดับ
-                { wch: 10 },  // ORS
-                { wch: 22 },  // ชื่องาน
-                { wch: 10 },  // สถานะ
-                { wch: 22 },  // รายละเอียด
-                { wch: 10 },  // วันที่
-            ];
-
-            // ── Row heights — คำนวณจากทั้งชื่องานและรายละเอียด ──
-            const titleColWidth  = 22;
-            const detailColWidth = 22;
-            const calcRowHpt = (title, detail) => {
-                const countLines = (text, colW) => {
-                    if (!text || text === "—") return 1;
-                    return text.split('\n').reduce((sum, line) => {
-                        return sum + (Math.ceil((line.length * 1.4) / colW) || 1);
-                    }, 0);
-                };
-                const lines = Math.max(
-                    countLines(title, titleColWidth),
-                    countLines(detail, detailColWidth)
-                );
-                return Math.max(16, Math.min(lines * 13, 90));
-            };
-
-            ws["!rows"] = [
-                { hpt: 32 },
-                { hpt: 16 },
-                { hpt: 4  },
-                { hpt: 20 },
-                ...rows.map((_, i) => ({ hpt: calcRowHpt(allTasks[i]?.title, allTasks[i]?.detail) })),
-                { hpt: 6  },
-                { hpt: 16 },
-                { hpt: 16 },
-                { hpt: 16 },
-            ];
-
-            // ── A4 Print Settings ──
-            ws["!pageSetup"] = {
-                paperSize:   9,          // A4
-                orientation: "portrait",
-                fitToPage:   true,
-                fitToWidth:  1,
-                fitToHeight: 0,          // ยืดตามจำนวนแถว
-                scale:       100,
-                horizontalDpi: 300,
-                verticalDpi:   300,
-            };
-            ws["!printOptions"] = {
-                gridLines: false,
-                headings:  false,
-            };
-            ws["!margins"] = {
-                left:   0.5,   // นิ้ว
-                right:  0.5,
-                top:    0.75,
-                bottom: 0.75,
-                header: 0.3,
-                footer: 0.3,
-            };
-            // ── Header/Footer ──
-            ws["!headerFooter"] = {
-                oddHeader: `&C&"Calibri,Bold"&12&K14532D 4M TASK — รายงานสรุปงาน`,
-                oddFooter: `&Lพัฒนาโดย ธิติ พุกวิลัย&R&P / &N`,
-            };
-
+            ws["!merges"] = [{s:{r:0,c:0},e:{r:0,c:5}},{s:{r:1,c:0},e:{r:1,c:5}}];
+            ws["!cols"] = [{wch:4},{wch:10},{wch:22},{wch:10},{wch:22},{wch:10}];
+            ws["!rows"] = [{hpt:32},{hpt:16},{hpt:4},{hpt:20},...rows.map((_,i)=>({hpt:Math.max(16,Math.min(40,16))})),{hpt:6},{hpt:16},{hpt:16},{hpt:16}];
+            ws["!pageSetup"] = {paperSize:9,orientation:"portrait",fitToPage:true,fitToWidth:1,fitToHeight:0};
+            ws["!margins"] = {left:0.5,right:0.5,top:0.75,bottom:0.75,header:0.3,footer:0.3};
             XLSX.utils.book_append_sheet(wb, ws, "WorkLog");
             XLSX.writeFile(wb, `4MTASK_Report_${now.toISOString().split("T")[0]}.xlsx`);
         };
 
-
-        // ── Theme Toggle ──
-        const html = document.documentElement;
-        html.setAttribute('data-theme', 'light');
-
     </script>
 
-    <!-- Loading Screen Logic — แยกออกจาก module เพื่อให้รันได้ทันที -->
+    <!-- Loading Screen Logic -->
     <script>
         (function() {
             const bar  = document.getElementById('loadingBar');
@@ -1747,10 +1355,8 @@
                 setTimeout(() => { const s = document.getElementById('loadingScreen'); if(s) s.classList.add('hidden'); }, 300);
                 setTimeout(() => { const s = document.getElementById('loadingScreen'); if(s) s.remove(); }, 900);
             };
-            // Fallback 5 วินาที
             setTimeout(() => window.finishLoading(), 5000);
 
-            // ── Nav fallback — ให้กดได้แม้ module ยังไม่โหลด ──
             window.showSection = window.showSection || function(n) {
                 document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -1760,13 +1366,12 @@
                 if (b) b.classList.add('active');
             };
 
-            // ── Global click sound ──
             document.addEventListener('click', (e) => {
                 const el = e.target.closest('button, .nav-item, .admin-btn, .month-header, .filter-btn');
                 if (!el) return;
-                if (el.classList.contains('btn-delete-confirm')) return; // ลบมีเสียงเอง
-                if (el.classList.contains('btn-quick')) return;          // quick มีเสียงเอง
-                if (el.id === 'saveBtn') return;                         // save มีเสียงเอง
+                if (el.classList.contains('btn-delete-confirm')) return;
+                if (el.classList.contains('btn-quick')) return;
+                if (el.id === 'saveBtn') return;
                 window.SFX?.click();
             }, { passive: true });
         })();
