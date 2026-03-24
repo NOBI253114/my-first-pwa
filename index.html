@@ -303,9 +303,6 @@
             display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap;
         }
         .btn-quick:active { transform: scale(0.97); }
-        .btn-cut  { background: rgba(124,58,237,0.07); color: #7c3aed; border-color: rgba(124,58,237,0.25); }
-        .btn-cut:hover  { background: rgba(124,58,237,0.14); }
-        .btn-cut.done-state  { background: rgba(124,58,237,0.15); opacity: 0.6; cursor: default; }
         .btn-made { background: rgba(8,145,178,0.07);  color: #0891b2; border-color: rgba(8,145,178,0.25); }
         .btn-made:hover { background: rgba(8,145,178,0.14); }
         .btn-made.done-state { background: rgba(8,145,178,0.15); opacity: 0.6; cursor: default; }
@@ -1084,7 +1081,6 @@ window.filterTasks = () => {
 
         grouped[mName].forEach(t => {
             const status  = t.status||'รอดำเนินการ';
-            const isCut   = status==='ตัดตัวครบแล้ว'||status==='ผลิตเสร็จแล้ว'||status==='เสร็จสิ้น';
             const isMade  = status==='ผลิตเสร็จแล้ว'||status==='เสร็จสิ้น';
             const dueBadge = getCompletedBadge(t.completedDate);
 
@@ -1099,9 +1095,6 @@ window.filterTasks = () => {
                 ${t.detail ? `<div class="task-detail" style="margin-top:6px;">${t.detail}</div>` : ''}
                 ${renderChecklistHTML(t)}
                 <div class="quick-actions">
-                    <button class="btn-quick btn-cut${isCut?' done-state':''}" onclick="${isCut?'':` quickStatus('${t.id}','ตัดตัวครบแล้ว')`}">
-                        ${isCut?'✅':'✂️'} ตัดตัวครบแล้ว
-                    </button>
                     <button class="btn-quick btn-made${isMade?' done-state':''}" onclick="${isMade?'':` quickStatus('${t.id}','ผลิตเสร็จแล้ว')`}">
                         ${isMade?'✅':'🏭'} ผลิตเสร็จแล้ว
                     </button>
