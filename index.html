@@ -195,13 +195,24 @@
             background: linear-gradient(90deg, #16a34a, #4ade80);
             transition: width 0.4s cubic-bezier(0.34,1.2,0.64,1);
         }
+
+        /* ── Admin-unlocked item ── */
         .checklist-display-item {
             display: flex; align-items: flex-start; gap: 10px;
-            padding: 7px 4px; border-radius: 8px; cursor: pointer;
+            padding: 7px 4px; border-radius: 8px;
             transition: 0.15s; position: relative;
         }
-        .checklist-display-item:hover { background: var(--surface2); }
-        .checklist-display-item:active { transform: scale(0.99); }
+        .checklist-display-item.admin-mode {
+            cursor: pointer;
+        }
+        .checklist-display-item.admin-mode:hover { background: var(--surface2); }
+        .checklist-display-item.admin-mode:active { transform: scale(0.99); }
+
+        /* ── Locked item (non-admin) ── */
+        .checklist-display-item.locked-mode {
+            cursor: not-allowed;
+            opacity: 0.82;
+        }
 
         /* Custom checkbox */
         .cl-check {
@@ -213,6 +224,15 @@
         }
         .checklist-display-item.checked .cl-check {
             background: var(--primary); border-color: var(--primary);
+        }
+        /* Locked checkbox override */
+        .checklist-display-item.locked-mode .cl-check {
+            background: #f1f5f1;
+            border-color: #c8ddd0;
+        }
+        .checklist-display-item.locked-mode.checked .cl-check {
+            background: #86efac;
+            border-color: #4ade80;
         }
         .cl-check-icon {
             font-size: 11px; color: #fff; opacity: 0;
@@ -228,6 +248,10 @@
         .checklist-display-item.checked .cl-label {
             color: var(--text-dim); text-decoration: line-through;
         }
+        .cl-lock-icon {
+            font-size: 12px; color: var(--text-dim); flex-shrink: 0;
+            margin-top: 3px; opacity: 0.55;
+        }
         .checklist-summary {
             font-size: 0.7rem; color: var(--text-sub);
             font-family: 'IBM Plex Mono'; margin-bottom: 8px;
@@ -235,6 +259,14 @@
         }
         .checklist-summary-pct {
             font-weight: 700; color: var(--primary);
+        }
+
+        /* Admin-only notice bar */
+        .checklist-admin-notice {
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(180,83,9,0.06); border: 1px solid rgba(180,83,9,0.15);
+            border-radius: 8px; padding: 7px 10px; margin-bottom: 8px;
+            font-size: 0.72rem; color: #92400e; font-weight: 500;
         }
 
         /* ═══════════════════════ ALL-DONE ANIMATION ═══════════════════════ */
@@ -716,6 +748,7 @@ window.SFX = {
     ping:    ()=>{try{const c=ac();tone(1047,'sine',0,0.05,0.1,c);tone(1319,'sine',0.06,0.12,0.08,c);}catch(e){}},
     check:   ()=>{try{const c=ac();tone(880,'sine',0,0.05,0.1,c);tone(1100,'sine',0.05,0.1,0.08,c);}catch(e){}},
     allDone: ()=>{try{const c=ac();[523,659,784,880,1047].forEach((f,i)=>tone(f,'sine',i*0.07,0.25,0.13,c));}catch(e){}},
+    locked:  ()=>{try{const c=ac();tone(300,'sine',0,0.06,0.1,c);tone(250,'sine',0.06,0.08,0.08,c);}catch(e){}},
 };
 </script>
 
@@ -738,8 +771,8 @@ let allTasks = [], statusChart, isAdmin = false;
 let editingId = null, taskToDeleteId = null, editingSnapshot = null;
 let logsUnsubscribe = null;
 let activeFilter = 'ทั้งหมด';
-let newChecklistItems = [];   // [{text, checked}]
-let editChecklistItems = [];  // [{text, checked}]
+let newChecklistItems = [];
+let editChecklistItems = [];
 
 const monthNames = ["ทั่วไป","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 
@@ -769,7 +802,6 @@ const writeLog = async (action, data={}) => {
 window.addChecklistItem = () => {
     newChecklistItems.push({ text: '', checked: false });
     renderNewChecklist();
-    // focus last input
     setTimeout(() => {
         const inputs = document.querySelectorAll('#new-checklist-items .checklist-item-input');
         if (inputs.length) inputs[inputs.length-1].focus();
@@ -826,9 +858,16 @@ window.updateEditItem = (i, val) => { editChecklistItems[i].text = val; };
 window.removeEditItem = (i) => { editChecklistItems.splice(i, 1); renderEditChecklist(); };
 
 // ════════════════════════════════════════
-// TICK CHECKLIST ITEM — real-time Firebase
+// TICK CHECKLIST ITEM — Admin only
 // ════════════════════════════════════════
 window.toggleCheckItem = async (taskId, itemIndex) => {
+    // ── GUARD: เฉพาะ Admin เท่านั้น ──
+    if (!isAdmin) {
+        window.SFX?.locked();
+        window.showToast?.('🔒 เฉพาะ Admin เท่านั้นที่ติ๊กรายการตัดได้', 'error', 2500);
+        return;
+    }
+
     const task = allTasks.find(x => x.id === taskId);
     if (!task || !task.checklist) return;
 
@@ -839,7 +878,6 @@ window.toggleCheckItem = async (taskId, itemIndex) => {
     const allChecked = newChecklist.length > 0 && newChecklist.every(x => x.checked);
     const updateData = { checklist: newChecklist, lastEditedByDevice: getDeviceInfo() };
 
-    // ถ้าครบทุกข้อ → เปลี่ยนสถานะอัตโนมัติ
     if (allChecked && task.status !== 'ตัดตัวครบแล้ว' && task.status !== 'ผลิตเสร็จแล้ว' && task.status !== 'เสร็จสิ้น') {
         updateData.status = 'ตัดตัวครบแล้ว';
         await updateDoc(doc(db, "tasks", taskId), updateData);
@@ -851,7 +889,6 @@ window.toggleCheckItem = async (taskId, itemIndex) => {
         });
         window.SFX?.allDone();
         window.showToast?.('✂️ ตัดครบทุกรายการแล้ว!', 'success', 3000);
-        // highlight card
         setTimeout(() => {
             const card = document.getElementById(`task-card-${taskId}`);
             if (card) card.classList.add('just-completed');
@@ -1016,6 +1053,13 @@ const renderChecklistHTML = (task) => {
     const pct   = total > 0 ? Math.round((done/total)*100) : 0;
     const allDone = done === total;
 
+    // แสดง notice bar ต่างกันตาม role
+    const noticeBar = isAdmin
+        ? '' // admin: ไม่ต้องแสดง notice
+        : `<div class="checklist-admin-notice">🔒 เฉพาะ Admin เท่านั้นที่สามารถติ๊กรายการได้</div>`;
+
+    const itemMode = isAdmin ? 'admin-mode' : 'locked-mode';
+
     return `
     <div class="checklist-wrap">
         <div class="checklist-summary">
@@ -1025,11 +1069,13 @@ const renderChecklistHTML = (task) => {
         <div class="checklist-progress-bar-wrap">
             <div class="checklist-progress-bar" style="width:${pct}%"></div>
         </div>
+        ${noticeBar}
         ${allDone ? `<div class="auto-complete-banner">🎉 ตัดครบทุกรายการแล้ว!</div>` : ''}
         ${cl.map((item, i) => `
-        <div class="checklist-display-item ${item.checked?'checked':''}" onclick="toggleCheckItem('${task.id}', ${i})">
+        <div class="checklist-display-item ${itemMode} ${item.checked?'checked':''}" onclick="toggleCheckItem('${task.id}', ${i})">
             <div class="cl-check"><span class="cl-check-icon">✓</span></div>
             <span class="cl-label">${item.text}</span>
+            ${!isAdmin ? `<span class="cl-lock-icon">🔒</span>` : ''}
         </div>`).join('')}
     </div>`;
 };
@@ -1170,7 +1216,7 @@ window.showSection = (n) => {
 };
 
 // ════════════════════════════════════════
-// LOGIN
+// LOGIN — เมื่อ login สำเร็จ re-render tasks ใหม่
 // ════════════════════════════════════════
 window.openLoginModal  = () => document.getElementById('loginModal').classList.add('active');
 window.closeLoginModal = () => document.getElementById('loginModal').classList.remove('active');
@@ -1180,8 +1226,9 @@ window.adminLogin = () => {
         document.getElementById('nav-logs').style.display='';
         document.getElementById('admin-indicator').style.display='block';
         window.SFX?.unlock();
-        window.showToast?.('🛡️ เข้าสู่ระบบ Admin แล้ว','info');
+        window.showToast?.('🛡️ เข้าสู่ระบบ Admin แล้ว — สามารถติ๊กรายการตัดได้', 'info', 3000);
         closeLoginModal();
+        // Re-render tasks เพื่อเปลี่ยน checklist items เป็น admin-mode
         filterTasks();
         const logsQ = query(collection(db,"logs"),orderBy("timestamp","desc"),limit(100));
         logsUnsubscribe = onSnapshot(logsQ,(snap)=>{
