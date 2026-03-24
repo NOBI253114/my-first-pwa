@@ -1081,9 +1081,29 @@ const renderChecklistHTML = (task) => {
 };
 
 // ════════════════════════════════════════
+// MONTH STATE — จำว่าเดือนไหนเปิดอยู่
+// ════════════════════════════════════════
+const getOpenMonths = () => {
+    const open = new Set();
+    document.querySelectorAll('.month-body.open').forEach(el => open.add(el.id));
+    return open;
+};
+const restoreOpenMonths = (open) => {
+    open.forEach(id => {
+        const body = document.getElementById(id);
+        if (body) {
+            body.classList.add('open');
+            const header = body.previousElementSibling;
+            if (header) header.classList.add('open');
+        }
+    });
+};
+
+// ════════════════════════════════════════
 // RENDER ALL TASKS
 // ════════════════════════════════════════
 window.filterTasks = () => {
+    const openMonths = getOpenMonths();   // ← จำ state ก่อน render
     const container = document.getElementById('task-container');
     container.innerHTML = "";
     const search = document.getElementById('searchInput').value.toLowerCase();
@@ -1154,6 +1174,17 @@ window.filterTasks = () => {
         html += `</div></div>`;
         container.innerHTML += html;
     });
+
+    if (openMonths.size > 0) {
+        restoreOpenMonths(openMonths);   // ← คืน state เดิม
+    } else {
+        // ครั้งแรกโหลด: เปิดทุกเดือนอัตโนมัติ
+        document.querySelectorAll('.month-body').forEach(el => {
+            el.classList.add('open');
+            const header = el.previousElementSibling;
+            if (header) header.classList.add('open');
+        });
+    }
 };
 
 window.toggleMonth = (mId, headerEl) => {
