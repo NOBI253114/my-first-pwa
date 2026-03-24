@@ -39,51 +39,31 @@
             overflow-x: hidden;
         }
 
-        /* ═══════════════════════ TOP BAR ═══════════════════════ */
         .topbar {
             position: sticky; top: 0; z-index: 200;
             background: var(--topbar-bg);
             backdrop-filter: blur(24px);
             border-bottom: 1px solid var(--border);
-            padding: 0 20px;
-            height: 60px;
+            padding: 0 20px; height: 60px;
             display: flex; align-items: center; justify-content: space-between;
         }
-        .topbar-brand {
-            display: flex; align-items: center; gap: 10px;
-        }
+        .topbar-brand { display: flex; align-items: center; gap: 10px; }
         .brand-icon {
             width: 32px; height: 32px;
             background: linear-gradient(135deg, #16a34a, #15803d);
             border-radius: 8px; display: grid; place-items: center;
             font-size: 16px; box-shadow: 0 2px 8px rgba(22,163,74,0.35);
         }
-        .brand-name {
-            font-size: 1.1rem; font-weight: 700; letter-spacing: 1.5px;
-            color: var(--text);
-        }
+        .brand-name { font-size: 1.1rem; font-weight: 700; letter-spacing: 1.5px; color: var(--text); }
         .brand-ver {
             font-size: 0.6rem; background: var(--surface2); color: var(--text-sub);
             padding: 2px 7px; border-radius: 20px; border: 1px solid var(--border);
             font-family: 'IBM Plex Mono'; letter-spacing: 0.5px;
         }
-        .footer-credit {
-            text-align: center;
-            padding: 18px 20px 6px;
-            border-top: 1px solid var(--border);
-            margin: 8px 0 0;
-        }
-        .footer-credit-label {
-            font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase;
-            color: var(--text-dim); font-weight: 600; margin-bottom: 4px;
-        }
-        .footer-credit-name {
-            font-size: 0.82rem; font-weight: 700; color: var(--primary);
-            letter-spacing: 0.3px;
-        }
-        .footer-credit-role {
-            font-size: 0.68rem; color: var(--text-sub); margin-top: 2px;
-        }
+        .footer-credit { text-align: center; padding: 18px 20px 6px; border-top: 1px solid var(--border); margin: 8px 0 0; }
+        .footer-credit-label { font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); font-weight: 600; margin-bottom: 4px; }
+        .footer-credit-name { font-size: 0.82rem; font-weight: 700; color: var(--primary); }
+        .footer-credit-role { font-size: 0.68rem; color: var(--text-sub); margin-top: 2px; }
         .topbar-right { display: flex; align-items: center; gap: 10px; }
         #admin-indicator {
             display: none; font-size: 0.7rem; font-weight: 600; color: #15803d;
@@ -97,14 +77,12 @@
         }
         .admin-btn:hover { background: var(--surface); border-color: var(--primary); }
 
-        /* ═══════════════════════ NAV TABS ═══════════════════════ */
         .nav-rail {
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
             background: var(--nav-bg); backdrop-filter: blur(24px);
             border-top: 1px solid var(--border);
             display: grid; grid-template-columns: repeat(4, 1fr);
-            padding: 8px 16px 16px;
-            gap: 4px;
+            padding: 8px 16px 16px; gap: 4px;
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; gap: 4px;
@@ -116,12 +94,10 @@
         .nav-item:hover { color: var(--text); background: var(--surface); }
         .nav-item.active { color: var(--primary); background: var(--primary-glow); font-weight: 600; }
 
-        /* ═══════════════════════ LAYOUT ═══════════════════════ */
         .container { max-width: 680px; margin: 0 auto; padding: 20px 16px; }
         .page-section { display: none; }
         .page-section.active { display: block; }
 
-        /* ═══════════════════════ CARDS ═══════════════════════ */
         .card {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
@@ -132,12 +108,8 @@
             text-transform: uppercase; color: var(--text-sub); margin-bottom: 18px;
         }
 
-        /* ═══════════════════════ FORM ELEMENTS ═══════════════════════ */
         .form-group { margin-bottom: 14px; }
-        .form-label {
-            display: block; font-size: 0.75rem; font-weight: 500;
-            color: var(--text-sub); margin-bottom: 6px; letter-spacing: 0.5px;
-        }
+        .form-label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--text-sub); margin-bottom: 6px; letter-spacing: 0.5px; }
         .form-input, .form-textarea, .form-select {
             width: 100%; padding: 13px 16px;
             background: var(--bg); border: 1px solid var(--border);
@@ -150,11 +122,13 @@
         .form-input:focus, .form-textarea:focus, .form-select:focus {
             border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); background: #fff;
         }
-        .form-textarea { resize: vertical; min-height: 90px; }
-        .form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234b7a5a' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+        .form-textarea { resize: vertical; min-height: 80px; }
+        .form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234b7a5a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+        }
         .form-select option { background: #fff; color: var(--text); }
 
-        /* ═══════════════════════ BUTTONS ═══════════════════════ */
         .btn {
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
             padding: 13px 20px; border-radius: var(--radius-sm); border: none;
@@ -165,13 +139,112 @@
         .btn-primary:hover { filter: brightness(1.1); }
         .btn-primary:active { transform: scale(0.98); }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-ghost {
-            background: var(--surface2); color: var(--text); border: 1px solid var(--border);
-            padding: 10px 16px; border-radius: var(--radius-sm); font-size: 0.85rem;
-        }
+        .btn-ghost { background: var(--surface2); color: var(--text); border: 1px solid var(--border); padding: 10px 16px; border-radius: var(--radius-sm); font-size: 0.85rem; }
         .btn-ghost:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-glow); }
         .btn-danger { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); padding: 10px 16px; border-radius: var(--radius-sm); font-size: 0.85rem; }
         .btn-danger:hover { background: rgba(248,113,113,0.2); }
+
+        /* ═══════════════════════ CHECKLIST BUILDER ═══════════════════════ */
+        .checklist-builder {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 14px; margin-bottom: 4px;
+        }
+        .checklist-builder-label {
+            font-size: 0.72rem; font-weight: 600; color: var(--text-sub);
+            letter-spacing: 0.5px; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .checklist-item-row {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+        }
+        .checklist-item-input {
+            flex: 1; padding: 10px 13px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text);
+            font-family: 'Prompt'; font-size: 0.88rem; outline: none; transition: 0.2s;
+        }
+        .checklist-item-input::placeholder { color: var(--text-dim); }
+        .checklist-item-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+        .checklist-item-del {
+            width: 32px; height: 32px; background: rgba(220,38,38,0.07);
+            border: 1px solid rgba(220,38,38,0.15); border-radius: 8px;
+            color: var(--red); cursor: pointer; display: grid; place-items: center;
+            font-size: 14px; flex-shrink: 0; transition: 0.15s;
+        }
+        .checklist-item-del:hover { background: rgba(220,38,38,0.15); }
+        .btn-add-item {
+            width: 100%; padding: 9px; border: 1.5px dashed var(--border);
+            border-radius: 8px; background: none; color: var(--text-sub);
+            font-family: 'Prompt'; font-size: 0.82rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            transition: 0.2s; margin-top: 4px;
+        }
+        .btn-add-item:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-glow); }
+
+        /* ═══════════════════════ CHECKLIST DISPLAY (in task card) ═══════════════════════ */
+        .checklist-wrap {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 14px;
+        }
+        .checklist-progress-bar-wrap {
+            height: 5px; background: var(--border); border-radius: 20px;
+            margin-bottom: 10px; overflow: hidden;
+        }
+        .checklist-progress-bar {
+            height: 100%; border-radius: 20px;
+            background: linear-gradient(90deg, #16a34a, #4ade80);
+            transition: width 0.4s cubic-bezier(0.34,1.2,0.64,1);
+        }
+        .checklist-display-item {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 7px 4px; border-radius: 8px; cursor: pointer;
+            transition: 0.15s; position: relative;
+        }
+        .checklist-display-item:hover { background: var(--surface2); }
+        .checklist-display-item:active { transform: scale(0.99); }
+
+        /* Custom checkbox */
+        .cl-check {
+            width: 20px; height: 20px; flex-shrink: 0;
+            border: 2px solid var(--border); border-radius: 6px;
+            display: grid; place-items: center;
+            transition: 0.2s; margin-top: 1px;
+            background: var(--surface);
+        }
+        .checklist-display-item.checked .cl-check {
+            background: var(--primary); border-color: var(--primary);
+        }
+        .cl-check-icon {
+            font-size: 11px; color: #fff; opacity: 0;
+            transform: scale(0.5); transition: 0.2s;
+        }
+        .checklist-display-item.checked .cl-check-icon {
+            opacity: 1; transform: scale(1);
+        }
+        .cl-label {
+            font-size: 0.88rem; color: var(--text); line-height: 1.5;
+            flex: 1; transition: 0.2s;
+        }
+        .checklist-display-item.checked .cl-label {
+            color: var(--text-dim); text-decoration: line-through;
+        }
+        .checklist-summary {
+            font-size: 0.7rem; color: var(--text-sub);
+            font-family: 'IBM Plex Mono'; margin-bottom: 8px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .checklist-summary-pct {
+            font-weight: 700; color: var(--primary);
+        }
+
+        /* ═══════════════════════ ALL-DONE ANIMATION ═══════════════════════ */
+        @keyframes allDone {
+            0%   { transform: scale(1); }
+            30%  { transform: scale(1.03); }
+            60%  { transform: scale(0.98); }
+            100% { transform: scale(1); }
+        }
+        .task-card.just-completed { animation: allDone 0.5s ease; }
 
         /* ═══════════════════════ SEARCH ═══════════════════════ */
         .search-wrap { position: relative; margin-bottom: 16px; }
@@ -186,7 +259,6 @@
         .search-input::placeholder { color: var(--text-dim); }
         .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
 
-        /* ═══════════════════════ MONTH SECTION ═══════════════════════ */
         .month-section { margin-bottom: 8px; }
         .month-header {
             display: flex; align-items: center; justify-content: space-between;
@@ -198,32 +270,24 @@
         .month-header-left { display: flex; align-items: center; gap: 10px; }
         .month-dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, #16a34a, #15803d); box-shadow: 0 0 4px rgba(22,163,74,0.4); }
         .month-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
-        .month-count {
-            font-size: 0.7rem; background: var(--bg); color: var(--text-sub);
-            padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border);
-            font-family: 'IBM Plex Mono';
-        }
+        .month-count { font-size: 0.7rem; background: var(--bg); color: var(--text-sub); padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border); font-family: 'IBM Plex Mono'; }
         .month-chevron { color: var(--text-sub); font-size: 12px; transition: transform 0.3s; }
         .month-header.open .month-chevron { transform: rotate(180deg); }
-        .month-body { display: none; padding-left: 0; }
+        .month-body { display: none; }
         .month-body.open { display: block; }
 
-        /* ═══════════════════════ TASK CARD ═══════════════════════ */
         .task-card {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: var(--radius); padding: 18px 20px; margin-bottom: 10px;
             transition: 0.2s; position: relative; overflow: hidden;
             box-shadow: 0 1px 4px rgba(22,163,74,0.06);
         }
-        .task-card::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-        }
+        .task-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
         .task-card.status-wait::before  { background: var(--red); }
         .task-card.status-doing::before  { background: var(--yellow); }
         .task-card.status-done::before   { background: var(--green); }
         .task-card.status-cut::before    { background: #7c3aed; }
         .task-card.status-made::before   { background: #0891b2; }
-        .task-card:hover { border-color: rgba(0,0,0,0.06); }
 
         .badge-wait  { background: rgba(220,38,38,0.1);   color: #dc2626; border: 1px solid rgba(220,38,38,0.2); }
         .badge-doing { background: rgba(180,83,9,0.1);    color: #b45309; border: 1px solid rgba(180,83,9,0.2); }
@@ -231,16 +295,12 @@
         .badge-cut   { background: rgba(124,58,237,0.1);  color: #7c3aed; border: 1px solid rgba(124,58,237,0.2); }
         .badge-made  { background: rgba(8,145,178,0.1);   color: #0891b2; border: 1px solid rgba(8,145,178,0.2); }
 
-        /* ── Quick Action Buttons ── */
-        .quick-actions {
-            display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
-        }
+        .quick-actions { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
         .btn-quick {
             flex: 1; min-width: 0; padding: 9px 10px; border-radius: var(--radius-sm);
             font-family: 'Prompt'; font-size: 0.78rem; font-weight: 600;
             cursor: pointer; border: 1.5px solid; transition: 0.18s;
-            display: flex; align-items: center; justify-content: center; gap: 5px;
-            white-space: nowrap;
+            display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap;
         }
         .btn-quick:active { transform: scale(0.97); }
         .btn-cut  { background: rgba(124,58,237,0.07); color: #7c3aed; border-color: rgba(124,58,237,0.25); }
@@ -257,23 +317,22 @@
         .task-detail { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 14px; white-space: pre-wrap; line-height: 1.6; }
         .task-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
-        /* ═══════════════════════ DASHBOARD ═══════════════════════ */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
-        .stat-box {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 18px 14px; text-align: center;
-            box-shadow: 0 2px 8px rgba(22,163,74,0.07);
+        .completed-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 0.7rem; font-weight: 600; padding: 3px 9px; border-radius: 20px; margin-top: 6px;
+            background: rgba(22,163,74,0.08); color: var(--primary); border: 1px solid rgba(22,163,74,0.15);
         }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+        .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 14px; text-align: center; box-shadow: 0 2px 8px rgba(22,163,74,0.07); }
         .stat-num { font-size: 1.8rem; font-weight: 700; font-family: 'IBM Plex Mono'; }
         .stat-label { font-size: 0.72rem; color: var(--text-sub); margin-top: 2px; font-weight: 500; }
         .stat-box.s-total .stat-num { color: var(--primary); }
-        .stat-box.s-done .stat-num { color: #15803d; }
-        .stat-box.s-wait .stat-num { color: var(--red); }
-
-        .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(22,163,74,0.06); }
+        .stat-box.s-done  .stat-num { color: #15803d; }
+        .stat-box.s-wait  .stat-num { color: var(--red); }
+        .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
         .chart-label { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
 
-        /* ═══════════════════════ MODALS ═══════════════════════ */
         .modal-overlay {
             display: none; position: fixed; inset: 0; z-index: 9000;
             background: var(--modal-backdrop); backdrop-filter: blur(6px);
@@ -295,12 +354,10 @@
         .modal-actions .btn-primary { flex: 1; }
         .modal-actions .btn-ghost { flex: 0.5; }
 
-        /* ═══════════════════════ CONFIRM MODAL ═══════════════════════ */
         .confirm-modal {
             background: var(--surface); border-radius: 20px; padding: 30px;
             width: calc(100% - 48px); max-width: 380px; text-align: center;
-            border: 1px solid var(--border);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.12);
             animation: popUp 0.25s ease;
         }
         @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -313,26 +370,19 @@
         .btn-cancel { background: var(--surface2); border: 1px solid var(--border); color: var(--text-sub); }
         .btn-delete-confirm { background: var(--red); border: none; color: #fff; }
 
-        /* ═══════════════════════ LOGIN MODAL ═══════════════════════ */
         #loginModal { align-items: center; }
         .login-card { background: var(--surface); border-radius: 20px; padding: 30px; width: calc(100% - 48px); max-width: 380px; border: 1px solid var(--border); animation: popUp 0.25s ease; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
         .login-title { font-size: 1rem; font-weight: 700; margin-bottom: 20px; }
         .login-cancel { width: 100%; margin-top: 10px; padding: 10px; background: none; border: none; color: var(--text-sub); cursor: pointer; font-family: 'Prompt'; }
 
-        /* ═══════════════════════ EMPTY STATE ═══════════════════════ */
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-sub); }
         .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
         .empty-text { font-size: 0.9rem; }
 
-        /* ═══════════════════════ PAGE HEADER ═══════════════════════ */
         .page-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: var(--text); letter-spacing: -0.3px; }
         .page-title span { color: var(--text-sub); font-weight: 400; font-size: 0.85rem; margin-left: 8px; }
 
-        /* ═══════════════════════ FILTER BUTTONS ═══════════════════════ */
-        .filter-row {
-            display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto;
-            padding-bottom: 4px; -webkit-overflow-scrolling: touch;
-        }
+        .filter-row { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
         .filter-btn {
             flex-shrink: 0; padding: 8px 16px; border-radius: 20px;
             border: 1.5px solid var(--border); background: var(--surface);
@@ -341,93 +391,32 @@
         }
         .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
         .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
-        .filter-btn.f-wait.active  { background: var(--red);     border-color: var(--red); }
-        .filter-btn.f-doing.active { background: var(--yellow);  border-color: var(--yellow); color: #7c2d12; }
+        .filter-btn.f-wait.active  { background: var(--red);    border-color: var(--red); }
+        .filter-btn.f-doing.active { background: var(--yellow); border-color: var(--yellow); color: #7c2d12; }
         .filter-btn.f-done.active  { background: var(--primary); border-color: var(--primary); }
 
-        /* ═══════════════════════ COMPLETED DATE ═══════════════════════ */
-        .completed-badge {
-            display: inline-flex; align-items: center; gap: 4px;
-            font-size: 0.7rem; font-weight: 600; padding: 3px 9px;
-            border-radius: 20px; margin-top: 6px;
-            background: rgba(22,163,74,0.08); color: var(--primary);
-            border: 1px solid rgba(22,163,74,0.15);
-        }
-
-        .log-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 18px 20px; margin-bottom: 12px;
-            box-shadow: 0 1px 4px rgba(22,163,74,0.06);
-        }
-        .log-card-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 8px; flex-wrap: wrap; gap: 6px;
-        }
-        .log-action-badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            font-size: 0.72rem; font-weight: 700; padding: 4px 12px;
-            border-radius: 20px; border: 1px solid; letter-spacing: 0.3px;
-        }
-        .log-timestamp {
-            font-size: 0.72rem; color: var(--text-sub);
-            font-family: 'IBM Plex Mono'; letter-spacing: 0.3px;
-        }
-        .log-taskref {
-            font-size: 0.9rem; font-weight: 600; color: var(--text);
-            margin-bottom: 12px; padding-bottom: 12px;
-            border-bottom: 1px solid var(--border);
-        }
-        .log-device-block {
-            background: var(--bg); border: 1px solid var(--border);
-            border-radius: var(--radius-sm); padding: 12px 14px;
-            margin-bottom: 12px; display: grid; gap: 6px;
-        }
-        .log-device-row {
-            display: flex; justify-content: space-between; align-items: center;
-            gap: 10px;
-        }
-        .log-device-key {
-            font-size: 0.72rem; color: var(--text-sub); font-weight: 500;
-            flex-shrink: 0; min-width: 72px;
-        }
-        .log-device-val {
-            font-size: 0.78rem; color: var(--text); font-weight: 600;
-            font-family: 'IBM Plex Mono'; text-align: right; word-break: break-all;
-        }
-        .log-diff-wrap {
-            background: #fffbeb; border: 1px solid rgba(180,83,9,0.15);
-            border-radius: var(--radius-sm); padding: 12px 14px;
-            display: grid; gap: 8px;
-        }
-        .log-diff-title {
-            font-size: 0.72rem; font-weight: 700; color: #92400e;
-            letter-spacing: 0.5px; margin-bottom: 2px;
-        }
-        .log-diff-row {
-            display: grid; grid-template-columns: 60px 1fr 1fr; gap: 8px;
-            align-items: start;
-        }
-        .log-diff-field {
-            font-size: 0.7rem; color: var(--text-sub); font-weight: 600;
-            padding-top: 2px;
-        }
-        .log-diff-before, .log-diff-after {
-            font-size: 0.78rem; padding: 5px 8px; border-radius: 6px;
-            line-height: 1.4; word-break: break-word;
-        }
+        .log-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 12px; }
+        .log-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+        .log-action-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; border: 1px solid; }
+        .log-timestamp { font-size: 0.72rem; color: var(--text-sub); font-family: 'IBM Plex Mono'; }
+        .log-taskref { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .log-device-block { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 12px; display: grid; gap: 6px; }
+        .log-device-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .log-device-key { font-size: 0.72rem; color: var(--text-sub); font-weight: 500; flex-shrink: 0; min-width: 72px; }
+        .log-device-val { font-size: 0.78rem; color: var(--text); font-weight: 600; font-family: 'IBM Plex Mono'; text-align: right; word-break: break-all; }
+        .log-diff-wrap { background: #fffbeb; border: 1px solid rgba(180,83,9,0.15); border-radius: var(--radius-sm); padding: 12px 14px; display: grid; gap: 8px; }
+        .log-diff-title { font-size: 0.72rem; font-weight: 700; color: #92400e; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .log-diff-row { display: grid; grid-template-columns: 60px 1fr 1fr; gap: 8px; align-items: start; }
+        .log-diff-field { font-size: 0.7rem; color: var(--text-sub); font-weight: 600; padding-top: 2px; }
+        .log-diff-before, .log-diff-after { font-size: 0.78rem; padding: 5px 8px; border-radius: 6px; line-height: 1.4; word-break: break-word; }
         .log-diff-before { background: rgba(220,38,38,0.06); color: #991b1b; }
         .log-diff-after  { background: rgba(22,163,74,0.07); color: #166534; }
-        .log-diff-label {
-            display: block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.5px;
-            opacity: 0.6; margin-bottom: 2px; text-transform: uppercase;
-        }
+        .log-diff-label { display: block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 2px; text-transform: uppercase; }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #c4e0cc; border-radius: 2px; }
 
-        /* ═══════════════════════ TOAST ═══════════════════════ */
         #toast-container {
             position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
             z-index: 99998; display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -445,936 +434,874 @@
         .toast.error   { background: #dc2626; color: #fff; }
         .toast.info    { background: #0891b2; color: #fff; }
         .toast.out     { animation: toastOut 0.3s ease forwards; }
-        @keyframes toastIn  { from { opacity:0; transform:translateY(-12px) scale(0.9); } to { opacity:1; transform:translateY(0) scale(1); } }
-        @keyframes toastOut { from { opacity:1; transform:translateY(0) scale(1); }       to { opacity:0; transform:translateY(-8px) scale(0.95); } }
+        @keyframes toastIn  { from{opacity:0;transform:translateY(-12px) scale(0.9);}to{opacity:1;transform:translateY(0) scale(1);} }
+        @keyframes toastOut { from{opacity:1;transform:translateY(0) scale(1);}to{opacity:0;transform:translateY(-8px) scale(0.95);} }
 
-        /* ═══════════════════════ LOADING SCREEN ═══════════════════════ */
         #loadingScreen {
-            position: fixed; inset: 0; z-index: 99999;
-            background: var(--bg);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 20px;
+            position: fixed; inset: 0; z-index: 99999; background: var(--bg);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
             transition: opacity 0.5s ease;
         }
         #loadingScreen.hidden { opacity: 0; pointer-events: none; }
         .loading-logo { display: flex; align-items: center; gap: 12px; }
-        .loading-logo-icon {
-            width: 48px; height: 48px;
-            background: linear-gradient(135deg, #16a34a, #15803d);
-            border-radius: 14px; display: grid; place-items: center;
-            font-size: 24px; box-shadow: 0 4px 16px rgba(22,163,74,0.35);
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-        @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }
+        .loading-logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, #16a34a, #15803d); border-radius: 14px; display: grid; place-items: center; font-size: 24px; box-shadow: 0 4px 16px rgba(22,163,74,0.35); animation: pulse 1.5s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.08);} }
         .loading-logo-name { font-size: 1.6rem; font-weight: 700; color: var(--text); letter-spacing: 2px; }
-        .loading-bar-wrap {
-            width: 220px; background: var(--surface2);
-            border-radius: 20px; height: 8px; overflow: hidden;
-            border: 1px solid var(--border);
-        }
-        .loading-bar {
-            height: 100%; width: 0%; border-radius: 20px;
-            background: linear-gradient(90deg, #16a34a, #4ade80);
-            transition: width 0.25s ease;
-            box-shadow: 0 0 8px rgba(22,163,74,0.5);
-        }
+        .loading-bar-wrap { width: 220px; background: var(--surface2); border-radius: 20px; height: 8px; overflow: hidden; border: 1px solid var(--border); }
+        .loading-bar { height: 100%; width: 0%; border-radius: 20px; background: linear-gradient(90deg, #16a34a, #4ade80); transition: width 0.25s ease; box-shadow: 0 0 8px rgba(22,163,74,0.5); }
         .loading-pct { font-size: 0.8rem; font-weight: 600; color: var(--primary); font-family: 'IBM Plex Mono'; }
         .loading-msg { font-size: 0.75rem; color: var(--text-sub); }
 
-        /* ═══════════════════════ MADE DATE MODAL ═══════════════════════ */
         #madeDateModal { align-items: center; }
-        .made-date-card {
-            background: var(--surface); border-radius: 20px; padding: 28px 24px;
-            width: calc(100% - 48px); max-width: 360px;
-            border: 1px solid var(--border);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-            animation: popUp 0.25s ease;
-        }
+        .made-date-card { background: var(--surface); border-radius: 20px; padding: 28px 24px; width: calc(100% - 48px); max-width: 360px; border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.12); animation: popUp 0.25s ease; }
         .made-date-icon { font-size: 2.2rem; text-align: center; margin-bottom: 10px; }
         .made-date-title { font-size: 1rem; font-weight: 700; text-align: center; margin-bottom: 4px; color: var(--text); }
         .made-date-sub { font-size: 0.8rem; color: var(--text-sub); text-align: center; margin-bottom: 18px; }
         .made-date-actions { display: flex; gap: 10px; margin-top: 16px; }
         .made-date-actions .btn-primary { flex: 1; background: linear-gradient(135deg, #0891b2, #0e7490); box-shadow: 0 4px 12px rgba(8,145,178,0.25); }
-        .made-date-actions .btn-ghost   { flex: 0.5; }
+        .made-date-actions .btn-ghost { flex: 0.5; }
 
+        /* ═══════════════════════ AUTO-COMPLETE BANNER ═══════════════════════ */
+        @keyframes completeBanner {
+            0%   { opacity:0; transform: scale(0.85) translateY(10px); }
+            50%  { opacity:1; transform: scale(1.04) translateY(-2px); }
+            100% { opacity:1; transform: scale(1) translateY(0); }
+        }
+        .auto-complete-banner {
+            display: flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, rgba(22,163,74,0.12), rgba(21,128,61,0.08));
+            border: 1.5px solid rgba(22,163,74,0.3);
+            border-radius: var(--radius-sm); padding: 10px 14px;
+            margin-bottom: 10px;
+            animation: completeBanner 0.4s ease forwards;
+            font-size: 0.82rem; font-weight: 600; color: var(--green);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Loading Screen -->
-    <div id="loadingScreen">
-        <div class="loading-logo">
-            <div class="loading-logo-icon">⚡</div>
-            <span class="loading-logo-name">4M TASK</span>
-        </div>
-        <div class="loading-bar-wrap">
-            <div class="loading-bar" id="loadingBar"></div>
-        </div>
-        <div class="loading-pct" id="loadingPct">0%</div>
-        <div class="loading-msg" id="loadingMsg">กำลังเชื่อมต่อระบบ...</div>
+<div id="loadingScreen">
+    <div class="loading-logo">
+        <div class="loading-logo-icon">⚡</div>
+        <span class="loading-logo-name">4M TASK</span>
     </div>
+    <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
+    <div class="loading-pct" id="loadingPct">0%</div>
+    <div class="loading-msg" id="loadingMsg">กำลังเชื่อมต่อระบบ...</div>
+</div>
 
-    <!-- Made Date Modal -->
-    <div id="madeDateModal" class="modal-overlay">
-        <div class="made-date-card">
-            <div class="made-date-icon">🏭</div>
-            <div class="made-date-title">ยืนยันผลิตเสร็จแล้ว</div>
-            <div class="made-date-sub" id="madeDateTaskName">—</div>
-            <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label">วันที่ผลิตเสร็จ</label>
-                <input class="form-input" type="date" id="madeDateInput">
-            </div>
-            <div class="made-date-actions">
-                <button class="btn btn-primary" onclick="confirmMadeDate()">✅ ยืนยัน</button>
-                <button class="btn btn-ghost"    onclick="closeMadeDateModal()">ยกเลิก</button>
-            </div>
+<div id="madeDateModal" class="modal-overlay">
+    <div class="made-date-card">
+        <div class="made-date-icon">🏭</div>
+        <div class="made-date-title">ยืนยันผลิตเสร็จแล้ว</div>
+        <div class="made-date-sub" id="madeDateTaskName">—</div>
+        <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">วันที่ผลิตเสร็จ</label>
+            <input class="form-input" type="date" id="madeDateInput">
+        </div>
+        <div class="made-date-actions">
+            <button class="btn btn-primary" onclick="confirmMadeDate()">✅ ยืนยัน</button>
+            <button class="btn btn-ghost" onclick="closeMadeDateModal()">ยกเลิก</button>
         </div>
     </div>
+</div>
 
-    <!-- Toast Container -->
-    <div id="toast-container"></div>
+<div id="toast-container"></div>
 
-    <!-- Top Bar -->
-    <header class="topbar">
-        <div class="topbar-brand">
-            <div class="brand-icon">⚡</div>
-            <span class="brand-name">4M TASK</span>
-            <span class="brand-ver">v3.4 Beta</span>
-        </div>
-        <div class="topbar-right">
-            <div id="admin-indicator">🛡 ADMIN</div>
-            <div class="admin-btn" onclick="openLoginModal()">🔐</div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <div class="container">
-
-        <!-- ADD TASK -->
-        <div id="section-add" class="page-section active">
-            <div class="page-title">สร้างงานใหม่</div>
-            <div class="card">
-                <div class="card-title">ข้อมูลงาน</div>
-                <div class="form-group">
-                    <label class="form-label">กรอกเลข ORS. / ชื่องาน</label>
-                    <input class="form-input" type="text" id="taskFullInput" placeholder="ตัวอย่าง 01/01 งาน แขวงทางหลวงชนบท">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">รายละเอียด</label>
-                    <textarea class="form-textarea" id="taskDetail" placeholder="ระบุรายละเอียดงาน..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">สถานะ</label>
-                    <select class="form-select" id="taskStatus">
-                        <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
-                        <option value="กำลังทำ">🟡 กำลังทำ</option>
-                        <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
-                    </select>
-                </div>
-            </div>
-            <button class="btn btn-primary" id="saveBtn" onclick="addTask()">ยืนยันบันทึกงาน</button>
-
-            <div class="footer-credit">
-                <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
-                <div class="footer-credit-name">ธิติ พุกวิลัย</div>
-                <div class="footer-credit-role">4M TASK Management System · v3.4 Beta</div>
-            </div>
-        </div>
-
-        <!-- VIEW TASKS -->
-        <div id="section-view" class="page-section">
-            <div class="page-title">คลังงานทั้งหมด <span id="total-count"></span></div>
-            <div class="search-wrap">
-                <span class="search-icon">🔍</span>
-                <input class="search-input" type="text" id="searchInput" placeholder="ค้นหาเลข ORS หรือชื่องาน..." onkeyup="filterTasks()">
-            </div>
-            <div class="filter-row">
-                <button class="filter-btn active" data-filter="ทั้งหมด" onclick="setFilter('ทั้งหมด')">📋 ทั้งหมด</button>
-                <button class="filter-btn f-wait"  data-filter="รอดำเนินการ" onclick="setFilter('รอดำเนินการ')">🔴 รอดำเนินการ</button>
-                <button class="filter-btn f-doing" data-filter="กำลังทำ"    onclick="setFilter('กำลังทำ')">🟡 กำลังทำ</button>
-                <button class="filter-btn f-done"  data-filter="เสร็จสิ้น"       onclick="setFilter('เสร็จสิ้น')">🟢 เสร็จสิ้น</button>
-                <button class="filter-btn"          data-filter="ตัดตัวครบแล้ว"   onclick="setFilter('ตัดตัวครบแล้ว')" style="--f-active-bg:#7c3aed;">✂️ ตัดตัว</button>
-                <button class="filter-btn"          data-filter="ผลิตเสร็จแล้ว"   onclick="setFilter('ผลิตเสร็จแล้ว')" style="--f-active-bg:#0891b2;">🏭 ผลิตเสร็จ</button>
-            </div>
-            <div id="task-container">
-                <div class="empty-state">
-                    <div class="empty-icon">📂</div>
-                    <div class="empty-text">กำลังโหลดข้อมูล...</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- DASHBOARD -->
-        <div id="section-dash" class="page-section">
-            <div class="page-title">สถิติภาพรวม</div>
-            <div class="stats-grid">
-                <div class="stat-box s-total">
-                    <div class="stat-num" id="stat-total">0</div>
-                    <div class="stat-label">ทั้งหมด</div>
-                </div>
-                <div class="stat-box s-done">
-                    <div class="stat-num" id="stat-done">0</div>
-                    <div class="stat-label">สำเร็จ</div>
-                </div>
-                <div class="stat-box s-wait">
-                    <div class="stat-num" id="stat-wait">0</div>
-                    <div class="stat-label">รอดำเนินการ</div>
-                </div>
-            </div>
-            <div class="chart-wrap">
-                <div class="chart-label">สัดส่วนสถานะงาน</div>
-                <canvas id="statusChart"></canvas>
-            </div>
-            <button class="btn btn-primary" onclick="exportToExcel()">📗 ส่งออก Excel</button>
-        </div>
-
-        <!-- LOGS -->
-        <div id="section-logs" class="page-section">
-            <div class="page-title">ประวัติการเข้าใช้งาน</div>
-            <div id="log-container"></div>
-        </div>
-
+<header class="topbar">
+    <div class="topbar-brand">
+        <div class="brand-icon">⚡</div>
+        <span class="brand-name">4M TASK</span>
+        <span class="brand-ver">v3.5 Beta</span>
     </div>
+    <div class="topbar-right">
+        <div id="admin-indicator">🛡 ADMIN</div>
+        <div class="admin-btn" onclick="openLoginModal()">🔐</div>
+    </div>
+</header>
 
-    <!-- Bottom Nav -->
-    <nav class="nav-rail">
-        <button id="nav-add" class="nav-item active" onclick="showSection('add')">
-            <span class="nav-icon">✨</span>เพิ่มงาน
-        </button>
-        <button id="nav-view" class="nav-item" onclick="showSection('view')">
-            <span class="nav-icon">📂</span>คลังงาน
-        </button>
-        <button id="nav-dash" class="nav-item" onclick="showSection('dash')">
-            <span class="nav-icon">📊</span>สถิติ
-        </button>
-        <button id="nav-logs" class="nav-item" onclick="showSection('logs')" style="display:none;">
-            <span class="nav-icon">📜</span>ล็อก
-        </button>
-    </nav>
+<div class="container">
 
-    <!-- Edit Modal (Bottom Sheet) -->
-    <div id="editModal" class="modal-overlay">
-        <div class="modal-sheet">
-            <div class="modal-handle"></div>
-            <div class="modal-title">✏️ แก้ไขงาน</div>
+    <!-- ADD TASK -->
+    <div id="section-add" class="page-section active">
+        <div class="page-title">สร้างงานใหม่</div>
+        <div class="card">
+            <div class="card-title">ข้อมูลงาน</div>
             <div class="form-group">
                 <label class="form-label">กรอกเลข ORS. / ชื่องาน</label>
-                <input class="form-input" type="text" id="editFullInput">
+                <input class="form-input" type="text" id="taskFullInput" placeholder="ตัวอย่าง 01/01 งาน แขวงทางหลวงชนบท">
             </div>
             <div class="form-group">
-                <label class="form-label">รายละเอียด</label>
-                <textarea class="form-textarea" id="editDetail" rows="4"></textarea>
+                <label class="form-label">หมายเหตุ (ถ้ามี)</label>
+                <textarea class="form-textarea" id="taskDetail" placeholder="ระบุหมายเหตุเพิ่มเติม..." style="min-height:60px;"></textarea>
             </div>
             <div class="form-group">
                 <label class="form-label">สถานะ</label>
-                <select class="form-select" id="editStatus">
+                <select class="form-select" id="taskStatus">
                     <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
                     <option value="กำลังทำ">🟡 กำลังทำ</option>
                     <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label class="form-label">วันที่เสร็จงาน</label>
-                <input class="form-input" type="date" id="editCompletedDate">
+        </div>
+
+        <!-- CHECKLIST BUILDER -->
+        <div class="card">
+            <div class="card-title">📋 รายการตัด (Checklist)</div>
+            <div class="checklist-builder">
+                <div class="checklist-builder-label">✂️ เพิ่มรายการที่ต้องตัด</div>
+                <div id="new-checklist-items"></div>
+                <button class="btn-add-item" onclick="addChecklistItem()">➕ เพิ่มรายการ</button>
             </div>
-            <div class="modal-actions">
-                <button class="btn btn-primary" onclick="saveEdit()">อัปเดต</button>
-                <button class="btn btn-ghost" onclick="closeEditModal()">ยกเลิก</button>
-            </div>
+        </div>
+
+        <button class="btn btn-primary" id="saveBtn" onclick="addTask()">ยืนยันบันทึกงาน</button>
+        <div class="footer-credit">
+            <div class="footer-credit-label">ผู้พัฒนาระบบ</div>
+            <div class="footer-credit-name">ธิติ พุกวิลัย</div>
+            <div class="footer-credit-role">4M TASK Management System · v3.5 Beta</div>
         </div>
     </div>
 
-    <!-- Delete Confirm Modal -->
-    <div id="deleteModal" class="modal-overlay">
-        <div class="confirm-modal">
-            <div class="confirm-icon">🗑️</div>
-            <div class="confirm-title">ยืนยันการลบ?</div>
-            <div class="confirm-sub">ข้อมูลจะถูกลบถาวร ไม่สามารถกู้คืนได้</div>
-            <div class="confirm-actions">
-                <button class="btn-cancel" onclick="closeDeleteModal()">ยกเลิก</button>
-                <button class="btn-delete-confirm" onclick="confirmDeleteTask()">ลบข้อมูล</button>
-            </div>
+    <!-- VIEW TASKS -->
+    <div id="section-view" class="page-section">
+        <div class="page-title">คลังงานทั้งหมด <span id="total-count"></span></div>
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="search-input" type="text" id="searchInput" placeholder="ค้นหาเลข ORS หรือชื่องาน..." onkeyup="filterTasks()">
+        </div>
+        <div class="filter-row">
+            <button class="filter-btn active" data-filter="ทั้งหมด" onclick="setFilter('ทั้งหมด')">📋 ทั้งหมด</button>
+            <button class="filter-btn f-wait"  data-filter="รอดำเนินการ" onclick="setFilter('รอดำเนินการ')">🔴 รอดำเนินการ</button>
+            <button class="filter-btn f-doing" data-filter="กำลังทำ"    onclick="setFilter('กำลังทำ')">🟡 กำลังทำ</button>
+            <button class="filter-btn f-done"  data-filter="เสร็จสิ้น"  onclick="setFilter('เสร็จสิ้น')">🟢 เสร็จสิ้น</button>
+            <button class="filter-btn"         data-filter="ตัดตัวครบแล้ว" onclick="setFilter('ตัดตัวครบแล้ว')">✂️ ตัดตัว</button>
+            <button class="filter-btn"         data-filter="ผลิตเสร็จแล้ว" onclick="setFilter('ผลิตเสร็จแล้ว')">🏭 ผลิตเสร็จ</button>
+        </div>
+        <div id="task-container">
+            <div class="empty-state"><div class="empty-icon">📂</div><div class="empty-text">กำลังโหลดข้อมูล...</div></div>
         </div>
     </div>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal-overlay">
-        <div class="login-card">
-            <div class="login-title">🔐 Admin Login</div>
-            <div class="form-group">
-                <label class="form-label">Username</label>
-                <input class="form-input" type="text" id="adminUser" placeholder="Username">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Password</label>
-                <input class="form-input" type="password" id="adminPass" placeholder="••••••••">
-            </div>
-            <button class="btn btn-primary" onclick="adminLogin()">เข้าสู่ระบบ</button>
-            <button class="login-cancel" onclick="closeLoginModal()">ยกเลิก</button>
+    <!-- DASHBOARD -->
+    <div id="section-dash" class="page-section">
+        <div class="page-title">สถิติภาพรวม</div>
+        <div class="stats-grid">
+            <div class="stat-box s-total"><div class="stat-num" id="stat-total">0</div><div class="stat-label">ทั้งหมด</div></div>
+            <div class="stat-box s-done"> <div class="stat-num" id="stat-done">0</div> <div class="stat-label">สำเร็จ</div></div>
+            <div class="stat-box s-wait"> <div class="stat-num" id="stat-wait">0</div> <div class="stat-label">รอดำเนินการ</div></div>
         </div>
+        <div class="chart-wrap">
+            <div class="chart-label">สัดส่วนสถานะงาน</div>
+            <canvas id="statusChart"></canvas>
+        </div>
+        <button class="btn btn-primary" onclick="exportToExcel()">📗 ส่งออก Excel</button>
     </div>
 
-    <!-- Clear stale Service Worker cache -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(regs => {
-                regs.forEach(r => r.unregister());
-            });
-            caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
-        }
-    </script>
+    <!-- LOGS -->
+    <div id="section-logs" class="page-section">
+        <div class="page-title">ประวัติการเข้าใช้งาน</div>
+        <div id="log-container"></div>
+    </div>
 
-    <!-- Sound Engine + Toast -->
-    <script>
-    window.showToast = function(msg, type = 'success', duration = 2800) {
-        const c = document.getElementById('toast-container');
-        if (!c) return;
-        const t = document.createElement('div');
-        const icons = { success:'✅', error:'❌', info:'ℹ️' };
-        t.className = `toast ${type}`;
-        t.innerHTML = `<span>${icons[type]||'💬'}</span><span>${msg}</span>`;
-        c.appendChild(t);
+</div>
+
+<!-- Bottom Nav -->
+<nav class="nav-rail">
+    <button id="nav-add"  class="nav-item active" onclick="showSection('add')"><span class="nav-icon">✨</span>เพิ่มงาน</button>
+    <button id="nav-view" class="nav-item" onclick="showSection('view')"><span class="nav-icon">📂</span>คลังงาน</button>
+    <button id="nav-dash" class="nav-item" onclick="showSection('dash')"><span class="nav-icon">📊</span>สถิติ</button>
+    <button id="nav-logs" class="nav-item" onclick="showSection('logs')" style="display:none;"><span class="nav-icon">📜</span>ล็อก</button>
+</nav>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal-overlay">
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-title">✏️ แก้ไขงาน</div>
+        <div class="form-group">
+            <label class="form-label">กรอกเลข ORS. / ชื่องาน</label>
+            <input class="form-input" type="text" id="editFullInput">
+        </div>
+        <div class="form-group">
+            <label class="form-label">หมายเหตุ</label>
+            <textarea class="form-textarea" id="editDetail" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">สถานะ</label>
+            <select class="form-select" id="editStatus">
+                <option value="รอดำเนินการ">🔴 รอดำเนินการ</option>
+                <option value="กำลังทำ">🟡 กำลังทำ</option>
+                <option value="เสร็จสิ้น">🟢 เสร็จสิ้น</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">วันที่เสร็จงาน</label>
+            <input class="form-input" type="date" id="editCompletedDate">
+        </div>
+        <!-- Edit Checklist -->
+        <div class="form-group">
+            <label class="form-label" style="margin-bottom:10px;">📋 รายการตัด (Checklist)</label>
+            <div class="checklist-builder">
+                <div id="edit-checklist-items"></div>
+                <button class="btn-add-item" onclick="addEditChecklistItem()">➕ เพิ่มรายการ</button>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="saveEdit()">อัปเดต</button>
+            <button class="btn btn-ghost" onclick="closeEditModal()">ยกเลิก</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div id="deleteModal" class="modal-overlay">
+    <div class="confirm-modal">
+        <div class="confirm-icon">🗑️</div>
+        <div class="confirm-title">ยืนยันการลบ?</div>
+        <div class="confirm-sub">ข้อมูลจะถูกลบถาวร ไม่สามารถกู้คืนได้</div>
+        <div class="confirm-actions">
+            <button class="btn-cancel" onclick="closeDeleteModal()">ยกเลิก</button>
+            <button class="btn-delete-confirm" onclick="confirmDeleteTask()">ลบข้อมูล</button>
+        </div>
+    </div>
+</div>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal-overlay">
+    <div class="login-card">
+        <div class="login-title">🔐 Admin Login</div>
+        <div class="form-group">
+            <label class="form-label">Username</label>
+            <input class="form-input" type="text" id="adminUser" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" id="adminPass" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary" onclick="adminLogin()">เข้าสู่ระบบ</button>
+        <button class="login-cancel" onclick="closeLoginModal()">ยกเลิก</button>
+    </div>
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+    caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+}
+</script>
+
+<script>
+window.showToast = function(msg, type='success', duration=2800) {
+    const c = document.getElementById('toast-container');
+    if (!c) return;
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<span>${{success:'✅',error:'❌',info:'ℹ️'}[type]||'💬'}</span><span>${msg}</span>`;
+    c.appendChild(t);
+    setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, duration);
+};
+
+let _ctx = null;
+const ac = () => { if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)(); if (_ctx.state==='suspended') _ctx.resume(); return _ctx; };
+const tone = (freq,type,start,dur,vol,ctx) => { const o=ctx.createOscillator(),g=ctx.createGain(); o.connect(g);g.connect(ctx.destination); o.type=type;o.frequency.setValueAtTime(freq,ctx.currentTime+start); g.gain.setValueAtTime(0,ctx.currentTime+start);g.gain.linearRampToValueAtTime(vol,ctx.currentTime+start+0.01);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+start+dur); o.start(ctx.currentTime+start);o.stop(ctx.currentTime+start+dur+0.01); };
+const noise = (start,dur,vol,ctx) => { const buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate),d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; const src=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter(); f.type='bandpass';f.frequency.value=800;f.Q.value=0.5; src.buffer=buf;src.connect(f);f.connect(g);g.connect(ctx.destination); g.gain.setValueAtTime(vol,ctx.currentTime+start);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+start+dur); src.start(ctx.currentTime+start);src.stop(ctx.currentTime+start+dur+0.01); };
+window.SFX = {
+    click:   ()=>{try{const c=ac();tone(660,'sine',0,0.08,0.12,c);tone(880,'sine',0.04,0.06,0.06,c);}catch(e){}},
+    success: ()=>{try{const c=ac();[523,659,784].forEach((f,i)=>tone(f,'sine',i*0.1,0.18,0.15,c));}catch(e){}},
+    add:     ()=>{try{const c=ac();[392,523,659,784].forEach((f,i)=>tone(f,'triangle',i*0.08,0.2,0.13,c));}catch(e){}},
+    delete:  ()=>{try{const c=ac();tone(440,'square',0,0.05,0.08,c);tone(330,'square',0.05,0.05,0.08,c);tone(220,'square',0.1,0.1,0.07,c);}catch(e){}},
+    cut:     ()=>{try{const c=ac();noise(0,0.04,0.18,c);tone(1200,'square',0,0.03,0.07,c);noise(0.04,0.03,0.12,c);tone(900,'square',0.04,0.03,0.05,c);}catch(e){}},
+    made:    ()=>{try{const c=ac();[523,659,784,1047].forEach((f,i)=>tone(f,'sine',i*0.09,0.22,0.14,c));tone(784,'sine',0.36,0.3,0.1,c);}catch(e){}},
+    unlock:  ()=>{try{const c=ac();tone(440,'sine',0,0.08,0.1,c);tone(660,'sine',0.1,0.08,0.1,c);tone(880,'sine',0.2,0.15,0.12,c);}catch(e){}},
+    error:   ()=>{try{const c=ac();tone(180,'sawtooth',0,0.08,0.12,c);tone(160,'sawtooth',0.08,0.08,0.1,c);}catch(e){}},
+    launch:  ()=>{try{const c=ac();[330,392,523,659,784].forEach((f,i)=>tone(f,'sine',i*0.07,0.25,0.11,c));tone(1047,'sine',0.35,0.4,0.09,c);}catch(e){}},
+    ping:    ()=>{try{const c=ac();tone(1047,'sine',0,0.05,0.1,c);tone(1319,'sine',0.06,0.12,0.08,c);}catch(e){}},
+    check:   ()=>{try{const c=ac();tone(880,'sine',0,0.05,0.1,c);tone(1100,'sine',0.05,0.1,0.08,c);}catch(e){}},
+    allDone: ()=>{try{const c=ac();[523,659,784,880,1047].forEach((f,i)=>tone(f,'sine',i*0.07,0.25,0.13,c));}catch(e){}},
+};
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
+    authDomain: "mytaskapp-pro.firebaseapp.com",
+    projectId: "mytaskapp-pro",
+    storageBucket: "mytaskapp-pro.firebasestorage.app",
+    messagingSenderId: "189296604432",
+    appId: "1:189296604432:web:31dabc3c5e363b2c96a195"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let allTasks = [], statusChart, isAdmin = false;
+let editingId = null, taskToDeleteId = null, editingSnapshot = null;
+let logsUnsubscribe = null;
+let activeFilter = 'ทั้งหมด';
+let newChecklistItems = [];   // [{text, checked}]
+let editChecklistItems = [];  // [{text, checked}]
+
+const monthNames = ["ทั่วไป","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+
+const getDeviceInfo = () => {
+    const ua = navigator.userAgent;
+    let brand="Unknown",model="Unknown",os="Unknown",browser="Unknown";
+    if(/android/i.test(ua)){os="Android";const v=ua.match(/Android\s([\d.]+)/);if(v)os+=" "+v[1];const m=ua.match(/;\s*([^;]+)\s+Build\//);if(m){model=m[1].trim();brand=model.split(" ")[0];}}
+    else if(/iPhone/i.test(ua)){brand="Apple";model="iPhone";const v=ua.match(/OS\s([\d_]+)/);if(v)os="iOS "+v[1].replace(/_/g,".");}
+    else if(/iPad/i.test(ua)){brand="Apple";model="iPad";const v=ua.match(/OS\s([\d_]+)/);if(v)os="iPadOS "+v[1].replace(/_/g,".");}
+    else if(/Windows/i.test(ua)){os="Windows";brand="PC";}
+    else if(/Mac/i.test(ua)){os="macOS";brand="Apple";}
+    if(/Chrome\/[\d]+/.test(ua)&&!/Edg\//.test(ua)&&!/OPR\//.test(ua)){const v=ua.match(/Chrome\/([\d]+)/);browser="Chrome"+(v?" "+v[1]:"");}
+    else if(/Safari\//.test(ua)&&!/Chrome/.test(ua)){const v=ua.match(/Version\/([\d.]+)/);browser="Safari"+(v?" "+v[1]:"");}
+    else if(/Edg\//.test(ua)){browser="Edge";}
+    else if(/Firefox\//.test(ua)){browser="Firefox";}
+    else if(/SamsungBrowser/.test(ua)){browser="Samsung Internet";}
+    return {brand,model,os,browser,screen:`${window.screen.width}×${window.screen.height}`,ua};
+};
+
+const writeLog = async (action, data={}) => {
+    try { await addDoc(collection(db,"logs"),{action,timestamp:new Date().getTime(),device:getDeviceInfo(),...data}); } catch(e){console.warn("Log write failed:",e);}
+};
+
+// ════════════════════════════════════════
+// CHECKLIST BUILDER — หน้าสร้างงาน
+// ════════════════════════════════════════
+window.addChecklistItem = () => {
+    newChecklistItems.push({ text: '', checked: false });
+    renderNewChecklist();
+    // focus last input
+    setTimeout(() => {
+        const inputs = document.querySelectorAll('#new-checklist-items .checklist-item-input');
+        if (inputs.length) inputs[inputs.length-1].focus();
+    }, 50);
+};
+
+const renderNewChecklist = () => {
+    const wrap = document.getElementById('new-checklist-items');
+    wrap.innerHTML = newChecklistItems.map((item, i) => `
+        <div class="checklist-item-row">
+            <input class="checklist-item-input" type="text" value="${item.text.replace(/"/g,'&quot;')}"
+                placeholder="ระบุรายการ เช่น ทางข้าง 5 เหลี่ยม 60x60 cm. (4 แผ่น)"
+                oninput="updateNewItem(${i}, this.value)"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();addChecklistItem();}if(event.key==='Backspace'&&this.value===''){removeNewItem(${i});}"
+            >
+            <button class="checklist-item-del" onclick="removeNewItem(${i})">✕</button>
+        </div>
+    `).join('');
+};
+
+window.updateNewItem = (i, val) => { newChecklistItems[i].text = val; };
+window.removeNewItem = (i) => {
+    newChecklistItems.splice(i, 1);
+    renderNewChecklist();
+};
+
+// ════════════════════════════════════════
+// CHECKLIST BUILDER — edit modal
+// ════════════════════════════════════════
+window.addEditChecklistItem = () => {
+    editChecklistItems.push({ text: '', checked: false });
+    renderEditChecklist();
+    setTimeout(() => {
+        const inputs = document.querySelectorAll('#edit-checklist-items .checklist-item-input');
+        if (inputs.length) inputs[inputs.length-1].focus();
+    }, 50);
+};
+
+const renderEditChecklist = () => {
+    const wrap = document.getElementById('edit-checklist-items');
+    wrap.innerHTML = editChecklistItems.map((item, i) => `
+        <div class="checklist-item-row">
+            <input class="checklist-item-input" type="text" value="${item.text.replace(/"/g,'&quot;')}"
+                placeholder="ระบุรายการ..."
+                oninput="updateEditItem(${i}, this.value)"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();addEditChecklistItem();}if(event.key==='Backspace'&&this.value===''){removeEditItem(${i});}"
+            >
+            <button class="checklist-item-del" onclick="removeEditItem(${i})">✕</button>
+        </div>
+    `).join('');
+};
+
+window.updateEditItem = (i, val) => { editChecklistItems[i].text = val; };
+window.removeEditItem = (i) => { editChecklistItems.splice(i, 1); renderEditChecklist(); };
+
+// ════════════════════════════════════════
+// TICK CHECKLIST ITEM — real-time Firebase
+// ════════════════════════════════════════
+window.toggleCheckItem = async (taskId, itemIndex) => {
+    const task = allTasks.find(x => x.id === taskId);
+    if (!task || !task.checklist) return;
+
+    const newChecklist = task.checklist.map((item, i) =>
+        i === itemIndex ? { ...item, checked: !item.checked } : item
+    );
+
+    const allChecked = newChecklist.length > 0 && newChecklist.every(x => x.checked);
+    const updateData = { checklist: newChecklist, lastEditedByDevice: getDeviceInfo() };
+
+    // ถ้าครบทุกข้อ → เปลี่ยนสถานะอัตโนมัติ
+    if (allChecked && task.status !== 'ตัดตัวครบแล้ว' && task.status !== 'ผลิตเสร็จแล้ว' && task.status !== 'เสร็จสิ้น') {
+        updateData.status = 'ตัดตัวครบแล้ว';
+        await updateDoc(doc(db, "tasks", taskId), updateData);
+        await writeLog('EDIT', {
+            taskId,
+            taskRef: `${task.ors} ${task.title}`,
+            before: { status: task.status },
+            after:  { status: 'ตัดตัวครบแล้ว', note: 'ตัดครบจาก checklist อัตโนมัติ' }
+        });
+        window.SFX?.allDone();
+        window.showToast?.('✂️ ตัดครบทุกรายการแล้ว!', 'success', 3000);
+        // highlight card
         setTimeout(() => {
-            t.classList.add('out');
-            setTimeout(() => t.remove(), 350);
-        }, duration);
+            const card = document.getElementById(`task-card-${taskId}`);
+            if (card) card.classList.add('just-completed');
+        }, 100);
+    } else {
+        await updateDoc(doc(db, "tasks", taskId), updateData);
+        window.SFX?.check();
+    }
+};
+
+// ════════════════════════════════════════
+// ADD TASK
+// ════════════════════════════════════════
+window.addTask = async () => {
+    const raw = document.getElementById('taskFullInput').value.trim();
+    if (!raw) return alert("กรุณาระบุชื่องาน");
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true; btn.innerText = "กำลังบันทึก...";
+    try {
+        const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
+        const ors   = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
+        const title = match ? match[3].trim() : raw;
+        const cleanChecklist = newChecklistItems
+            .filter(x => x.text.trim() !== '')
+            .map(x => ({ text: x.text.trim(), checked: false }));
+        const taskData = {
+            ors, title,
+            detail: document.getElementById('taskDetail').value,
+            status: document.getElementById('taskStatus').value,
+            completedDate: null,
+            checklist: cleanChecklist,
+            createdAt: new Date().getTime(),
+            createdByDevice: getDeviceInfo()
+        };
+        const ref = await addDoc(collection(db,"tasks"), taskData);
+        await writeLog('ADD', { taskId: ref.id, taskRef: `${ors} ${title}`, after: { ors, title, detail: taskData.detail, status: taskData.status } });
+        window.SFX?.add();
+        window.showToast?.('บันทึกงานสำเร็จ! 🎉', 'success');
+        setTimeout(() => location.reload(), 800);
+    } catch(e) {
+        alert(e.message);
+        btn.disabled = false; btn.innerText = "ยืนยันบันทึกงาน";
+    }
+};
+
+// ════════════════════════════════════════
+// EDIT TASK
+// ════════════════════════════════════════
+window.openEditModal = (id) => {
+    const t = allTasks.find(x => x.id === id);
+    editingId = id;
+    editingSnapshot = { ors: t.ors, title: t.title, detail: t.detail||"", status: t.status, completedDate: t.completedDate||"" };
+    document.getElementById('editFullInput').value = t.ors.replace('ORS.','')+' '+t.title;
+    document.getElementById('editDetail').value = t.detail||"";
+    document.getElementById('editStatus').value = t.status;
+    document.getElementById('editCompletedDate').value = t.completedDate||"";
+    editChecklistItems = (t.checklist||[]).map(x => ({ ...x }));
+    renderEditChecklist();
+    document.getElementById('editModal').classList.add('active');
+};
+
+window.saveEdit = async () => {
+    const btn = document.querySelector('#editModal .btn-primary');
+    if (btn) { btn.disabled=true; btn.innerText='กำลังบันทึก...'; }
+    try {
+        const raw = document.getElementById('editFullInput').value;
+        const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
+        const cleanChecklist = editChecklistItems.filter(x => x.text.trim() !== '').map(x => ({ text: x.text.trim(), checked: x.checked }));
+        const newData = {
+            ors: match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00",
+            title: match ? match[3].trim() : raw,
+            detail: document.getElementById('editDetail').value,
+            status: document.getElementById('editStatus').value,
+            completedDate: document.getElementById('editCompletedDate').value||null,
+            checklist: cleanChecklist,
+            lastEditedByDevice: getDeviceInfo()
+        };
+        await updateDoc(doc(db,"tasks",editingId), newData);
+        await writeLog('EDIT', { taskId: editingId, taskRef: `${newData.ors} ${newData.title}`, before: editingSnapshot, after: { ors: newData.ors, title: newData.title, detail: newData.detail, status: newData.status, completedDate: newData.completedDate } });
+        window.SFX?.success();
+        window.showToast?.('อัปเดตสำเร็จ ✅', 'success');
+    } catch(e) {
+        window.SFX?.error();
+        alert('บันทึกไม่สำเร็จ: '+e.message);
+    } finally {
+        closeEditModal();
+        if (btn) { btn.disabled=false; btn.innerText='อัปเดต'; }
+    }
+};
+window.closeEditModal = () => document.getElementById('editModal').classList.remove('active');
+
+// ════════════════════════════════════════
+// QUICK STATUS
+// ════════════════════════════════════════
+let madeTaskId = null;
+window.quickStatus = async (id, newStatus) => {
+    if (newStatus==='ผลิตเสร็จแล้ว') {
+        window.SFX?.ping();
+        madeTaskId = id;
+        const t = allTasks.find(x=>x.id===id);
+        document.getElementById('madeDateTaskName').textContent = t ? `${t.ors} ${t.title}` : '—';
+        document.getElementById('madeDateInput').value = new Date().toISOString().split('T')[0];
+        document.getElementById('madeDateModal').classList.add('active');
+        return;
+    }
+    const t = allTasks.find(x=>x.id===id); if(!t) return;
+    await updateDoc(doc(db,"tasks",id),{status:newStatus,lastEditedByDevice:getDeviceInfo()});
+    await writeLog('EDIT',{taskId:id,taskRef:`${t.ors} ${t.title}`,before:{status:t.status},after:{status:newStatus}});
+    window.SFX?.cut();
+    window.showToast?.('✂️ ตัดตัวครบแล้ว!','success',2200);
+};
+window.closeMadeDateModal = () => { document.getElementById('madeDateModal').classList.remove('active'); madeTaskId=null; };
+window.confirmMadeDate = async () => {
+    if (!madeTaskId) return;
+    const t = allTasks.find(x=>x.id===madeTaskId); if(!t) return;
+    const dateVal = document.getElementById('madeDateInput').value;
+    await updateDoc(doc(db,"tasks",madeTaskId),{status:'ผลิตเสร็จแล้ว',completedDate:dateVal||null,lastEditedByDevice:getDeviceInfo()});
+    await writeLog('EDIT',{taskId:madeTaskId,taskRef:`${t.ors} ${t.title}`,before:{status:t.status},after:{status:'ผลิตเสร็จแล้ว',completedDate:dateVal}});
+    window.SFX?.made();
+    window.showToast?.('🏭 ผลิตเสร็จแล้ว!','success',2500);
+    closeMadeDateModal();
+};
+
+// ════════════════════════════════════════
+// DELETE
+// ════════════════════════════════════════
+window.openDeleteModal  = (id) => { taskToDeleteId=id; document.getElementById('deleteModal').classList.add('active'); };
+window.closeDeleteModal = ()  => document.getElementById('deleteModal').classList.remove('active');
+window.confirmDeleteTask = async () => {
+    const t = allTasks.find(x=>x.id===taskToDeleteId);
+    await deleteDoc(doc(db,"tasks",taskToDeleteId));
+    await writeLog('DELETE',{taskId:taskToDeleteId,taskRef:t?`${t.ors} ${t.title}`:taskToDeleteId,before:t?{ors:t.ors,title:t.title,detail:t.detail||"",status:t.status}:null});
+    window.SFX?.delete();
+    window.showToast?.('ลบข้อมูลแล้ว','info',2000);
+    closeDeleteModal();
+};
+
+// ════════════════════════════════════════
+// FILTER
+// ════════════════════════════════════════
+window.setFilter = (f) => {
+    activeFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector(`.filter-btn[data-filter="${f}"]`).classList.add('active');
+    filterTasks();
+};
+
+const getCompletedBadge = (d) => {
+    if (!d) return '';
+    const ds = new Date(d).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'});
+    return `<span class="completed-badge">✅ เสร็จเมื่อ ${ds}</span>`;
+};
+
+// ════════════════════════════════════════
+// RENDER CHECKLIST inside task card
+// ════════════════════════════════════════
+const renderChecklistHTML = (task) => {
+    const cl = task.checklist || [];
+    if (cl.length === 0) return '';
+    const done  = cl.filter(x=>x.checked).length;
+    const total = cl.length;
+    const pct   = total > 0 ? Math.round((done/total)*100) : 0;
+    const allDone = done === total;
+
+    return `
+    <div class="checklist-wrap">
+        <div class="checklist-summary">
+            <span>✂️ รายการตัด ${done}/${total}</span>
+            <span class="checklist-summary-pct">${pct}%</span>
+        </div>
+        <div class="checklist-progress-bar-wrap">
+            <div class="checklist-progress-bar" style="width:${pct}%"></div>
+        </div>
+        ${allDone ? `<div class="auto-complete-banner">🎉 ตัดครบทุกรายการแล้ว!</div>` : ''}
+        ${cl.map((item, i) => `
+        <div class="checklist-display-item ${item.checked?'checked':''}" onclick="toggleCheckItem('${task.id}', ${i})">
+            <div class="cl-check"><span class="cl-check-icon">✓</span></div>
+            <span class="cl-label">${item.text}</span>
+        </div>`).join('')}
+    </div>`;
+};
+
+// ════════════════════════════════════════
+// RENDER ALL TASKS
+// ════════════════════════════════════════
+window.filterTasks = () => {
+    const container = document.getElementById('task-container');
+    container.innerHTML = "";
+    const search = document.getElementById('searchInput').value.toLowerCase();
+
+    let filtered = allTasks.filter(t =>
+        (t.title||"").toLowerCase().includes(search) ||
+        (t.ors||"").toLowerCase().includes(search)
+    );
+    if (activeFilter !== 'ทั้งหมด') filtered = filtered.filter(t=>t.status===activeFilter);
+
+    if (filtered.length===0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">ไม่พบงานที่ค้นหา</div></div>`;
+        return;
+    }
+    document.getElementById('total-count').textContent = `(${filtered.length})`;
+
+    const grouped = {};
+    filtered.forEach(t => {
+        let m = "ทั่วไป";
+        try { const idx=parseInt(t.ors.split('/')[0].split('.')[1]); if(idx>0&&idx<=12) m=monthNames[idx]; } catch(e){}
+        if(!grouped[m]) grouped[m]=[];
+        grouped[m].push(t);
+    });
+
+    monthNames.filter(m=>grouped[m]).forEach(mName => {
+        const sId = 'ms-'+mName;
+        const badgeClass = {'เสร็จสิ้น':'badge-done','กำลังทำ':'badge-doing','รอดำเนินการ':'badge-wait','ตัดตัวครบแล้ว':'badge-cut','ผลิตเสร็จแล้ว':'badge-made'};
+        const cardClass  = {'เสร็จสิ้น':'status-done','กำลังทำ':'status-doing','รอดำเนินการ':'status-wait','ตัดตัวครบแล้ว':'status-cut','ผลิตเสร็จแล้ว':'status-made'};
+
+        let html = `
+        <div class="month-section">
+            <div class="month-header" onclick="toggleMonth('${sId}',this)">
+                <div class="month-header-left">
+                    <div class="month-dot"></div>
+                    <span class="month-name">เดือน${mName}</span>
+                    <span class="month-count">${grouped[mName].length}</span>
+                </div>
+                <span class="month-chevron">▼</span>
+            </div>
+            <div id="${sId}" class="month-body">`;
+
+        grouped[mName].forEach(t => {
+            const status  = t.status||'รอดำเนินการ';
+            const isCut   = status==='ตัดตัวครบแล้ว'||status==='ผลิตเสร็จแล้ว'||status==='เสร็จสิ้น';
+            const isMade  = status==='ผลิตเสร็จแล้ว'||status==='เสร็จสิ้น';
+            const dueBadge = getCompletedBadge(t.completedDate);
+
+            html += `
+            <div class="task-card ${cardClass[status]||'status-wait'}" id="task-card-${t.id}">
+                <div class="task-header">
+                    <span class="task-ors">${t.ors}</span>
+                    <span class="task-badge ${badgeClass[status]||'badge-wait'}">${status}</span>
+                </div>
+                <div class="task-title">${t.title}</div>
+                ${dueBadge}
+                ${t.detail ? `<div class="task-detail" style="margin-top:6px;">${t.detail}</div>` : ''}
+                ${renderChecklistHTML(t)}
+                <div class="quick-actions">
+                    <button class="btn-quick btn-cut${isCut?' done-state':''}" onclick="${isCut?'':` quickStatus('${t.id}','ตัดตัวครบแล้ว')`}">
+                        ${isCut?'✅':'✂️'} ตัดตัวครบแล้ว
+                    </button>
+                    <button class="btn-quick btn-made${isMade?' done-state':''}" onclick="${isMade?'':` quickStatus('${t.id}','ผลิตเสร็จแล้ว')`}">
+                        ${isMade?'✅':'🏭'} ผลิตเสร็จแล้ว
+                    </button>
+                </div>
+                <div class="task-actions">
+                    <button class="btn btn-ghost" onclick="openEditModal('${t.id}')">✏️ แก้ไข</button>
+                    <button class="btn btn-danger" onclick="openDeleteModal('${t.id}')">🗑️ ลบ</button>
+                </div>
+            </div>`;
+        });
+        html += `</div></div>`;
+        container.innerHTML += html;
+    });
+};
+
+window.toggleMonth = (mId, headerEl) => {
+    document.getElementById(mId).classList.toggle('open');
+    headerEl.classList.toggle('open');
+};
+
+// ════════════════════════════════════════
+// FIREBASE LISTENER
+// ════════════════════════════════════════
+let firstLoad = true;
+onSnapshot(
+    collection(db,"tasks"),
+    (snap) => {
+        allTasks = snap.docs.map(d=>({id:d.id,...d.data()}));
+        allTasks.sort((a,b)=>a.ors.localeCompare(b.ors));
+        filterTasks();
+        updateDashboard();
+        if (firstLoad) { firstLoad=false; window.finishLoading&&window.finishLoading(); }
+    },
+    (error) => {
+        console.error("Firestore error:",error);
+        window.finishLoading&&window.finishLoading();
+        const c = document.getElementById('task-container');
+        if(c) c.innerHTML=`<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text" style="color:#dc2626;">โหลดข้อมูลไม่สำเร็จ<br><small>${error.code||error.message}</small></div><button class="btn btn-primary" style="margin-top:16px;max-width:200px;" onclick="location.reload()">🔄 โหลดใหม่</button></div>`;
+    }
+);
+
+// ════════════════════════════════════════
+// LOGS
+// ════════════════════════════════════════
+const renderLogs = (logs) => {
+    const container = document.getElementById('log-container');
+    if (!logs.length) { container.innerHTML=`<div class="empty-state"><div class="empty-icon">📜</div><div class="empty-text">ยังไม่มีบันทึก</div></div>`; return; }
+    const actionLabel = { ADD:{text:'เพิ่มงาน',color:'#16a34a',bg:'rgba(22,163,74,0.08)',icon:'➕'}, EDIT:{text:'แก้ไขงาน',color:'#b45309',bg:'rgba(180,83,9,0.08)',icon:'✏️'}, DELETE:{text:'ลบงาน',color:'#dc2626',bg:'rgba(220,38,38,0.08)',icon:'🗑️'} };
+    container.innerHTML = logs.map(log => {
+        const a = actionLabel[log.action]||{text:log.action,color:'#4b7a5a',bg:'#f0faf4',icon:'📋'};
+        const d = log.device||{};
+        const dt = new Date(log.timestamp);
+        const dateStr = dt.toLocaleDateString('th-TH',{year:'numeric',month:'short',day:'numeric'});
+        const timeStr = dt.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+        let diffHtml='';
+        if(log.action==='EDIT'&&log.before&&log.after){
+            const fields=[{label:'ORS',before:log.before.ors,after:log.after.ors},{label:'ชื่องาน',before:log.before.title,after:log.after.title},{label:'สถานะ',before:log.before.status,after:log.after.status},{label:'รายละเอียด',before:log.before.detail,after:log.after.detail}].filter(f=>f.before!==f.after);
+            if(fields.length) diffHtml=`<div class="log-diff-wrap"><div class="log-diff-title">🔄 ข้อมูลที่เปลี่ยนแปลง</div>${fields.map(f=>`<div class="log-diff-row"><div class="log-diff-field">${f.label}</div><div class="log-diff-before"><span class="log-diff-label">ก่อน</span>${f.before||'—'}</div><div class="log-diff-after"><span class="log-diff-label">หลัง</span>${f.after||'—'}</div></div>`).join('')}</div>`;
+        }
+        if(log.action==='DELETE'&&log.before) diffHtml=`<div class="log-diff-wrap" style="border-color:rgba(220,38,38,0.2);"><div class="log-diff-title">📋 ข้อมูลที่ถูกลบ</div><div class="log-diff-row"><div class="log-diff-field">ORS</div><div class="log-diff-before" style="grid-column:span 2;">${log.before.ors}</div></div><div class="log-diff-row"><div class="log-diff-field">ชื่องาน</div><div class="log-diff-before" style="grid-column:span 2;">${log.before.title}</div></div><div class="log-diff-row"><div class="log-diff-field">สถานะ</div><div class="log-diff-before" style="grid-column:span 2;">${log.before.status}</div></div></div>`;
+        return `<div class="log-card"><div class="log-card-header"><div class="log-action-badge" style="background:${a.bg};color:${a.color};border-color:${a.color}40;">${a.icon} ${a.text}</div><div class="log-timestamp">${dateStr} · ${timeStr}</div></div><div class="log-taskref">${log.taskRef||'—'}</div><div class="log-device-block"><div class="log-device-row"><span class="log-device-key">ยี่ห้อ</span><span class="log-device-val">${d.brand||'—'}</span></div><div class="log-device-row"><span class="log-device-key">รุ่น</span><span class="log-device-val">${d.model||'—'}</span></div><div class="log-device-row"><span class="log-device-key">OS</span><span class="log-device-val">${d.os||'—'}</span></div><div class="log-device-row"><span class="log-device-key">เบราว์เซอร์</span><span class="log-device-val">${d.browser||'—'}</span></div><div class="log-device-row"><span class="log-device-key">หน้าจอ</span><span class="log-device-val">${d.screen||'—'}</span></div></div>${diffHtml}</div>`;
+    }).join('');
+};
+
+// ════════════════════════════════════════
+// SECTION NAV
+// ════════════════════════════════════════
+window.showSection = (n) => {
+    document.querySelectorAll('.page-section').forEach(el=>el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+    document.getElementById('section-'+n).classList.add('active');
+    document.getElementById('nav-'+n).classList.add('active');
+};
+
+// ════════════════════════════════════════
+// LOGIN
+// ════════════════════════════════════════
+window.openLoginModal  = () => document.getElementById('loginModal').classList.add('active');
+window.closeLoginModal = () => document.getElementById('loginModal').classList.remove('active');
+window.adminLogin = () => {
+    if (document.getElementById('adminUser').value==="Admin" && document.getElementById('adminPass').value==="Admin444") {
+        isAdmin=true;
+        document.getElementById('nav-logs').style.display='';
+        document.getElementById('admin-indicator').style.display='block';
+        window.SFX?.unlock();
+        window.showToast?.('🛡️ เข้าสู่ระบบ Admin แล้ว','info');
+        closeLoginModal();
+        filterTasks();
+        const logsQ = query(collection(db,"logs"),orderBy("timestamp","desc"),limit(100));
+        logsUnsubscribe = onSnapshot(logsQ,(snap)=>{
+            const logs = snap.docs.map(d=>({id:d.id,...d.data()}));
+            renderLogs(logs);
+        });
+    } else {
+        window.SFX?.error();
+        alert("รหัสผ่านไม่ถูกต้อง");
+    }
+};
+
+// ════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════
+let sObj;
+window.updateDashboard = () => {
+    const cs={'เสร็จสิ้น':0,'กำลังทำ':0,'รอดำเนินการ':0};
+    allTasks.forEach(t=>{if(cs[t.status]!==undefined)cs[t.status]++;});
+    document.getElementById('stat-total').innerText = allTasks.length;
+    document.getElementById('stat-done').innerText  = cs['เสร็จสิ้น'];
+    document.getElementById('stat-wait').innerText  = cs['รอดำเนินการ'];
+    const cx = document.getElementById('statusChart')?.getContext('2d');
+    if (!cx) return;
+    if (sObj) sObj.destroy();
+    sObj = new Chart(cx,{type:'doughnut',data:{labels:['เสร็จสิ้น','กำลังทำ','รอดำเนินการ'],datasets:[{data:Object.values(cs),backgroundColor:['#16a34a','#f59e0b','#ef4444'],borderWidth:0,hoverOffset:8}]},options:{plugins:{legend:{labels:{color:'#4b7a5a',font:{family:'Prompt',size:12}}}}}});
+};
+
+// ════════════════════════════════════════
+// EXCEL EXPORT
+// ════════════════════════════════════════
+window.exportToExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const C_GREEN_DARK="14532D",C_GREEN_MID="16A34A",C_GREEN_LIGHT="DCFCE7",C_YELLOW_LIGHT="FEF9C3",C_RED_LIGHT="FEE2E2",C_WHITE="FFFFFF";
+    const fontMain={name:"Calibri",sz:9},fontBold={name:"Calibri",sz:9,bold:true},fontTitle={name:"Calibri",sz:14,bold:true,color:{rgb:C_WHITE}},fontSub={name:"Calibri",sz:8,color:{rgb:"4B7A5A"}},fontHeader={name:"Calibri",sz:9,bold:true,color:{rgb:C_WHITE}},fontMono={name:"Courier New",sz:8};
+    const border={top:{style:"thin",color:{rgb:"BBF7D0"}},bottom:{style:"thin",color:{rgb:"BBF7D0"}},left:{style:"thin",color:{rgb:"BBF7D0"}},right:{style:"thin",color:{rgb:"BBF7D0"}}};
+    const borderHeader={top:{style:"medium",color:{rgb:C_GREEN_DARK}},bottom:{style:"medium",color:{rgb:C_GREEN_DARK}},left:{style:"medium",color:{rgb:C_GREEN_DARK}},right:{style:"medium",color:{rgb:C_GREEN_DARK}}};
+    const align_c={horizontal:"center",vertical:"center"},align_l={horizontal:"left",vertical:"center"},align_wrap={horizontal:"left",vertical:"center",wrapText:true};
+    const sHeader=(col)=>({v:col,t:"s",s:{font:fontHeader,fill:{fgColor:{rgb:C_GREEN_DARK}},alignment:align_c,border:borderHeader}});
+    const rowBg=(st)=>{if(st==="เสร็จสิ้น")return C_GREEN_LIGHT;if(st==="กำลังทำ")return C_YELLOW_LIGHT;return C_RED_LIGHT;};
+    const sCell=(val,st,mono=false,center=false,wrap=false)=>({v:val??"",t:"s",s:{font:mono?{...fontMono,color:{rgb:"166534"}}:fontMain,fill:{fgColor:{rgb:rowBg(st)}},alignment:wrap?align_wrap:(center?align_c:align_l),border}});
+    const sStatus=(st)=>{const color=st==="เสร็จสิ้น"?"166534":st==="กำลังทำ"?"92400E":"991B1B",bg=st==="เสร็จสิ้น"?C_GREEN_LIGHT:st==="กำลังทำ"?C_YELLOW_LIGHT:C_RED_LIGHT;return{v:st,t:"s",s:{font:{...fontBold,color:{rgb:color}},fill:{fgColor:{rgb:bg}},alignment:align_c,border}};};
+    const now=new Date();
+    const dateStr=now.toLocaleDateString("th-TH",{year:"numeric",month:"long",day:"numeric"});
+    const titleCell={v:`4M TASK — รายงานสรุปงานทั้งหมด`,t:"s",s:{font:fontTitle,fill:{fgColor:{rgb:C_GREEN_MID}},alignment:align_c}};
+    const subCell={v:`ส่งออกเมื่อ: ${dateStr} · รวม ${allTasks.length} รายการ`,t:"s",s:{font:fontSub,fill:{fgColor:{rgb:"F0FDF4"}},alignment:align_c}};
+    const headers=["ลำดับ","เลข ORS","ชื่องาน","สถานะ","รายการตัด (Checklist)","หมายเหตุ","วันที่สร้าง"];
+    const rows=allTasks.map((t,i)=>{
+        const st=t.status||"รอดำเนินการ";
+        const clText=(t.checklist||[]).map((x,n)=>`${n+1}. [${x.checked?'✓':' '}] ${x.text}`).join('\n');
+        const dateCreated=t.createdAt?new Date(t.createdAt).toLocaleDateString("th-TH",{year:"numeric",month:"short",day:"numeric"}):"—";
+        return [
+            {v:i+1,t:"n",s:{font:{...fontBold,color:{rgb:"166534"}},fill:{fgColor:{rgb:rowBg(st)}},alignment:align_c,border}},
+            sCell(t.ors,st,true,true),
+            sCell(t.title,st,false,false,true),
+            sStatus(st),
+            sCell(clText||"—",st,false,false,true),
+            sCell(t.detail||"—",st,false,false,true),
+            sCell(dateCreated,st,false,true),
+        ];
+    });
+    const done=allTasks.filter(t=>t.status==="เสร็จสิ้น").length,doing=allTasks.filter(t=>t.status==="กำลังทำ").length,wait=allTasks.filter(t=>t.status==="รอดำเนินการ").length;
+    const sSum=(label,val,color,bg)=>([{v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},{v:label,t:"s",s:{font:{...fontBold,color:{rgb:color}},fill:{fgColor:{rgb:bg}},alignment:align_c,border}},{v:`${val} รายการ`,t:"s",s:{font:{name:"Calibri",sz:9,color:{rgb:color}},fill:{fgColor:{rgb:bg}},alignment:align_c,border}},{v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},{v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},{v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},{v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},]);
+    const wsData=[[titleCell,{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],[subCell,{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],[{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],headers.map(sHeader),...rows,[{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],sSum("🟢 เสร็จสิ้น",done,"166534",C_GREEN_LIGHT),sSum("🟡 กำลังทำ",doing,"92400E",C_YELLOW_LIGHT),sSum("🔴 รอดำเนินการ",wait,"991B1B",C_RED_LIGHT)];
+    const ws=XLSX.utils.aoa_to_sheet(wsData);
+    ws["!merges"]=[{s:{r:0,c:0},e:{r:0,c:6}},{s:{r:1,c:0},e:{r:1,c:6}}];
+    ws["!cols"]=[{wch:4},{wch:10},{wch:20},{wch:10},{wch:28},{wch:18},{wch:10}];
+    ws["!rows"]=[{hpt:32},{hpt:16},{hpt:4},{hpt:20},...rows.map(()=>({hpt:18})),{hpt:6},{hpt:16},{hpt:16},{hpt:16}];
+    ws["!pageSetup"]={paperSize:9,orientation:"portrait",fitToPage:true,fitToWidth:1,fitToHeight:0};
+    ws["!margins"]={left:0.5,right:0.5,top:0.75,bottom:0.75,header:0.3,footer:0.3};
+    XLSX.utils.book_append_sheet(wb,ws,"WorkLog");
+    XLSX.writeFile(wb,`4MTASK_Report_${now.toISOString().split("T")[0]}.xlsx`);
+};
+
+</script>
+
+<!-- Loading Screen Logic -->
+<script>
+(function() {
+    const bar=document.getElementById('loadingBar'),pct=document.getElementById('loadingPct'),msg=document.getElementById('loadingMsg');
+    const msgs=['กำลังเชื่อมต่อ...','โหลดข้อมูล...','เตรียมหน้าจอ...','เกือบเสร็จแล้ว...'];
+    let p=0,done=false;
+    const timer=setInterval(()=>{
+        p=Math.min(p+Math.random()*25+10,90);
+        if(bar)bar.style.width=p+'%';
+        if(pct)pct.textContent=Math.round(p)+'%';
+        if(msg)msg.textContent=msgs[Math.min(Math.floor(p/25),3)];
+    },200);
+    window.finishLoading=function(){
+        if(done)return;done=true;
+        clearInterval(timer);
+        if(bar)bar.style.width='100%';if(pct)pct.textContent='100%';if(msg)msg.textContent='พร้อมใช้งาน ✅';
+        setTimeout(()=>{window.SFX?.launch();},200);
+        setTimeout(()=>{const s=document.getElementById('loadingScreen');if(s)s.classList.add('hidden');},300);
+        setTimeout(()=>{const s=document.getElementById('loadingScreen');if(s)s.remove();},900);
     };
-
-    let _ctx = null;
-    const ac = () => {
-        if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
-        if (_ctx.state === 'suspended') _ctx.resume();
-        return _ctx;
+    setTimeout(()=>window.finishLoading(),5000);
+    window.showSection=window.showSection||function(n){
+        document.querySelectorAll('.page-section').forEach(el=>el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+        const s=document.getElementById('section-'+n),b=document.getElementById('nav-'+n);
+        if(s)s.classList.add('active');if(b)b.classList.add('active');
     };
-    const tone = (freq, type, start, dur, vol, ctx) => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.connect(g); g.connect(ctx.destination);
-        o.type = type; o.frequency.setValueAtTime(freq, ctx.currentTime + start);
-        g.gain.setValueAtTime(0, ctx.currentTime + start);
-        g.gain.linearRampToValueAtTime(vol, ctx.currentTime + start + 0.01);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
-        o.start(ctx.currentTime + start);
-        o.stop(ctx.currentTime + start + dur + 0.01);
-    };
-    const noise = (start, dur, vol, ctx) => {
-        const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
-        const d = buf.getChannelData(0);
-        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-        const src = ctx.createBufferSource();
-        const g = ctx.createGain();
-        const f = ctx.createBiquadFilter();
-        f.type = 'bandpass'; f.frequency.value = 800; f.Q.value = 0.5;
-        src.buffer = buf; src.connect(f); f.connect(g); g.connect(ctx.destination);
-        g.gain.setValueAtTime(vol, ctx.currentTime + start);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
-        src.start(ctx.currentTime + start);
-        src.stop(ctx.currentTime + start + dur + 0.01);
-    };
-    window.SFX = {
-        click:   () => { try { const c = ac(); tone(660,'sine',0,0.08,0.12,c); tone(880,'sine',0.04,0.06,0.06,c); } catch(e){} },
-        success: () => { try { const c = ac(); [523,659,784].forEach((f,i) => tone(f,'sine',i*0.1,0.18,0.15,c)); } catch(e){} },
-        add:     () => { try { const c = ac(); [392,523,659,784].forEach((f,i) => tone(f,'triangle',i*0.08,0.2,0.13,c)); } catch(e){} },
-        delete:  () => { try { const c = ac(); tone(440,'square',0,0.05,0.08,c); tone(330,'square',0.05,0.05,0.08,c); tone(220,'square',0.1,0.1,0.07,c); } catch(e){} },
-        cut:     () => { try { const c = ac(); noise(0,0.04,0.18,c); tone(1200,'square',0,0.03,0.07,c); noise(0.04,0.03,0.12,c); tone(900,'square',0.04,0.03,0.05,c); } catch(e){} },
-        made:    () => { try { const c = ac(); [523,659,784,1047].forEach((f,i) => tone(f,'sine',i*0.09,0.22,0.14,c)); tone(784,'sine',0.36,0.3,0.1,c); } catch(e){} },
-        unlock:  () => { try { const c = ac(); tone(440,'sine',0,0.08,0.1,c); tone(660,'sine',0.1,0.08,0.1,c); tone(880,'sine',0.2,0.15,0.12,c); } catch(e){} },
-        error:   () => { try { const c = ac(); tone(180,'sawtooth',0,0.08,0.12,c); tone(160,'sawtooth',0.08,0.08,0.1,c); } catch(e){} },
-        launch:  () => { try { const c = ac(); [330,392,523,659,784].forEach((f,i) => tone(f,'sine',i*0.07,0.25,0.11,c)); tone(1047,'sine',0.35,0.4,0.09,c); } catch(e){} },
-        ping:    () => { try { const c = ac(); tone(1047,'sine',0,0.05,0.1,c); tone(1319,'sine',0.06,0.12,0.08,c); } catch(e){} },
-    };
-    </script>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBwNltx2biA-AdM44HjHay-4gO4N1RH_sQ",
-            authDomain: "mytaskapp-pro.firebaseapp.com",
-            projectId: "mytaskapp-pro",
-            storageBucket: "mytaskapp-pro.firebasestorage.app",
-            messagingSenderId: "189296604432",
-            appId: "1:189296604432:web:31dabc3c5e363b2c96a195"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        let allTasks = [], statusChart, isAdmin = false;
-        let editingId = null, taskToDeleteId = null, editingSnapshot = null;
-        let logsUnsubscribe = null;
-        let activeFilter = 'ทั้งหมด';
-
-        const monthNames = ["ทั่วไป","มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
-
-        // ── อุปกรณ์ละเอียด ──
-        const getDeviceInfo = () => {
-            const ua = navigator.userAgent;
-            let brand = "Unknown", model = "Unknown", os = "Unknown", browser = "Unknown";
-            if (/android/i.test(ua)) {
-                os = "Android";
-                const verM = ua.match(/Android\s([\d.]+)/);
-                if (verM) os += " " + verM[1];
-                const modelM = ua.match(/;\s*([^;]+)\s+Build\//);
-                if (modelM) { model = modelM[1].trim(); brand = model.split(" ")[0]; }
-            } else if (/iPhone/i.test(ua)) {
-                brand = "Apple"; model = "iPhone";
-                const v = ua.match(/OS\s([\d_]+)/);
-                if (v) os = "iOS " + v[1].replace(/_/g, ".");
-            } else if (/iPad/i.test(ua)) {
-                brand = "Apple"; model = "iPad";
-                const v = ua.match(/OS\s([\d_]+)/);
-                if (v) os = "iPadOS " + v[1].replace(/_/g, ".");
-            } else if (/Windows/i.test(ua)) {
-                os = "Windows"; brand = "PC";
-            } else if (/Mac/i.test(ua)) {
-                os = "macOS"; brand = "Apple";
-            }
-            if (/Chrome\/[\d]+/.test(ua) && !/Edg\//.test(ua) && !/OPR\//.test(ua)) {
-                const v = ua.match(/Chrome\/([\d]+)/); browser = "Chrome" + (v ? " " + v[1] : "");
-            } else if (/Safari\//.test(ua) && !/Chrome/.test(ua)) {
-                const v = ua.match(/Version\/([\d.]+)/); browser = "Safari" + (v ? " " + v[1] : "");
-            } else if (/Edg\//.test(ua)) {
-                browser = "Edge";
-            } else if (/Firefox\//.test(ua)) {
-                browser = "Firefox";
-            } else if (/SamsungBrowser/.test(ua)) {
-                browser = "Samsung Internet";
-            }
-            return { brand, model, os, browser, screen: `${window.screen.width}×${window.screen.height}`, ua };
-        };
-
-        const writeLog = async (action, data = {}) => {
-            try {
-                await addDoc(collection(db, "logs"), {
-                    action,
-                    timestamp: new Date().getTime(),
-                    device: getDeviceInfo(),
-                    ...data
-                });
-            } catch(e) { console.warn("Log write failed:", e); }
-        };
-
-        // ── เพิ่มงาน ──
-        window.addTask = async () => {
-            const raw = document.getElementById('taskFullInput').value.trim();
-            if (!raw) return alert("กรุณาระบุชื่องาน");
-            const btn = document.getElementById('saveBtn');
-            btn.disabled = true; btn.innerText = "กำลังบันทึก...";
-            try {
-                const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
-                const ors = match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00";
-                const title = match ? match[3].trim() : raw;
-                const taskData = {
-                    ors, title,
-                    detail: document.getElementById('taskDetail').value,
-                    status: document.getElementById('taskStatus').value,
-                    completedDate: null,
-                    createdAt: new Date().getTime(),
-                    createdByDevice: getDeviceInfo()
-                };
-                const ref = await addDoc(collection(db, "tasks"), taskData);
-                await writeLog('ADD', {
-                    taskId: ref.id,
-                    taskRef: `${ors} ${title}`,
-                    after: { ors, title, detail: taskData.detail, status: taskData.status, completedDate: taskData.completedDate }
-                });
-                window.SFX?.add();
-                window.showToast?.('บันทึกงานสำเร็จ! 🎉', 'success');
-                setTimeout(() => location.reload(), 800);
-            } catch (e) {
-                alert(e.message);
-                btn.disabled = false; btn.innerText = "ยืนยันบันทึกงาน";
-            }
-        };
-
-        // ── แก้ไขงาน ──
-        window.openEditModal = (id) => {
-            const t = allTasks.find(x => x.id === id); editingId = id;
-            editingSnapshot = { ors: t.ors, title: t.title, detail: t.detail || "", status: t.status, completedDate: t.completedDate || "" };
-            document.getElementById('editFullInput').value = t.ors.replace('ORS.','') + " " + t.title;
-            document.getElementById('editDetail').value = t.detail || "";
-            document.getElementById('editStatus').value = t.status;
-            document.getElementById('editCompletedDate').value = t.completedDate || "";
-            document.getElementById('editModal').classList.add('active');
-        };
-        window.saveEdit = async () => {
-            const btn = document.querySelector('#editModal .btn-primary');
-            if (btn) { btn.disabled = true; btn.innerText = 'กำลังบันทึก...'; }
-            try {
-                const raw = document.getElementById('editFullInput').value;
-                const match = raw.match(/^(\d{1,2})\s*[-/]\s*(\d{1,2})\s+(.*)$/);
-                const newData = {
-                    ors: match ? `ORS.${match[1]}/${match[2]}` : "ORS.00/00",
-                    title: match ? match[3].trim() : raw,
-                    detail: document.getElementById('editDetail').value,
-                    status: document.getElementById('editStatus').value,
-                    completedDate: document.getElementById('editCompletedDate').value || null,
-                    lastEditedByDevice: getDeviceInfo()
-                };
-                await updateDoc(doc(db, "tasks", editingId), newData);
-                await writeLog('EDIT', {
-                    taskId: editingId,
-                    taskRef: `${newData.ors} ${newData.title}`,
-                    before: editingSnapshot,
-                    after: { ors: newData.ors, title: newData.title, detail: newData.detail, status: newData.status, completedDate: newData.completedDate }
-                });
-                window.SFX?.success();
-                window.showToast?.('อัปเดตสำเร็จ ✅', 'success');
-            } catch(e) {
-                window.SFX?.error();
-                alert('บันทึกไม่สำเร็จ: ' + e.message);
-            } finally {
-                closeEditModal();
-                if (btn) { btn.disabled = false; btn.innerText = 'อัปเดต'; }
-            }
-        };
-        window.closeEditModal = () => document.getElementById('editModal').classList.remove('active');
-
-        // ── Quick Status Update ──
-        let madeTaskId = null;
-        window.quickStatus = async (id, newStatus) => {
-            if (newStatus === 'ผลิตเสร็จแล้ว') {
-                window.SFX?.ping();
-                madeTaskId = id;
-                const t = allTasks.find(x => x.id === id);
-                document.getElementById('madeDateTaskName').textContent = t ? `${t.ors} ${t.title}` : '—';
-                document.getElementById('madeDateInput').value = new Date().toISOString().split('T')[0];
-                document.getElementById('madeDateModal').classList.add('active');
-                return;
-            }
-            const t = allTasks.find(x => x.id === id); if (!t) return;
-            await updateDoc(doc(db, "tasks", id), { status: newStatus, lastEditedByDevice: getDeviceInfo() });
-            await writeLog('EDIT', { taskId: id, taskRef: `${t.ors} ${t.title}`, before: { status: t.status }, after: { status: newStatus } });
-            window.SFX?.cut();
-            window.showToast?.('✂️ ตัดตัวครบแล้ว!', 'success', 2200);
-        };
-        window.closeMadeDateModal = () => { document.getElementById('madeDateModal').classList.remove('active'); madeTaskId = null; };
-        window.confirmMadeDate = async () => {
-            if (!madeTaskId) return;
-            const t = allTasks.find(x => x.id === madeTaskId); if (!t) return;
-            const dateVal = document.getElementById('madeDateInput').value;
-            await updateDoc(doc(db, "tasks", madeTaskId), {
-                status: 'ผลิตเสร็จแล้ว',
-                completedDate: dateVal || null,
-                lastEditedByDevice: getDeviceInfo()
-            });
-            await writeLog('EDIT', { taskId: madeTaskId, taskRef: `${t.ors} ${t.title}`, before: { status: t.status }, after: { status: 'ผลิตเสร็จแล้ว', completedDate: dateVal } });
-            window.SFX?.made();
-            window.showToast?.('🏭 ผลิตเสร็จแล้ว!', 'success', 2500);
-            closeMadeDateModal();
-        };
-
-        // ── ลบงาน ──
-        window.openDeleteModal = (id) => { taskToDeleteId = id; document.getElementById('deleteModal').classList.add('active'); };
-        window.closeDeleteModal = () => document.getElementById('deleteModal').classList.remove('active');
-        window.confirmDeleteTask = async () => {
-            const t = allTasks.find(x => x.id === taskToDeleteId);
-            await deleteDoc(doc(db, "tasks", taskToDeleteId));
-            await writeLog('DELETE', {
-                taskId: taskToDeleteId,
-                taskRef: t ? `${t.ors} ${t.title}` : taskToDeleteId,
-                before: t ? { ors: t.ors, title: t.title, detail: t.detail || "", status: t.status } : null
-            });
-            window.SFX?.delete();
-            window.showToast?.('ลบข้อมูลแล้ว', 'info', 2000);
-            closeDeleteModal();
-        };
-
-        // ── Filter ──
-        window.setFilter = (f) => {
-            activeFilter = f;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector(`.filter-btn[data-filter="${f}"]`).classList.add('active');
-            filterTasks();
-        };
-
-        const getCompletedBadge = (completedDate) => {
-            if (!completedDate) return '';
-            const d = new Date(completedDate).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'numeric' });
-            return `<span class="completed-badge">✅ เสร็จเมื่อ ${d}</span>`;
-        };
-
-        // ── Render Tasks ──
-        window.filterTasks = () => {
-            const container = document.getElementById('task-container');
-            container.innerHTML = "";
-            const search = document.getElementById('searchInput').value.toLowerCase();
-
-            let filtered = allTasks.filter(t =>
-                (t.title||"").toLowerCase().includes(search) ||
-                (t.ors||"").toLowerCase().includes(search)
-            );
-
-            if (activeFilter !== 'ทั้งหมด') {
-                filtered = filtered.filter(t => t.status === activeFilter);
-            }
-
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">ไม่พบงานที่ค้นหา</div></div>`;
-                return;
-            }
-            document.getElementById('total-count').textContent = `(${filtered.length})`;
-
-            const grouped = {};
-            filtered.forEach(t => {
-                let m = "ทั่วไป";
-                try { const idx = parseInt(t.ors.split('/')[0].split('.')[1]); if(idx>0 && idx<=12) m = monthNames[idx]; } catch(e){}
-                if(!grouped[m]) grouped[m] = [];
-                grouped[m].push(t);
-            });
-
-            monthNames.filter(m => grouped[m]).forEach(mName => {
-                const sId = 'ms-' + mName;
-                const badgeClass = {
-                    'เสร็จสิ้น':     'badge-done',
-                    'กำลังทำ':      'badge-doing',
-                    'รอดำเนินการ':   'badge-wait',
-                    'ตัดตัวครบแล้ว': 'badge-cut',
-                    'ผลิตเสร็จแล้ว': 'badge-made',
-                };
-                const cardClass = {
-                    'เสร็จสิ้น':     'status-done',
-                    'กำลังทำ':      'status-doing',
-                    'รอดำเนินการ':   'status-wait',
-                    'ตัดตัวครบแล้ว': 'status-cut',
-                    'ผลิตเสร็จแล้ว': 'status-made',
-                };
-
-                let html = `
-                <div class="month-section">
-                    <div class="month-header" onclick="toggleMonth('${sId}', this)">
-                        <div class="month-header-left">
-                            <div class="month-dot"></div>
-                            <span class="month-name">เดือน${mName}</span>
-                            <span class="month-count">${grouped[mName].length}</span>
-                        </div>
-                        <span class="month-chevron">▼</span>
-                    </div>
-                    <div id="${sId}" class="month-body">`;
-
-                grouped[mName].forEach(t => {
-                    const status = t.status || 'รอดำเนินการ';
-                    const dueBadge = getCompletedBadge(t.completedDate);
-                    const isCut  = status === 'ตัดตัวครบแล้ว' || status === 'ผลิตเสร็จแล้ว' || status === 'เสร็จสิ้น';
-                    const isMade = status === 'ผลิตเสร็จแล้ว' || status === 'เสร็จสิ้น';
-
-                    html += `
-                    <div class="task-card ${cardClass[status] || 'status-wait'}">
-                        <div class="task-header">
-                            <span class="task-ors">${t.ors}</span>
-                            <span class="task-badge ${badgeClass[status] || 'badge-wait'}">${status}</span>
-                        </div>
-                        <div class="task-title">${t.title}</div>
-                        ${dueBadge}
-                        ${t.detail ? `<div class="task-detail">${t.detail}</div>` : ''}
-                        <div class="quick-actions">
-                            <button class="btn-quick btn-cut${isCut ? ' done-state' : ''}" onclick="${isCut ? '' : `quickStatus('${t.id}','ตัดตัวครบแล้ว')`}">
-                                ${isCut ? '✅' : '✂️'} ตัดตัวครบแล้ว
-                            </button>
-                            <button class="btn-quick btn-made${isMade ? ' done-state' : ''}" onclick="${isMade ? '' : `quickStatus('${t.id}','ผลิตเสร็จแล้ว')`}">
-                                ${isMade ? '✅' : '🏭'} ผลิตเสร็จแล้ว
-                            </button>
-                        </div>
-                        <div class="task-actions">
-                            <button class="btn btn-ghost" onclick="openEditModal('${t.id}')">✏️ แก้ไข</button>
-                            <button class="btn btn-danger" onclick="openDeleteModal('${t.id}')">🗑️ ลบ</button>
-                        </div>
-                    </div>`;
-                });
-                html += `</div></div>`;
-                container.innerHTML += html;
-            });
-        };
-
-        window.toggleMonth = (mId, headerEl) => {
-            document.getElementById(mId).classList.toggle('open');
-            headerEl.classList.toggle('open');
-        };
-
-        // ── Firebase Tasks Listener ──
-        let firstLoad = true;
-        onSnapshot(
-            collection(db, "tasks"),
-            (snap) => {
-                allTasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                allTasks.sort((a, b) => a.ors.localeCompare(b.ors));
-                filterTasks();
-                updateDashboard();
-                if (firstLoad) { firstLoad = false; window.finishLoading && window.finishLoading(); }
-            },
-            (error) => {
-                console.error("Firestore error:", error);
-                window.finishLoading && window.finishLoading();
-                const c = document.getElementById('task-container');
-                if (c) c.innerHTML = `<div class="empty-state">
-                    <div class="empty-icon">⚠️</div>
-                    <div class="empty-text" style="color:#dc2626;">โหลดข้อมูลไม่สำเร็จ<br><small style="font-size:0.7rem;color:#6b7280;">${error.code || error.message}</small></div>
-                    <button class="btn btn-primary" style="margin-top:16px;max-width:200px;" onclick="location.reload()">🔄 โหลดใหม่</button>
-                </div>`;
-            }
-        );
-
-        // ── Render Logs ──
-        const renderLogs = (logs) => {
-            const container = document.getElementById('log-container');
-            if (!logs.length) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">📜</div><div class="empty-text">ยังไม่มีบันทึก</div></div>`;
-                return;
-            }
-            const actionLabel = { ADD: { text: 'เพิ่มงาน', color: '#16a34a', bg: 'rgba(22,163,74,0.08)', icon: '➕' }, EDIT: { text: 'แก้ไขงาน', color: '#b45309', bg: 'rgba(180,83,9,0.08)', icon: '✏️' }, DELETE: { text: 'ลบงาน', color: '#dc2626', bg: 'rgba(220,38,38,0.08)', icon: '🗑️' } };
-            container.innerHTML = logs.map(log => {
-                const a = actionLabel[log.action] || { text: log.action, color: '#4b7a5a', bg: '#f0faf4', icon: '📋' };
-                const d = log.device || {};
-                const dt = new Date(log.timestamp);
-                const dateStr = dt.toLocaleDateString('th-TH', { year:'numeric', month:'short', day:'numeric' });
-                const timeStr = dt.toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-
-                let diffHtml = '';
-                if (log.action === 'EDIT' && log.before && log.after) {
-                    const fields = [
-                        { label: 'ORS', before: log.before.ors, after: log.after.ors },
-                        { label: 'ชื่องาน', before: log.before.title, after: log.after.title },
-                        { label: 'สถานะ', before: log.before.status, after: log.after.status },
-                        { label: 'รายละเอียด', before: log.before.detail, after: log.after.detail },
-                    ].filter(f => f.before !== f.after);
-
-                    if (fields.length) {
-                        diffHtml = `
-                        <div class="log-diff-wrap">
-                            <div class="log-diff-title">🔄 ข้อมูลที่เปลี่ยนแปลง</div>
-                            ${fields.map(f => `
-                            <div class="log-diff-row">
-                                <div class="log-diff-field">${f.label}</div>
-                                <div class="log-diff-before"><span class="log-diff-label">ก่อน</span>${f.before || '—'}</div>
-                                <div class="log-diff-after"><span class="log-diff-label">หลัง</span>${f.after || '—'}</div>
-                            </div>`).join('')}
-                        </div>`;
-                    }
-                }
-                if (log.action === 'DELETE' && log.before) {
-                    diffHtml = `
-                    <div class="log-diff-wrap" style="border-color:rgba(220,38,38,0.2);">
-                        <div class="log-diff-title">📋 ข้อมูลที่ถูกลบ</div>
-                        <div class="log-diff-row">
-                            <div class="log-diff-field">ORS</div>
-                            <div class="log-diff-before" style="grid-column:span 2;">${log.before.ors}</div>
-                        </div>
-                        <div class="log-diff-row">
-                            <div class="log-diff-field">ชื่องาน</div>
-                            <div class="log-diff-before" style="grid-column:span 2;">${log.before.title}</div>
-                        </div>
-                        <div class="log-diff-row">
-                            <div class="log-diff-field">สถานะ</div>
-                            <div class="log-diff-before" style="grid-column:span 2;">${log.before.status}</div>
-                        </div>
-                    </div>`;
-                }
-
-                return `
-                <div class="log-card">
-                    <div class="log-card-header">
-                        <div class="log-action-badge" style="background:${a.bg}; color:${a.color}; border-color:${a.color}40;">
-                            ${a.icon} ${a.text}
-                        </div>
-                        <div class="log-timestamp">${dateStr} · ${timeStr}</div>
-                    </div>
-                    <div class="log-taskref">${log.taskRef || '—'}</div>
-                    <div class="log-device-block">
-                        <div class="log-device-row"><span class="log-device-key">ยี่ห้อ</span><span class="log-device-val">${d.brand || '—'}</span></div>
-                        <div class="log-device-row"><span class="log-device-key">รุ่น</span><span class="log-device-val">${d.model || '—'}</span></div>
-                        <div class="log-device-row"><span class="log-device-key">OS</span><span class="log-device-val">${d.os || '—'}</span></div>
-                        <div class="log-device-row"><span class="log-device-key">เบราว์เซอร์</span><span class="log-device-val">${d.browser || '—'}</span></div>
-                        <div class="log-device-row"><span class="log-device-key">หน้าจอ</span><span class="log-device-val">${d.screen || '—'}</span></div>
-                    </div>
-                    ${diffHtml}
-                </div>`;
-            }).join('');
-        };
-
-        // ── Sections ──
-        window.showSection = (n) => {
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById('section-' + n).classList.add('active');
-            document.getElementById('nav-' + n).classList.add('active');
-        };
-
-        // ── Login ──
-        window.openLoginModal = () => document.getElementById('loginModal').classList.add('active');
-        window.closeLoginModal = () => document.getElementById('loginModal').classList.remove('active');
-        window.adminLogin = () => {
-            if (document.getElementById('adminUser').value === "Admin" && document.getElementById('adminPass').value === "Admin444") {
-                isAdmin = true;
-                document.getElementById('nav-logs').style.display = '';
-                document.getElementById('admin-indicator').style.display = 'block';
-                window.SFX?.unlock();
-                window.showToast?.('🛡️ เข้าสู่ระบบ Admin แล้ว', 'info');
-                closeLoginModal();
-                filterTasks();
-                const logsQ = query(collection(db, "logs"), orderBy("timestamp", "desc"), limit(100));
-                logsUnsubscribe = onSnapshot(logsQ, (snap) => {
-                    const logs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                    renderLogs(logs);
-                });
-            } else {
-                window.SFX?.error();
-                alert("รหัสผ่านไม่ถูกต้อง");
-            }
-        };
-
-        // ── Dashboard ──
-        let sObj;
-        window.updateDashboard = () => {
-            const cs = {'เสร็จสิ้น': 0, 'กำลังทำ': 0, 'รอดำเนินการ': 0};
-            allTasks.forEach(t => { if (cs[t.status] !== undefined) cs[t.status]++; });
-            document.getElementById('stat-total').innerText = allTasks.length;
-            document.getElementById('stat-done').innerText = cs['เสร็จสิ้น'];
-            document.getElementById('stat-wait').innerText = cs['รอดำเนินการ'];
-            const cx = document.getElementById('statusChart')?.getContext('2d');
-            if (!cx) return;
-            if (sObj) sObj.destroy();
-            sObj = new Chart(cx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['เสร็จสิ้น', 'กำลังทำ', 'รอดำเนินการ'],
-                    datasets: [{
-                        data: Object.values(cs),
-                        backgroundColor: ['#16a34a', '#f59e0b', '#ef4444'],
-                        borderWidth: 0, hoverOffset: 8
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: { labels: { color: '#4b7a5a', font: { family: 'Prompt', size: 12 } } }
-                    }
-                }
-            });
-        };
-
-        // ── Export Excel ──
-        window.exportToExcel = () => {
-            const wb = XLSX.utils.book_new();
-            const C_GREEN_DARK  = "14532D";
-            const C_GREEN_MID   = "16A34A";
-            const C_GREEN_LIGHT = "DCFCE7";
-            const C_YELLOW_LIGHT= "FEF9C3";
-            const C_RED_LIGHT   = "FEE2E2";
-            const C_WHITE       = "FFFFFF";
-            const fontMain  = { name: "Calibri", sz: 9 };
-            const fontBold  = { name: "Calibri", sz: 9, bold: true };
-            const fontTitle = { name: "Calibri", sz: 14, bold: true, color: { rgb: C_WHITE } };
-            const fontSub   = { name: "Calibri", sz: 8, color: { rgb: "4B7A5A" } };
-            const fontHeader= { name: "Calibri", sz: 9, bold: true, color: { rgb: C_WHITE } };
-            const fontMono  = { name: "Courier New", sz: 8 };
-            const border = { top:{style:"thin",color:{rgb:"BBF7D0"}}, bottom:{style:"thin",color:{rgb:"BBF7D0"}}, left:{style:"thin",color:{rgb:"BBF7D0"}}, right:{style:"thin",color:{rgb:"BBF7D0"}} };
-            const borderHeader = { top:{style:"medium",color:{rgb:C_GREEN_DARK}}, bottom:{style:"medium",color:{rgb:C_GREEN_DARK}}, left:{style:"medium",color:{rgb:C_GREEN_DARK}}, right:{style:"medium",color:{rgb:C_GREEN_DARK}} };
-            const align_c = { horizontal:"center", vertical:"center", wrapText:false };
-            const align_l = { horizontal:"left",   vertical:"center", wrapText:false };
-            const align_wrap = { horizontal:"left", vertical:"center", wrapText:true };
-            const sHeader = (col) => ({ v:col, t:"s", s:{font:fontHeader, fill:{fgColor:{rgb:C_GREEN_DARK}}, alignment:align_c, border:borderHeader} });
-            const rowBg = (status) => { if(status==="เสร็จสิ้น") return C_GREEN_LIGHT; if(status==="กำลังทำ") return C_YELLOW_LIGHT; return C_RED_LIGHT; };
-            const sCell = (val, status, mono=false, center=false, wrap=false) => ({ v:val??"", t:"s", s:{font:mono?{...fontMono,color:{rgb:"166534"}}:fontMain, fill:{fgColor:{rgb:rowBg(status)}}, alignment:wrap?align_wrap:(center?align_c:align_l), border} });
-            const sStatus = (status) => {
-                const color = status==="เสร็จสิ้น"?"166534":status==="กำลังทำ"?"92400E":"991B1B";
-                const bg    = status==="เสร็จสิ้น"?C_GREEN_LIGHT:status==="กำลังทำ"?C_YELLOW_LIGHT:C_RED_LIGHT;
-                return { v:status, t:"s", s:{font:{...fontBold,color:{rgb:color}}, fill:{fgColor:{rgb:bg}}, alignment:align_c, border} };
-            };
-            const now = new Date();
-            const dateStr = now.toLocaleDateString("th-TH", { year:"numeric", month:"long", day:"numeric" });
-            const titleCell = { v:`4M TASK — รายงานสรุปงานทั้งหมด`, t:"s", s:{font:fontTitle, fill:{fgColor:{rgb:C_GREEN_MID}}, alignment:align_c} };
-            const subCell = { v:`ส่งออกเมื่อ: ${dateStr} · รวม ${allTasks.length} รายการ`, t:"s", s:{font:fontSub, fill:{fgColor:{rgb:"F0FDF4"}}, alignment:align_c} };
-            const headers = ["ลำดับ","เลข ORS","ชื่องาน","สถานะ","รายละเอียด","วันที่สร้าง"];
-            const rows = allTasks.map((t,i) => {
-                const status = t.status||"รอดำเนินการ";
-                const dateCreated = t.createdAt ? new Date(t.createdAt).toLocaleDateString("th-TH",{year:"numeric",month:"short",day:"numeric"}) : "—";
-                return [
-                    {v:i+1,t:"n",s:{font:{...fontBold,color:{rgb:"166534"}},fill:{fgColor:{rgb:rowBg(status)}},alignment:align_c,border}},
-                    sCell(t.ors,status,true,true),
-                    sCell(t.title,status,false,false,true),
-                    sStatus(status),
-                    sCell(t.detail||"—",status,false,false,true),
-                    sCell(dateCreated,status,false,true),
-                ];
-            });
-            const done  = allTasks.filter(t=>t.status==="เสร็จสิ้น").length;
-            const doing = allTasks.filter(t=>t.status==="กำลังทำ").length;
-            const wait  = allTasks.filter(t=>t.status==="รอดำเนินการ").length;
-            const sSum = (label,val,color,bg) => ([
-                {v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},
-                {v:label,t:"s",s:{font:{...fontBold,color:{rgb:color}},fill:{fgColor:{rgb:bg}},alignment:align_c,border}},
-                {v:`${val} รายการ`,t:"s",s:{font:{name:"Calibri",sz:9,color:{rgb:color}},fill:{fgColor:{rgb:bg}},alignment:align_c,border}},
-                {v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},
-                {v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},
-                {v:"",t:"s",s:{fill:{fgColor:{rgb:"F0FDF4"}}}},
-            ]);
-            const wsData = [
-                [titleCell,{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],
-                [subCell,  {v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],
-                [{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],
-                headers.map(sHeader),
-                ...rows,
-                [{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"},{v:"",t:"s"}],
-                sSum("🟢 เสร็จสิ้น",  done,  "166534",C_GREEN_LIGHT),
-                sSum("🟡 กำลังทำ",   doing, "92400E",C_YELLOW_LIGHT),
-                sSum("🔴 รอดำเนินการ",wait, "991B1B",C_RED_LIGHT),
-            ];
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-            ws["!merges"] = [{s:{r:0,c:0},e:{r:0,c:5}},{s:{r:1,c:0},e:{r:1,c:5}}];
-            ws["!cols"] = [{wch:4},{wch:10},{wch:22},{wch:10},{wch:22},{wch:10}];
-            ws["!rows"] = [{hpt:32},{hpt:16},{hpt:4},{hpt:20},...rows.map((_,i)=>({hpt:Math.max(16,Math.min(40,16))})),{hpt:6},{hpt:16},{hpt:16},{hpt:16}];
-            ws["!pageSetup"] = {paperSize:9,orientation:"portrait",fitToPage:true,fitToWidth:1,fitToHeight:0};
-            ws["!margins"] = {left:0.5,right:0.5,top:0.75,bottom:0.75,header:0.3,footer:0.3};
-            XLSX.utils.book_append_sheet(wb, ws, "WorkLog");
-            XLSX.writeFile(wb, `4MTASK_Report_${now.toISOString().split("T")[0]}.xlsx`);
-        };
-
-    </script>
-
-    <!-- Loading Screen Logic -->
-    <script>
-        (function() {
-            const bar  = document.getElementById('loadingBar');
-            const pct  = document.getElementById('loadingPct');
-            const msg  = document.getElementById('loadingMsg');
-            const msgs = ['กำลังเชื่อมต่อ...','โหลดข้อมูล...','เตรียมหน้าจอ...','เกือบเสร็จแล้ว...'];
-            let p = 0, done = false;
-            const timer = setInterval(() => {
-                p = Math.min(p + Math.random() * 25 + 10, 90);
-                if (bar)  bar.style.width = p + '%';
-                if (pct)  pct.textContent = Math.round(p) + '%';
-                if (msg)  msg.textContent = msgs[Math.min(Math.floor(p / 25), 3)];
-            }, 200);
-            window.finishLoading = function() {
-                if (done) return; done = true;
-                clearInterval(timer);
-                if (bar) bar.style.width = '100%';
-                if (pct) pct.textContent = '100%';
-                if (msg) msg.textContent = 'พร้อมใช้งาน ✅';
-                setTimeout(() => { window.SFX?.launch(); }, 200);
-                setTimeout(() => { const s = document.getElementById('loadingScreen'); if(s) s.classList.add('hidden'); }, 300);
-                setTimeout(() => { const s = document.getElementById('loadingScreen'); if(s) s.remove(); }, 900);
-            };
-            setTimeout(() => window.finishLoading(), 5000);
-
-            window.showSection = window.showSection || function(n) {
-                document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                const s = document.getElementById('section-' + n);
-                const b = document.getElementById('nav-' + n);
-                if (s) s.classList.add('active');
-                if (b) b.classList.add('active');
-            };
-
-            document.addEventListener('click', (e) => {
-                const el = e.target.closest('button, .nav-item, .admin-btn, .month-header, .filter-btn');
-                if (!el) return;
-                if (el.classList.contains('btn-delete-confirm')) return;
-                if (el.classList.contains('btn-quick')) return;
-                if (el.id === 'saveBtn') return;
-                window.SFX?.click();
-            }, { passive: true });
-        })();
-    </script>
+    document.addEventListener('click',(e)=>{
+        const el=e.target.closest('button,.nav-item,.admin-btn,.month-header,.filter-btn');
+        if(!el)return;
+        if(el.classList.contains('btn-delete-confirm'))return;
+        if(el.classList.contains('btn-quick'))return;
+        if(el.id==='saveBtn')return;
+        if(el.classList.contains('checklist-display-item'))return;
+        window.SFX?.click();
+    },{passive:true});
+})();
+</script>
 </body>
 </html>
