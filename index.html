@@ -1176,15 +1176,9 @@ window.filterTasks = () => {
     });
 
     if (openMonths.size > 0) {
-        restoreOpenMonths(openMonths);   // ← คืน state เดิม
-    } else {
-        // ครั้งแรกโหลด: เปิดทุกเดือนอัตโนมัติ
-        document.querySelectorAll('.month-body').forEach(el => {
-            el.classList.add('open');
-            const header = el.previousElementSibling;
-            if (header) header.classList.add('open');
-        });
+        restoreOpenMonths(openMonths);   // ← คืน state เดิม (ไม่ปิดเองหลัง re-render)
     }
+    // ถ้าไม่มีเดือนที่เปิดอยู่ก่อน → ปล่อยปิดทั้งหมด (user กดเปิดเอง)
 };
 
 window.toggleMonth = (mId, headerEl) => {
